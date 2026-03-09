@@ -379,6 +379,8 @@
                         ),
                         SizedBox(height: 10),
                         ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return Padding(
@@ -469,7 +471,7 @@
                                                   return GestureDetector(
                                                     onTap: () {
                                                       value[index] = !value[index];
-                                                      favList.value = List.from(value); // notify update
+                                                      favList.value = List.from(value);
                                                     },
                                                     child: _circleIcon(
                                                       value[index] ? Icons.favorite : Icons.favorite_border,
