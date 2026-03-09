@@ -140,8 +140,6 @@ Widget loginRow({
   );
 }
 
-
-
 class Days {
   final int date;
   final String day;
@@ -150,26 +148,70 @@ class Days {
 }
 
 List<Days> appointmentDates = [
-  Days(date: 9, day: "MON"),
-  Days(date: 10, day: "TUE"),
-  Days(date: 11, day: "WED"),
-  Days(date: 12, day: "THU"),
-  Days(date: 13, day: "FRI"),
-  Days(date: 14, day: "SAT"),
-];
+  Days(date: 6, day: "THU"),
+  Days(date: 7, day: "FRI"),
+  Days(date: 8, day: "SAT"),
+  Days(date: 9, day: "SUN"),
+  Days(date: 10, day: "MON"),
+  Days(date: 11, day: "TUE"),
+  Days(date: 12, day: "WED"),
+  Days(date: 13, day: "THU"),
+  Days(date: 14, day: "FRI"),
+  Days(date: 15, day: "SAT"),
+  Days(date: 16, day: "SUN"),
+  Days(date: 17, day: "MON"),
+  Days(date: 18, day: "TUE"),
+  Days(date: 19, day: "WED"),
+  Days(date: 20, day: "THU"),
+  Days(date: 21, day: "FRI"),
+  Days(date: 22, day: "SAT"),
+  Days(date: 23, day: "SUN"),
+  Days(date: 24, day: "MON"),
+  Days(date: 25, day: "TUE"),
+  Days(date: 26, day: "WED"),
+  Days(date: 27, day: "THU"),
+  Days(date: 28, day: "FRI"),
+  Days(date: 29, day: "SAT"),
+  Days(date: 30, day: "SUN"),
 
-Widget circleIcon(String svgPath) {
+  /// next month
+  Days(date: 1, day: "MON"),
+  Days(date: 2, day: "TUE"),
+  Days(date: 3, day: "WED"),
+  Days(date: 4, day: "THU"),
+  Days(date: 5, day: "FRI"),
+  Days(date: 6, day: "SAT"),
+];
+Widget circleIcon(String svgPath, {bool showDot = false}) {
   return Container(
-    padding: const EdgeInsets.all(10),
-    decoration:  BoxDecoration(
+    padding: const EdgeInsets.all(5),
+    decoration: const BoxDecoration(
       color: Color(0xffCAD6FF),
       shape: BoxShape.circle,
     ),
-    child: SvgPicture.asset(
-      svgPath,
-      height: 20,
-      width: 20,
-      fit: BoxFit.fill,
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        SvgPicture.asset(
+          svgPath,
+          height: 20,
+          width: 20,
+        ),
+
+        if (showDot)
+          Positioned(
+            top: 1,
+            right: 1,
+            child: Container(
+              height: 6,
+              width: 6,
+              decoration:  BoxDecoration(
+                color: Color(0xff2260FF),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
     ),
   );
 }
@@ -198,3 +240,4 @@ Widget menuItem(String svgPath, String text) {
     ],
   );
 }
+

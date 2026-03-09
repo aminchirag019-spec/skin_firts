@@ -116,8 +116,7 @@ class LoginScreen_1 extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   loginRow(
-
-                    icons: [LoginRow(svgPath: "assets/images/finger_svg.svg",)],
+                    icons: [LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),)],
                   ),
                   SizedBox(height: 35),
                   Row(

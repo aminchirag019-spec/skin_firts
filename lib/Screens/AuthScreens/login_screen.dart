@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 200,
                     onPressed: () {
                       if (!formKey.currentState!.validate()) return;
-                      context.go(RouterName.loginScreen1.path);
+                      context.go(RouterName.fingerAuthenticationScreen.path);
                     },
                   ),
                   SizedBox(height: 10),
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         iconSize: 26,
                       ),
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
-                      LoginRow(svgPath: "assets/images/finger_svg.svg"),
+                      LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),),
                     ],
                   ),
                   SizedBox(height: 35),

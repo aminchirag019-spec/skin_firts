@@ -1,4 +1,4 @@
-import 'package:skin_firts/screens/authScreens/splash_screen.dart';
+
 
 enum RouterName {
   loginScreen('/LoginScreen','LoginScreen'),
@@ -7,6 +7,10 @@ enum RouterName {
   splashScreen('/SplashScreen','SplashScreen'),
   setPasswordScreen('/SetPasswordScreen','SetPasswordScreen'),
   homeScreen('/HomeScreen','HomeScreen'),
+  fingerAuthenticationScreen('/FingerAuthenticationScreen','FingerAuthenticationScreen'),
+  doctorScreen('/DoctorScreen','DoctorScreen'),
+  doctorInfoScreen('/DoctorInfoScreen','DoctorInfoScreen'),
+  appointmentScreen('/AppointmentScreen','AppointmentScreen'),
   welcomeScreen('/WelcomeScreen','WelcomeScreen');
 
 

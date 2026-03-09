@@ -181,7 +181,7 @@ class SignupScreen extends StatelessWidget {
                     textColor: Colors.white,
                     onPressed: () {
                       if (!formKey.currentState!.validate()) return;
-                      context.go(RouterName.loginScreen1.path);
+                      context.go(RouterName.fingerAuthenticationScreen.path);
                     },
                   ),
                   SizedBox(height: 10),
@@ -204,7 +204,7 @@ class SignupScreen extends StatelessWidget {
                     icons: [
                       LoginRow(svgPath: "assets/images/goole_svg.svg",iconSize: 26),
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
-                      LoginRow(svgPath: "assets/images/finger_svg.svg"),
+                      LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),),
                     ],
                   ),
                   SizedBox(height: 30),
