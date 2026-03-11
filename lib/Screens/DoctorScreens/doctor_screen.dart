@@ -56,11 +56,12 @@ class DoctorScreen extends StatelessWidget {
                             GestureDetector(
                               onTap: () async {
                                 context.read<DoctorScreenBloc>().add(
-                                  ApplyFilters(
-                                    filter: DoctorFilter.none
-                                  ),
+                                  ApplyFilters(filter: DoctorFilter.none),
                                 );
-                                context.read<DoctorScreenBloc>().add(FilterChangedEvent(-1));
+                                context.read<DoctorScreenBloc>().add(
+                                  FilterChangedEvent(-1),
+                                );
+                                context.read<DoctorScreenBloc>().add(TabEvent(isTab: true));
                               },
                               child: Container(
                                 width: 52,
@@ -145,7 +146,7 @@ class DoctorScreen extends StatelessWidget {
                                         style: GoogleFonts.leagueSpartan(
                                           color: state.isTab
                                               ? Colors.white
-                                              : const Color(0xff2260FF),
+                                              :  Color(0xff2260FF),
                                           fontWeight: FontWeight.w400,
                                           fontSize: 20,
                                         ),
@@ -155,7 +156,7 @@ class DoctorScreen extends StatelessWidget {
                                 ),
                               ),
 
-                              const SizedBox(width: 10),
+                               SizedBox(width: 10),
 
                               Expanded(
                                 child: GestureDetector(
@@ -202,118 +203,113 @@ class DoctorScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 8,
                                   ),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffCAD6FF).withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 40,
-                                          backgroundImage: item.image,
-                                        ),
-                                        SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              state.selectedFilter ==
-                                                      DoctorFilter.rating
-                                                  ? Row(
-                                                      children: [
-                                                        Container(
-                                                          height: 18,
-                                                          width: 18,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Color(
-                                                                  0xff2260FF,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      context.go(RouterName.doctorInfoScreen.path,extra: doctors[index]);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xffCAD6FF).withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: item.image,
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                state.selectedFilter ==
+                                                        DoctorFilter.rating
+                                                    ? Row(
+                                                        children: [
+                                                          Container(
+                                                            height: 18,
+                                                            width: 18,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Color(
+                                                                    0xff2260FF,
+                                                                  ),
                                                                 ),
+                                                            child: Image(
+                                                              image: AssetImage(
+                                                                "assets/images/qualification_badge_white.png",
                                                               ),
-                                                          child: Image(
-                                                            image: AssetImage(
-                                                              "assets/images/qualification_badge_white.png",
                                                             ),
                                                           ),
-                                                        ),
-                                                        SizedBox(width: 5),
-                                                        Text(
-                                                          "Professional Doctor",
-                                                          style:
-                                                              GoogleFonts.leagueSpartan(
-                                                                color: Color(
-                                                                  0xff2260FF,
+                                                          SizedBox(width: 5),
+                                                          Text(
+                                                            "Professional Doctor",
+                                                            style:
+                                                                GoogleFonts.leagueSpartan(
+                                                                  color: Color(
+                                                                    0xff2260FF,
+                                                                  ),
+                                                                  fontSize: 12,
                                                                 ),
-                                                                fontSize: 12,
-                                                              ),
-                                                        ),
-                                                        Spacer(),
-                                                        state.selectedFilter ==DoctorFilter.rating ?
-                                                        infoBadge(
-                                                          "assets/images/star_svg.svg",
-                                                          "${item.rating}",
-                                                        ): Container()
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                              SizedBox(height: 5),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 6,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      state.selectedFilter ==
-                                                          DoctorFilter.rating || state.selectedFilter == DoctorFilter.liked
-                                                      ? Colors.white
-                                                      : Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Flexible(
-                                                          child: Text(
-                                                            "${item.doctorName}, ",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: GoogleFonts.leagueSpartan(
-                                                              fontSize:
-                                                                  state.selectedFilter ==
-                                                                      DoctorFilter
-                                                                          .rating
-                                                                  ? 15
-                                                                  : 17,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: Color(
-                                                                0xff2260FF,
-                                                              ),
-                                                              height: 1,
-                                                            ),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          item.qualification,
-                                                          style:
-                                                              GoogleFonts.leagueSpartan(
-                                                                fontSize: 16,
+                                                          Spacer(),
+                                                          state.selectedFilter ==
+                                                                  DoctorFilter
+                                                                      .rating
+                                                              ? infoBadge(
+                                                                  "assets/images/star_svg.svg",
+                                                                  "${item.rating}",
+                                                                )
+                                                              : Container(),
+                                                        ],
+                                                      )
+                                                    : Container(),
+                                                SizedBox(height: 5),
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 6,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        state.selectedFilter ==
+                                                                DoctorFilter
+                                                                    .rating ||
+                                                            state.selectedFilter ==
+                                                                DoctorFilter.liked
+                                                        ? Colors.white
+                                                        : Colors.transparent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(15),
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Flexible(
+                                                            child: Text(
+                                                              "${item.doctorName}, ",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: GoogleFonts.leagueSpartan(
+                                                                fontSize:
+                                                                    state.selectedFilter ==
+                                                                        DoctorFilter
+                                                                            .rating
+                                                                    ? 15
+                                                                    : 17,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500,
@@ -322,165 +318,221 @@ class DoctorScreen extends StatelessWidget {
                                                                 ),
                                                                 height: 1,
                                                               ),
-                                                        ),
-                                                        state.selectedFilter == DoctorFilter.liked ?
-                                                        BlocBuilder<
-                                                            DoctorScreenBloc,
-                                                            DoctorScreenState
-                                                        >(
-                                                          builder: (context, state) {
-                                                            final doctor =
-                                                            state.doctors[index];
-
-                                                            return GestureDetector(
-                                                              onTap: () {
-                                                                context
-                                                                    .read<
-                                                                    DoctorScreenBloc
-                                                                >()
-                                                                    .add(
-                                                                  LikedEvent(
-                                                                    doctor.id,
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child: servicesOptions(
-                                                                icon: doctor.isLiked
-                                                                    ? Icons.favorite
-                                                                    : Icons
-                                                                    .favorite_border_outlined,
-                                                                size: state.selectedFilter == DoctorFilter.liked ? 18 : 15,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ) : Container()
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    Text(
-                                                      item.title,
-                                                      style:
-                                                          GoogleFonts.leagueSpartan(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            color:
-                                                                Colors.black87,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              state.selectedFilter == DoctorFilter.liked ?
-                                              SizedBox(height: 10) : SizedBox(height: 15,),
-                                  state.selectedFilter == DoctorFilter.liked ?
-                                  Container(
-                                    height: 25,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff2260FF),
-                                        borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: Center(child: Text("Make Appointment",style: GoogleFonts.leagueSpartan(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
-                                      height: 1,
-                                    ),))
-                                  )
-                                             : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () => context.go(
-                                                      RouterName
-                                                          .doctorInfoScreen
-                                                          .path,
-                                                    ),
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 15,
-                                                            vertical: 2,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: Color(
-                                                          0xff1B5FE0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
                                                             ),
+                                                          ),
+                                                          Text(
+                                                            item.qualification,
+                                                            style:
+                                                                GoogleFonts.leagueSpartan(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                    0xff2260FF,
+                                                                  ),
+                                                                  height: 1,
+                                                                ),
+                                                          ),
+                                                          state.selectedFilter ==
+                                                                  DoctorFilter
+                                                                      .liked
+                                                              ? BlocBuilder<
+                                                                  DoctorScreenBloc,
+                                                                  DoctorScreenState
+                                                                >(
+                                                                  builder: (context, state) {
+                                                                    final doctor =
+                                                                        state
+                                                                            .doctors[index];
+
+                                                                    return GestureDetector(
+                                                                      onTap: () {
+                                                                        context
+                                                                            .read<
+                                                                              DoctorScreenBloc
+                                                                            >()
+                                                                            .add(
+                                                                              LikedEvent(
+                                                                                doctor.id,
+                                                                              ),
+                                                                            );
+                                                                      },
+                                                                      child: servicesOptions(
+                                                                        icon:
+                                                                            doctor
+                                                                                .isLiked
+                                                                            ? Icons.favorite
+                                                                            : Icons.favorite_border_outlined,
+                                                                        size:
+                                                                            state.selectedFilter ==
+                                                                                DoctorFilter.liked
+                                                                            ? 18
+                                                                            : 15,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                )
+                                                              : Container(),
+                                                        ],
                                                       ),
-                                                      child: Text(
-                                                        "Info",
+                                                      SizedBox(height: 4),
+                                                      Text(
+                                                        item.title,
                                                         style:
                                                             GoogleFonts.leagueSpartan(
-                                                              fontSize: 18,
+                                                              fontSize: 14,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                                  FontWeight.w300,
                                                               color:
-                                                                  Colors.white,
+                                                                  Colors.black87,
                                                             ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
-                                                  SizedBox(width: 10),
-
-                                                  servicesOptions(
-                                                    icon: Icons.calendar_month,
-                                                    size: 15,
-                                                  ),
-                                                  SizedBox(width: 2),
-                                                  servicesOptions(
-                                                    icon: Icons.info_outline,
-                                                    size: 15,
-                                                  ),
-                                                  SizedBox(width: 2),
-                                                  servicesOptions(
-                                                    icon: Icons.question_mark,
-                                                    size: 15,
-                                                  ),
-                                                  BlocBuilder<
-                                                      DoctorScreenBloc,
-                                                      DoctorScreenState
-                                                  >(
-                                                    builder: (context, state) {
-                                                      final doctor =
-                                                      state.doctors[index];
-
-                                                      return GestureDetector(
-                                                        onTap: () {
-                                                          context
-                                                              .read<
-                                                              DoctorScreenBloc
-                                                          >()
-                                                              .add(
-                                                            LikedEvent(
-                                                              doctor.id,
-                                                            ),
-                                                          );
-                                                        },
-                                                        child: servicesOptions(
-                                                          icon: doctor.isLiked
-                                                              ? Icons.favorite
-                                                              : Icons
-                                                              .favorite_border_outlined,
-                                                          size: state.selectedFilter == DoctorFilter.liked ? 18 : 15,
+                                                ),
+                                                state.selectedFilter ==
+                                                        DoctorFilter.liked
+                                                    ? SizedBox(height: 10)
+                                                    : SizedBox(height: 15),
+                                                state.selectedFilter ==
+                                                        DoctorFilter.liked
+                                                    ? Container(
+                                                        height: 25,
+                                                        width: double.infinity,
+                                                        decoration: BoxDecoration(
+                                                          color: Color(
+                                                            0xff2260FF,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                20,
+                                                              ),
                                                         ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  SizedBox(width: 2),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Make Appointment",
+                                                            style:
+                                                                GoogleFonts.leagueSpartan(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  height: 1,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () => context.go(
+                                                              RouterName
+                                                                  .doctorInfoScreen
+                                                                  .path,
+                                                            ),
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        15,
+                                                                    vertical: 2,
+                                                                  ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                    color: Color(
+                                                                      0xff1B5FE0,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          20,
+                                                                        ),
+                                                                  ),
+                                                              child: Text(
+                                                                "Info",
+                                                                style: GoogleFonts.leagueSpartan(
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10),
 
-                                                ],
-                                              ),
-                                            ],
+                                                          servicesOptions(
+                                                            icon: Icons
+                                                                .calendar_month,
+                                                            size: 15,
+                                                          ),
+                                                          SizedBox(width: 2),
+                                                          servicesOptions(
+                                                            icon: Icons
+                                                                .info_outline,
+                                                            size: 15,
+                                                          ),
+                                                          SizedBox(width: 2),
+                                                          servicesOptions(
+                                                            icon: Icons
+                                                                .question_mark,
+                                                            size: 15,
+                                                          ),
+                                                          SizedBox(width: 2),
+                                                          BlocBuilder<
+                                                            DoctorScreenBloc,
+                                                            DoctorScreenState
+                                                          >(
+                                                            builder: (context, state) {
+                                                              final doctor = state
+                                                                  .doctors[index];
+
+                                                              return GestureDetector(
+                                                                onTap: () {
+                                                                  context
+                                                                      .read<
+                                                                        DoctorScreenBloc
+                                                                      >()
+                                                                      .add(
+                                                                        LikedEvent(
+                                                                          doctor
+                                                                              .id,
+                                                                        ),
+                                                                      );
+                                                                },
+                                                                child: servicesOptions(
+                                                                  icon:
+                                                                      doctor
+                                                                          .isLiked
+                                                                      ? Icons
+                                                                            .favorite
+                                                                      : Icons
+                                                                            .favorite_border_outlined,
+                                                                  size:
+                                                                      state.selectedFilter ==
+                                                                          DoctorFilter
+                                                                              .liked
+                                                                      ? 18
+                                                                      : 15,
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                          SizedBox(width: 2),
+                                                        ],
+                                                      ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -489,58 +541,28 @@ class DoctorScreen extends StatelessWidget {
                             ),
                           )
                         : Expanded(
-                            child: Column(
-                              children: [
-                                servicScreenOptions(
-                                  title: "Dermato-Endocrinology",
-                                ),
-                                SizedBox(height: 10,),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffCAD6FF),
-                                    borderRadius: BorderRadius.circular(15)
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 15),
+                                  ServiceDropdown(
+                                    title: "Dermato-Endocrinology",
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 13),
-                                    child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque congue lorem,"
-                                        " vel tincidunt tortor placerat a. Proin ac diam quam. Aenean in sagittis magna, ut feugiat diam.",
-                                      style: GoogleFonts.leagueSpartan(
-                                        height: 1,
-                                        fontSize: 14,
-                                        letterSpacing: -0.3
-                                      ),),
+                                  SizedBox(height: 15),
+                                  ServiceDropdown(
+                                    title: "Cosmetic Bioengineering",
                                   ),
-                                ),
-                                SizedBox(height: 10,),
-                                Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffCAD6FF),
-                                      borderRadius: BorderRadius.circular(15)
+                                  SizedBox(height: 15),
+                                  ServiceDropdown(title: "Dermato-Genetics"),
+                                  SizedBox(height: 15),
+                                  ServiceDropdown(title: "Solar Dermatology"),
+                                  SizedBox(height: 15),
+                                  ServiceDropdown(
+                                    title: "Dermato-Endocrinology",
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 13),
-                                    child: Center(
-                                      child: Text("looking doctors",
-                                        style: GoogleFonts.leagueSpartan(
-                                            height: 0.8,
-                                            fontSize: 20,
-                                            letterSpacing: -0.3,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff2260FF)
-                                        ),),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 15,),
-                                servicScreenOptions(title: "Cosmetic Bioengineering"),
-                                SizedBox(height: 15,),
-                                servicScreenOptions(title: "Solar Dermatology"),
-                                SizedBox(height: 15,),
-                                servicScreenOptions(title: "Dermato-Endocrinology"),
-
-
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                   ],
@@ -554,46 +576,126 @@ class DoctorScreen extends StatelessWidget {
   }
 }
 
-Widget servicScreenOptions({required String title}) {
-  return Container(
-    height: 55,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: Color(0xff2260FF),
-      borderRadius: BorderRadius.circular(30)
-    ),
-    child: Row(
+class ServiceDropdown extends StatefulWidget {
+  final String title;
+
+  const ServiceDropdown({super.key, required this.title});
+
+  @override
+  State<ServiceDropdown> createState() => _ServiceDropdownState();
+}
+
+class _ServiceDropdownState extends State<ServiceDropdown> {
+  bool isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
       children: [
-        SizedBox(width: 15,),
-        Icon(Icons.favorite, color: Colors.white),
-        SizedBox(width: 10,),
-        Text(
-          title,
-          style: GoogleFonts.leagueSpartan(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            height: 1,
-            letterSpacing: -0.1,
-            fontSize: 19,
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
+          child: Container(
+            height: 55,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color(0xff2260FF),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              children: [
+                SizedBox(width: 15),
+                Icon(Icons.favorite, color: Colors.white),
+                SizedBox(width: 10),
+
+                Text(
+                  widget.title,
+                  style: GoogleFonts.leagueSpartan(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    height: 1,
+                    letterSpacing: -0.1,
+                    fontSize: 19,
+                  ),
+                ),
+                Spacer(),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: Color(0xff2260FF),
+                    size: 30,
+                  ),
+                ),
+
+                SizedBox(width: 10),
+              ],
+            ),
           ),
         ),
-        Spacer(),
-        Container(
-            decoration:BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white
+        SizedBox(height: 10),
+        if (isExpanded) ...[
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xffCAD6FF),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: Icon(Icons.keyboard_arrow_down, color: Color(0xff2260FF),size: 30,)),
-        SizedBox(width: 10,)
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 13),
+            child: Text(
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+              " Praesent pellentesque congue lorem, vel tincidunt tortor placerat a. "
+              "Proin ac diam quam. Aenean in sagittis magna, ut feugiat diam.",
+              style: GoogleFonts.leagueSpartan(
+                height: 1,
+                fontSize: 14,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ),
+
+          SizedBox(height: 10),
+
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xffCAD6FF),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 13),
+            child: Center(
+              child: Text(
+                "Looking doctors",
+                style: GoogleFonts.leagueSpartan(
+                  height: 0.8,
+                  fontSize: 20,
+                  letterSpacing: -0.3,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff2260FF),
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
-    ),
-  );
+    );
+  }
 }
 
 Widget doctorsTopRow({required String text, required VoidCallback onPressed}) {
   return Row(
     children: [
-      Icon(Icons.arrow_back_ios, color: Color(0xff2260FF)),
+      GestureDetector(
+        onTap: onPressed,
+        child: Icon(Icons.arrow_back_ios, color: Color(0xff2260FF)),
+      ),
       SizedBox(width: 5),
       Expanded(
         child: Center(

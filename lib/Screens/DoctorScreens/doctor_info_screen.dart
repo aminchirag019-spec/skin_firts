@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Global/app_string.dart';
+import 'package:skin_firts/Global/dummy_data.dart';
 
 import '../../Global/coustom_widgets.dart';
 import '../../Router/router_class.dart';
@@ -9,8 +11,8 @@ import '../HomeScreen/home_screen.dart';
 import 'doctor_screen.dart';
 
 class DoctorInfoScreen extends StatelessWidget {
-  const DoctorInfoScreen({super.key});
-
+   DoctorInfoScreen({super.key,  this.data});
+final DummyData ?data;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -22,234 +24,296 @@ class DoctorInfoScreen extends StatelessWidget {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-            child: Column(
-              children: [
-                doctorsTopRow(
-                  text: "Doctor Info",
-                  onPressed: () => context.go(RouterName.doctorScreen.path),
-                ),
-                SizedBox(height: 10),
-                SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffC8D4F6),
-                    borderRadius: BorderRadius.circular(24),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  doctorsTopRow(
+                    text: "Doctor Info",
+                    onPressed: () {
+                      print("button pressed");
+                      context.go(RouterName.doctorScreen.path);
+                    }
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 65,
-                            backgroundImage: AssetImage(
-                              "assets/images/doctor_1.png",
+                  SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffC8D4F6),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 65,
+                              backgroundImage: data!.image,
                             ),
-                          ),
-                          SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff2260FF),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            height: 23,
-                                            width: 23,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                            ),
-                                            child: Center(
-                                              child: Image(
-                                                image: AssetImage(
-                                                  "assets/images/badge.png",
+                            SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 3,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff2260FF),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Container(
+                                              height: 23,
+                                              width: 23,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                              ),
+                                              child: Center(
+                                                child: Image(
+                                                  image: AssetImage(
+                                                    "assets/images/qualification_badge_blue.png"
+                                                  ),
+                                                  height: 15,
+                                                  width: 15,
                                                 ),
-                                                height: 15,
-                                                width: 15,
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: 8),
-                                      Column(
-                                        children: [
-                                          SizedBox(width: 6),
-                                          Text(
-                                            "15 years\nExperience",
-                                            style: GoogleFonts.leagueSpartan(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white,
-                                              height: 1,
+                                          ],
+                                        ),
+                                        SizedBox(width: 8),
+                                        Column(
+                                          children: [
+                                            SizedBox(width: 6),
+                                            Text(
+                                              "15 years\nExperience",
+                                              style: GoogleFonts.leagueSpartan(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white,
+                                                height: 1,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 3),
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff1B5FE0),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Text(
-                                    "Focus: The impact of hormonal imbalances "
-                                    "on skin conditions, specializing in acne, "
-                                    "hirsutism, and other skin disorders.",
-                                    style: GoogleFonts.leagueSpartan(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
-                                      letterSpacing: 0.5,
-                                      height: 0.9,
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Dr. Alexander Bennett, Ph.D.",
-                              style: GoogleFonts.leagueSpartan(
-                                fontSize: 19,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff2260FF),
-                                height: 1,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            Text(
-                              "Dermato-Genetics",
-                              style: GoogleFonts.leagueSpartan(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black,
-                                height: 1,
+                                  SizedBox(height: 3),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff1B5FE0),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child:RichText(
+                                      text: TextSpan(
+                                        style:
+                                        GoogleFonts.leagueSpartan(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w200,
+                                          color: Colors.white,
+                                          letterSpacing: 0.5,
+                                          height: 0.9,
+                                        ),
+                                        children: const [
+                                          TextSpan(
+                                            text: "Focus: ",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                            "The impact of hormonal imbalances on skin conditions, specializing in acne, hirsutism, and other skin disorders.",
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: 12),
-                      Row(
-                        children: [
-                          infoBadge("assets/images/star_svg.svg", "5", width: 50),
-                          SizedBox(width: 3),
-                          infoBadge(
-                            "assets/images/meesage_svg.svg",
-                            "50",
-                            width: 50,
+                        SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          SizedBox(width: 5),
-                          Container(
-                            width: 170,
-                            height: 22,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(width: 5),
-                                SvgPicture.asset(
-                                  "assets/images/alarm_svg.svg",
-                                  height: 16,
-                                  width: 16,
+                          child: Column(
+                            children: [
+                              Text(
+                                "${data!.doctorName.toString()},${data!.qualification}",
+                                style: GoogleFonts.leagueSpartan(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w500,
                                   color: Color(0xff2260FF),
+                                  height: 1,
+                                  letterSpacing: -0.3,
                                 ),
-                                SizedBox(width: 4),
-                                Text(
-                                  "Mon-Sat / 9:00AM - 5:00PM",
-                                  style: GoogleFonts.leagueSpartan(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w300,
-                                    letterSpacing: -0.5,
+                              ),
+                              Text(
+                                "Dermato-Genetics",
+                                style: GoogleFonts.leagueSpartan(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black,
+                                  height: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            infoBadge("assets/images/star_svg.svg", "5", width: 50),
+                            SizedBox(width: 3),
+                            infoBadge(
+                              "assets/images/meesage_svg.svg",
+                              "50",
+                              width: 50,
+                            ),
+                            SizedBox(width: 5),
+                            Container(
+                              width: 170,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(width: 5),
+                                  SvgPicture.asset(
+                                    "assets/images/alarm_svg.svg",
+                                    height: 16,
+                                    width: 16,
                                     color: Color(0xff2260FF),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "Mon-Sat / 9:00AM - 5:00PM",
+                                    style: GoogleFonts.leagueSpartan(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w300,
+                                      letterSpacing: -0.5,
+                                      color: Color(0xff2260FF),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Container(
-                            height: 30,
-                            width: 100
-                            ,decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(20),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Container(
+                              height: 30,
+                              width: 100
+                              ,decoration: BoxDecoration(
+                                color: Color(0xff2260FF),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.calendar_month,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    "Schedule",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.calendar_month,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                                SizedBox(width: 6),
-                                Text(
-                                  "Schedule",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
+                            Spacer(),
+                            servicesOptions(icon: Icons.info_outline, size: 18),
+                            SizedBox(width: 3),
+                            servicesOptions(icon: Icons.question_mark, size: 18),
+                            SizedBox(width: 3),
+                            servicesOptions(icon: Icons.star_outline, size: 18),
+                            SizedBox(width: 3),
+                            servicesOptions(
+                              icon: Icons.favorite_border_outlined,
+                              size: 18,
                             ),
-                          ),
-                          Spacer(),
-                          servicesOptions(icon: Icons.info_outline, size: 18),
-                          SizedBox(width: 2),
-                          servicesOptions(icon: Icons.question_mark, size: 18),
-                          SizedBox(width: 2),
-                          servicesOptions(icon: Icons.star_outline, size: 18),
-                          SizedBox(width: 2),
-                          servicesOptions(
-                            icon: Icons.favorite_border_outlined,
-                            size: 18,
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Text("Profile",
+                      style: GoogleFonts.leagueSpartan(
+                        fontSize: 16,
+                        color: Color(0xff2260FF),
+                        fontWeight: FontWeight.w500,
+                      ),),
                     ],
                   ),
-                ),
-                SizedBox(height: 20,),
-                Row(
-                  children: [
-                    Text("Profile"),
-                  ],
-                )
-              ],
+                  Text(
+                    data!.profileDetails.toString(),
+                    style: GoogleFonts.leagueSpartan(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      height: 1
+                    ),),
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Text("Career Path",
+                        style: GoogleFonts.leagueSpartan(
+                          fontSize: 16,
+                          color: Color(0xff2260FF),
+                          fontWeight: FontWeight.w500,
+                        ),),
+                    ],
+                  ),
+                  Text(data!.careerPath.toString(),
+                    style: GoogleFonts.leagueSpartan(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        height: 1
+                    ),),
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Text("highlights",
+                        style: GoogleFonts.leagueSpartan(
+                          fontSize: 16,
+                          color: Color(0xff2260FF),
+                          fontWeight: FontWeight.w500,
+                        ),),
+                    ],
+                  ),
+                  Text(data!.highlights.toString(),
+                    style: GoogleFonts.leagueSpartan(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        height: 1
+                    ),)
+                ],
+              ),
             ),
           ),
         ),

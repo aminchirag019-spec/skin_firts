@@ -49,11 +49,13 @@ Widget coustomTextField({
   String ? padding,
   double  h =14,
   double w = 10,
+  VoidCallback ? onTap,
 }) {
   return TextFormField(
     controller: controller,
     validator: validator,
     obscureText: obscureText,
+    onTap: onTap,
     decoration: InputDecoration(
       isCollapsed: true,
       alignLabelWithHint: true,

@@ -95,7 +95,7 @@ class LoginScreen_1 extends StatelessWidget {
                     backgroundColor: Color(0xff2260FF),
                     textColor: Colors.white,
                     onPressed: () {
-                      context.go(RouterName.setPasswordScreen.path);
+
                     },
                     width: 200,
                   ),

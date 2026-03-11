@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF5F7FB),
-      bottomNavigationBar: BottomNavBar(),
       body: SafeArea(
         bottom: false,
         child: Padding(
@@ -414,115 +413,120 @@ class _HomeScreenState extends State<HomeScreen> {
                               vertical: 5,
                               horizontal: 20,
                             ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xffCAD6FF).withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 34,
-                                    backgroundImage: item.image,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 300,
-                                          height: 38,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 5,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "${item.doctorName},${item.qualification}",
-                                                  style:
-                                                      GoogleFonts.leagueSpartan(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color: Color(
-                                                          0xff2260FF,
-                                                        ),
-                                                        height: 1,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  "${item.title}",
-                                                  style:
-                                                      GoogleFonts.leagueSpartan(
-                                                        fontSize: 13,
-                                                        color: Colors.black87,
-                                                        height: 0.9,
-                                                      ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Row(
-                                          children: [
-                                            infoBadge(
-                                              "assets/images/star_svg.svg",
-                                              "${item.rating}",
-                                            ),
-                                            SizedBox(width: 10),
-                                            infoBadge(
-                                              "assets/images/meesage_svg.svg",
-                                              "60",
-                                            ),
-                                            Spacer(),
-                                            _circleIcon(
-                                              Icons.question_mark,
-                                              isBlue: true,
-                                            ),
-                                            SizedBox(width: 5),
-                                            BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-                                              builder: (context, state) {
-
-                                                final doctor = state.doctors[index];
-
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    context.read<DoctorScreenBloc>().add(
-                                                      LikedEvent(doctor.id),
-                                                    );
-                                                  },
-                                                  child: _circleIcon(
-                                                    doctor.isLiked
-                                                        ? Icons.favorite
-                                                        : Icons.favorite_border,
-                                                    isBlue: true,
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ],
+                            child: GestureDetector(
+                              onTap: () {
+                                context.go(RouterName.doctorInfoScreen.path,extra:doctors[index]);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffCAD6FF).withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 34,
+                                      backgroundImage: item.image,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 300,
+                                            height: 38,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(
+                                                12,
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 5,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${item.doctorName},${item.qualification}",
+                                                    style:
+                                                        GoogleFonts.leagueSpartan(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Color(
+                                                            0xff2260FF,
+                                                          ),
+                                                          height: 1,
+                                                        ),
+                                                  ),
+                                                  Text(
+                                                    "${item.title}",
+                                                    style:
+                                                        GoogleFonts.leagueSpartan(
+                                                          fontSize: 13,
+                                                          color: Colors.black87,
+                                                          height: 0.9,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              infoBadge(
+                                                "assets/images/star_svg.svg",
+                                                "${item.rating}",
+                                              ),
+                                              SizedBox(width: 10),
+                                              infoBadge(
+                                                "assets/images/meesage_svg.svg",
+                                                "60",
+                                              ),
+                                              Spacer(),
+                                              _circleIcon(
+                                                Icons.question_mark,
+                                                isBlue: true,
+                                              ),
+                                              SizedBox(width: 5),
+                                              BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                                                builder: (context, state) {
+
+                                                  final doctor = state.doctors[index];
+
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      context.read<DoctorScreenBloc>().add(
+                                                        LikedEvent(doctor.id),
+                                                      );
+                                                    },
+                                                    child: _circleIcon(
+                                                      doctor.isLiked
+                                                          ? Icons.favorite
+                                                          : Icons.favorite_border,
+                                                      isBlue: true,
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

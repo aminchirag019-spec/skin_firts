@@ -29,6 +29,10 @@ class AppString {
   static const numberExample =  "+91 0000000000";
   static const dobExample =  "DD / MM /YYY";
   static const nameExample =  "Enter Your Name";
+  static const alexander =  "Dr. Alexander Bennett";
+  static const michael =  "Dr. Michael Davidson";
+  static const olivia =  "Dr. Olivia Turner";
+  static const martinez =  "Dr. Guru Martinez";
 }
 
 

@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
+import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
+import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
+import 'package:skin_firts/Screens/widgets/bottom_nav_bar.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/finger_authentication.dart';
 import 'package:skin_firts/screens/authScreens/login_Screen_!.dart';
@@ -10,10 +14,12 @@ import 'package:skin_firts/screens/authScreens/splash_screen.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 
+import '../Global/dummy_data.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
+import '../Screens/CalenderScreen/calender_screen.dart';
 
 final GoRouter app_router = GoRouter(
-  initialLocation: RouterName.homeScreen.path,
+  initialLocation: RouterName.welcomeScreen.path,
   routes: [
     GoRoute(
       path: RouterName.splashScreen.path,
@@ -39,20 +45,65 @@ final GoRouter app_router = GoRouter(
       path: RouterName.setPasswordScreen.path,
       builder: (context, state) => SetPasswordScreen(),
     ),
-    GoRoute(
-      path: RouterName.homeScreen.path,
-      builder: (context, state) => HomeScreen(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return BottomNavBar(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouterName.homeScreen.path,
+              builder: (context, state) => HomeScreen(),
+            ),
+            GoRoute(
+              path: RouterName.doctorScreen.path,
+              builder: (context, state) => DoctorScreen(),
+            ),
+            GoRoute(
+              path: RouterName.doctorInfoScreen.path,
+              builder: (context, state) {
+                final data = state.extra;
+
+                if (data is DummyData) {
+                  return DoctorInfoScreen(data: data);
+                }
+                return const Scaffold(
+                  body: Center(child: Text("Doctor data missing")),
+                );
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouterName.messageScreen.path,
+              builder: (context, state) => MessageScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouterName.profileScreen.path,
+              builder: (context, state) => ProfileScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouterName.calenderScreen.path,
+              builder: (context, state) => CalenderScreen(),
+            ),
+          ],
+        ),
+      ],
     ),
     GoRoute(
       path: RouterName.fingerAuthenticationScreen.path,
       builder: (context, state) => FingerAuthentication(),
     ),
-    GoRoute(
-      path: RouterName.doctorScreen.path,
-      builder: (context, state) => DoctorScreen(),
-    ),
-    GoRoute(path: RouterName.doctorInfoScreen.path,
-    builder: (context, state) => DoctorInfoScreen(),
-    )
   ],
 );

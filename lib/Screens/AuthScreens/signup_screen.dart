@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
+import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Data/auth_model.dart';
+import '../../Utilities/sharedpref_helper.dart';
 import '../../router/router_class.dart';
 import 'login_screen.dart';
 
@@ -21,7 +26,7 @@ class SignupScreen extends StatelessWidget {
     TextEditingController dobController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
     return WillPopScope(
-      onWillPop: ()async {
+      onWillPop: () async {
         context.go(RouterName.loginScreen.path);
         return false;
       },
@@ -33,9 +38,13 @@ class SignupScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  topRow(context, onPressed: () {
-                    context.go(RouterName.loginScreen.path);
-                  }, text: "New Account"),
+                  topRow(
+                    context,
+                    onPressed: () {
+                      context.go(RouterName.loginScreen.path);
+                    },
+                    text: "New Account",
+                  ),
                   SizedBox(height: 10),
                   Row(
                     children: [
@@ -70,7 +79,12 @@ class SignupScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        coustomTextField(hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
+                        coustomTextField(
+                          hintText: "••••••••",
+                          obscureText: true,
+                          controller: passwordController,
+                          image: AssetImage("assets/images/obsecure_image.png"),
+                        ),
                         SizedBox(height: 12),
                         Row(
                           children: [
@@ -102,8 +116,9 @@ class SignupScreen extends StatelessWidget {
                           ],
                         ),
                         coustomTextField(
-                          hintText:AppString.numberExample,
-                          h: 16,w: 13,
+                          hintText: AppString.numberExample,
+                          h: 16,
+                          w: 13,
                           controller: phoneController,
                           size: 18,
                         ),
@@ -124,7 +139,20 @@ class SignupScreen extends StatelessWidget {
                           isBold: true,
                           controller: dobController,
                           size: 20,
-                        ),
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime(2000),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            );
+
+                            if (pickedDate != null) {
+                              dobController.text =
+                              "${pickedDate.day}/${pickedDate
+                                  .month}/${pickedDate.year}";
+                            }
+                          } ),
                         SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -174,16 +202,48 @@ class SignupScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10),
-                  customButton(
-                    text: AppString.signUp,
-                    backgroundColor: Color(0xff2260FF),
-                    width: 210,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      if (!formKey.currentState!.validate()) return;
+                BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state.signupStatus == SignupStatus.success) {
                       context.go(RouterName.fingerAuthenticationScreen.path);
-                    },
-                  ),
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.signupStatus == SignupStatus.loading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return customButton(
+                      text: AppString.signUp,
+                      backgroundColor: const Color(0xff2260FF),
+                      width: 210,
+                      textColor: Colors.white,
+                      onPressed: () async{
+                        if (!formKey.currentState!.validate()) return;
+                        context.read<AuthBloc>().add(
+                          SignUpEvent(
+                            signupModel: SignupModel(
+                              email: emailController.text,
+                              password: passwordController.text,
+                              name: nameController.text,
+                              dob: dobController.text,
+                              phone: phoneController.text,
+                            ),
+                          ),
+                        );
+                        String? userId = await SharedPrefsHelper.getUserId();
+
+                        if (userId != null) {
+                          await SharedPrefsHelper.setBiometricEnabled(true, userId);
+                          print("true");
+                        }
+
+                      },
+                    );
+                  },
+                ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -202,9 +262,17 @@ class SignupScreen extends StatelessWidget {
                   SizedBox(height: 8),
                   loginRow(
                     icons: [
-                      LoginRow(svgPath: "assets/images/goole_svg.svg",iconSize: 26),
+                      LoginRow(
+                        svgPath: "assets/images/goole_svg.svg",
+                        iconSize: 26,
+                      ),
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
-                      LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),),
+                      LoginRow(
+                        svgPath: "assets/images/finger_svg.svg",
+                        onTap: () => context.go(
+                          RouterName.fingerAuthenticationScreen.path,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 30),

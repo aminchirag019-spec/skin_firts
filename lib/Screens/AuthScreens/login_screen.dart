@@ -1,13 +1,17 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/router/router_class.dart';
-import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
+import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Data/auth_model.dart';
 import '../../global/coustom_widgets.dart';
 
 String? validateEmail(String? value) {
@@ -16,14 +20,12 @@ String? validateEmail(String? value) {
   }
   return null;
 }
-
 String? validatePassword(String? value) {
   if (value == null || value.trim().isEmpty) {
     return "Please enter your password";
   }
   return null;
 }
-
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
@@ -120,7 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         SizedBox(height: 5),
-                       coustomTextField(hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
+                        coustomTextField(
+                          hintText: "••••••••",
+                          image: AssetImage("assets/images/obsecure_image.png"),
+                        ),
                         SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -145,14 +150,51 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(height: 30),
-                  customButton(
-                    text: AppString.logIn,
-                    backgroundColor: Color(0xff2260FF),
-                    textColor: Colors.white,
-                    width: 200,
-                    onPressed: () {
-                      if (!formKey.currentState!.validate()) return;
-                      context.go(RouterName.fingerAuthenticationScreen.path);
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state.loginStatus == LoginStatus.success) {
+                        context.go(RouterName.homeScreen.path);
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state.loginStatus == LoginStatus.loading) {
+                        return  Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return customButton(
+                        text: AppString.logIn,
+                        backgroundColor:  Color(0xff2260FF),
+                        textColor: Colors.white,
+                        width: 200,
+                        onPressed: () async {
+                          if (!formKey.currentState!.validate()) return;
+
+                          String? userId = await SharedPrefsHelper.getUserId();
+
+                          if (userId != null) {
+
+                            bool? biometricEnabled =
+                            await SharedPrefsHelper.getBiometricEnabled(userId);
+
+                            if (biometricEnabled == true) {
+                              context.read<AuthBloc>().add(BiometricLoginEvent());
+                              return;
+                            }
+                          }
+
+                          context.read<AuthBloc>().add(
+                            LoginEvent(
+                              loginModel: LoginModel(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            ),
+                          );
+                          print(userId);
+                          print(emailController);
+                        },
+                      );
                     },
                   ),
                   SizedBox(height: 10),
@@ -178,7 +220,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         iconSize: 26,
                       ),
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
-                      LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),),
+                      LoginRow(
+                        svgPath: "assets/images/finger_svg.svg",
+                        onTap: () => context.go(
+                          RouterName.fingerAuthenticationScreen.path,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 35),

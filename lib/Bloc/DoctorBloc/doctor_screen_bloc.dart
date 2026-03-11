@@ -24,6 +24,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
        Emitter<DoctorScreenState> emit,
        ) {
      int index = allDoctors.indexWhere((doctor) => doctor.id == event.doctorId);
+
      if (index != -1) {
        final doctor = allDoctors[index];
 
@@ -31,15 +32,37 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
          isLiked: !doctor.isLiked,
        );
      }
-     final likedDoctors = allDoctors.where((d) => d.isLiked).toList();
-     List<DummyData> filteredDoctors =
-     state.selectedFilter == DoctorFilter.liked
-         ? likedDoctors
-         : List.from(allDoctors);
+
+     List<DummyData> filteredDoctors = List.from(allDoctors);
+
+     switch (state.selectedFilter) {
+       case DoctorFilter.rating:
+         filteredDoctors.sort((a, b) => b.rating.compareTo(a.rating));
+         break;
+
+       case DoctorFilter.liked:
+         filteredDoctors = allDoctors.where((d) => d.isLiked).toList();
+         break;
+
+       case DoctorFilter.female:
+         filteredDoctors =
+             allDoctors.where((d) => d.gender == "Female").toList();
+         break;
+
+       case DoctorFilter.male:
+         filteredDoctors =
+             allDoctors.where((d) => d.gender == "Male").toList();
+         break;
+
+       case DoctorFilter.none:
+       default:
+         filteredDoctors = List.from(allDoctors);
+     }
+
      emit(
        state.copyWith(
          doctors: filteredDoctors,
-         likedDoctors: likedDoctors,
+         likedDoctors: allDoctors.where((d) => d.isLiked).toList(),
        ),
      );
    }
