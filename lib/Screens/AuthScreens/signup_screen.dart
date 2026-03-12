@@ -233,12 +233,6 @@ class SignupScreen extends StatelessWidget {
                             ),
                           ),
                         );
-                        String? userId = await SharedPrefsHelper.getUserId();
-
-                        if (userId != null) {
-                          await SharedPrefsHelper.setBiometricEnabled(true, userId);
-                          print("true");
-                        }
 
                       },
                     );

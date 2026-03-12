@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
+import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
+import 'package:skin_firts/Screens/ProfileScreen/setting_screen.dart';
 import 'package:skin_firts/Screens/widgets/bottom_nav_bar.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/finger_authentication.dart';
@@ -19,7 +22,7 @@ import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/CalenderScreen/calender_screen.dart';
 
 final GoRouter app_router = GoRouter(
-  initialLocation: RouterName.welcomeScreen.path,
+  initialLocation: RouterName.splashScreen.path,
   routes: [
     GoRoute(
       path: RouterName.splashScreen.path,
@@ -63,14 +66,8 @@ final GoRouter app_router = GoRouter(
             GoRoute(
               path: RouterName.doctorInfoScreen.path,
               builder: (context, state) {
-                final data = state.extra;
-
-                if (data is DummyData) {
+                final data = state.extra as AddDoctor;
                   return DoctorInfoScreen(data: data);
-                }
-                return const Scaffold(
-                  body: Center(child: Text("Doctor data missing")),
-                );
               },
             ),
           ],
@@ -105,5 +102,12 @@ final GoRouter app_router = GoRouter(
       path: RouterName.fingerAuthenticationScreen.path,
       builder: (context, state) => FingerAuthentication(),
     ),
+    GoRoute(
+      path: RouterName.settingScreen.path,
+      builder: (context, state) => SettingScreen(),
+    ),
+    GoRoute(path: RouterName.addDoctorScreen.path,
+    builder: (context, state) => AddDoctorScreen(),
+    )
   ],
 );

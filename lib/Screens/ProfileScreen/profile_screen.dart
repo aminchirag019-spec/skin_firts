@@ -20,111 +20,118 @@ class ProfileScreen extends StatelessWidget {
       },
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-            child: Column(
-              children: [
-                topRow(
-                  context,
-                  onPressed: () => context.go(RouterName.homeScreen.path),
-                  text: "My Profile",
-                ),
-                SizedBox(height: 10),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: AssetImage(
-                          "assets/images/doctor_1.png",
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+              child: Column(
+                children: [
+                  topRow(
+                    context,
+                    onPressed: () => context.go(RouterName.homeScreen.path),
+                    text: "My Profile",
+                  ),
+                  SizedBox(height: 10),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: AssetImage(
+                            "assets/images/doctor_1.png",
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      right: 3,
-                      bottom: 8,
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xff2260FF),
-                        ),
-                        child: Image(
-                          image: AssetImage("assets/images/pen.png"),
+                      Positioned(
+                        right: 3,
+                        bottom: 8,
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xff2260FF),
+                          ),
+                          child: Image(
+                            image: AssetImage("assets/images/pen.png"),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "John Doe",
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "John Doe",
+                        style: GoogleFonts.leagueSpartan(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/user_icon.png"),
-                  title: "Profile",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/heart_outlined.png"),
-                  title: "Favourite",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/wallet_icon.png"),
-                  title: "Payment Method",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/lock_icon.png"),
-                  title: "Privacy Policy",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/profile_setting.png"),
-                  title: "Setting",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                ProfileOptionTile(
-                  image: AssetImage("assets/images/question_icon.png"),
-                  title: "Help",
-                  onTap: () {},
-                ),
-                SizedBox(height: 15),
-                BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if(state.loginStatus == LoginStatus.initial) {
-                      context.go(RouterName.welcomeScreen.path);
-                    }
-                  },
-                  builder: (context, state) {
-                    return ProfileOptionTile(
-                      image: AssetImage("assets/images/logout_icon.png"),
-                      title: "Logout",
-                      onTap: () {
-                        context.read<AuthBloc>().add(LogoutEvent());
-                      },
-                    );
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/user_icon.png"),
+                    title: "Profile",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/heart_outlined.png"),
+                    title: "Favourite",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/wallet_icon.png"),
+                    title: "Payment Method",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/lock_icon.png"),
+                    title: "Privacy Policy",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/profile_setting.png"),
+                    title: "Setting",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(
+                    image: AssetImage("assets/images/question_icon.png"),
+                    title: "Help",
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 15),
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if(state.loginStatus == LoginStatus.logout) {
+                        context.go(RouterName.welcomeScreen.path);
+                      }
+                    },
+                    builder: (context, state) {
+                      return ProfileOptionTile(
+                        image: AssetImage("assets/images/logout_icon.png"),
+                        title: "Logout",
+                        onTap: () {
+                          context.read<AuthBloc>().add(LogoutEvent());
+                        },
+                      );
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  ProfileOptionTile(image: AssetImage("assets/images/plus_icon.png"), title: "Add Doctor", onTap: () {
+                    context.go(RouterName.addDoctorScreen.path);
+                  },)
+                ],
+              ),
             ),
           ),
         ),

@@ -22,64 +22,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<BiometricLoginEvent>(_onBiometricLoginEvent);
     on<AskBiometricEvent>(_onAskbiometric);
     on<LogoutEvent>(_onLogoutEvent);
+    on<LoadCurrentUser>(_onLoadCurrentUser);
+  }
+
+  void _onLoadCurrentUser(LoadCurrentUser event, Emitter<AuthState> emit) async{
+    final user =await repository.getCurrentUserDetails();
+
+    emit(state.copyWith(currentUser: user));
+
   }
 
   void _onLogoutEvent(LogoutEvent event, Emitter<AuthState> emit) async {
+    String? userId = await SharedPrefsHelper.getUserId();
+
     await AuthRepository().logout();
 
-    emit(state.copyWith(loginStatus: LoginStatus.initial));
+    if (userId != null) {
+      await SharedPrefsHelper.logout(userId);
+    }
+
+    emit(state.copyWith(loginStatus: LoginStatus.logout));
   }
-
   void _onAskbiometric(AskBiometricEvent event, Emitter<AuthState> emit) async {
-    try {
-      String? userId = await SharedPrefsHelper.getUserId();
 
-      if (userId == null) {
-        emit(state.copyWith(biometricStatus: BiometricStatus.skip));
-        return;
-      }
+    String? userId = await SharedPrefsHelper.getUserId();
 
-      bool? enabled = await SharedPrefsHelper.getBiometricEnabled(userId);
+    if (userId == null) {
+      emit(state.copyWith(biometricStatus: BiometricStatus.skip));
+      return;
+    }
 
-      if (enabled == null) {
-        bool authenticated = await biometricAuthService.authenticate();
+    bool? enabled = await SharedPrefsHelper.getBiometricEnabled(userId);
 
-        if (authenticated) {
-          await SharedPrefsHelper.setBiometricEnabled(true, userId);
-
-          emit(state.copyWith(biometricStatus: BiometricStatus.enabled));
-        } else {
-          await SharedPrefsHelper.setBiometricEnabled(false, userId);
-
-          emit(state.copyWith(biometricStatus: BiometricStatus.skip));
-        }
-      }
-      /// Biometric already enabled
-      else if (enabled == true) {
-        bool authenticated = await biometricAuthService.authenticate();
-
-        if (authenticated) {
-          emit(state.copyWith(biometricStatus: BiometricStatus.enabled));
-        } else {
-          emit(state.copyWith(biometricStatus: BiometricStatus.skip));
-        }
-      }
-      /// User skipped biometric
-      else {
-        emit(state.copyWith(biometricStatus: BiometricStatus.skip));
-      }
-    } catch (e) {
-      print("Biometric Error: $e");
-
+    if (enabled == null) {
+      emit(state.copyWith(biometricStatus: BiometricStatus.initial));
+    }
+    else if (enabled == true) {
+      emit(state.copyWith(biometricStatus: BiometricStatus.enabled));
+    }
+    else {
       emit(state.copyWith(biometricStatus: BiometricStatus.skip));
     }
   }
 
+
   void _onBiometricLoginEvent(
-    BiometricLoginEvent event,
-    Emitter<AuthState> emit,
-  ) async {
-    print("Event Received");
+      BiometricLoginEvent event,
+      Emitter<AuthState> emit,
+      ) async {
+
     try {
       bool isAuthenticated = await biometricAuthService.authenticate();
 
@@ -87,30 +78,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(
           state.copyWith(
             biometricStatus: BiometricStatus.enabled,
-            loginStatus: LoginStatus.success,
           ),
         );
       } else {
         emit(
           state.copyWith(
             biometricStatus: BiometricStatus.skip,
-            loginStatus: LoginStatus.success,
           ),
         );
       }
+
     } catch (e) {
-      print("-------------------------${e}");
       emit(state.copyWith(biometricStatus: BiometricStatus.skip));
     }
   }
-
   void _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(loginStatus: LoginStatus.loading));
+
     try {
       await repository.login(loginModel: event.loginModel);
+
+      String? userId = await SharedPrefsHelper.getUserId();
+
+      bool? biometricEnabled;
+
+      if (userId != null) {
+        biometricEnabled =
+        await SharedPrefsHelper.getBiometricEnabled(userId);
+      }
+
       emit(
         state.copyWith(
           loginStatus: LoginStatus.success,
+          biometricStatus: biometricEnabled == null
+              ? BiometricStatus.initial
+              : biometricEnabled
+              ? BiometricStatus.enabled
+              : BiometricStatus.skip,
           loginModel: event.loginModel,
         ),
       );
@@ -118,7 +122,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(loginStatus: LoginStatus.failure));
     }
   }
-
   void _onSignUpEvent(SignUpEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(signupStatus: SignupStatus.loading));
 

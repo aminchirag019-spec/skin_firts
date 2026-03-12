@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,8 @@ import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
+
+import '../../Utilities/sharedpref_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,10 +23,27 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     startSplash();
   }
-  void startSplash() {
-    Timer(const Duration(seconds: 5), () {
-      context.go(RouterName.welcomeScreen.path);
-    });
+
+  void startSplash() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    final user = await FirebaseAuth.instance.authStateChanges().first;
+
+    if (!mounted) return;
+
+    if (user == null) {
+      context.go(RouterName.loginScreen.path);
+      return;
+    }
+
+    bool biometricEnabled =
+        await SharedPrefsHelper.getBiometricEnabled(user.uid) ?? false;
+
+    if (biometricEnabled) {
+      context.go(RouterName.fingerAuthenticationScreen.path);
+    } else {
+      context.go(RouterName.loginScreen.path);
+    }
   }
   @override
   Widget build(BuildContext context) {

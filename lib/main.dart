@@ -8,8 +8,6 @@ import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
-import 'package:skin_firts/screens/authScreens/splash_screen.dart';
-import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
 import 'Utilities/bio_metric.dart';
 
@@ -22,7 +20,7 @@ void main() async{
     SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)),
   );
   runApp(MultiBlocProvider(providers: [
-    BlocProvider(create: (context) => DoctorScreenBloc()),
+    BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper()))
   ], child: MyApp()));
 }

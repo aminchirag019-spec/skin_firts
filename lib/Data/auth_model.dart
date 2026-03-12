@@ -29,11 +29,27 @@ class SignupModel {
     );
   }
 
+  /// Model → JSON (save to Firestore)
   Map<String, dynamic> toJson() {
-    return {"email": email, "password": password, "name": name};
+    return {
+      "email": email,
+      "name": name,
+      "phone": phone,
+      "dob": dob,
+    };
+  }
+
+  /// JSON → Model (read from Firestore)
+  factory SignupModel.fromJson(Map<String, dynamic> json) {
+    return SignupModel(
+      email: json["email"] ?? "",
+      password: "", // password should not come from Firestore
+      name: json["name"] ?? "",
+      phone: json["phone"] ?? "",
+      dob: json["dob"] ?? "",
+    );
   }
 }
-
 
 class LoginModel {
   final String email;

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Global/app_string.dart';
 import 'package:skin_firts/Global/dummy_data.dart';
 
+import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Global/coustom_widgets.dart';
 import '../../Router/router_class.dart';
 import '../HomeScreen/home_screen.dart';
@@ -12,7 +16,7 @@ import 'doctor_screen.dart';
 
 class DoctorInfoScreen extends StatelessWidget {
    DoctorInfoScreen({super.key,  this.data});
-final DummyData ?data;
+   final AddDoctor? data;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -20,7 +24,9 @@ final DummyData ?data;
         context.go(RouterName.doctorScreen.path);
         return false;
       },
-      child: Scaffold(
+      child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+  builder: (context, state) {
+    return Scaffold(
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
@@ -49,7 +55,8 @@ final DummyData ?data;
                           children: [
                             CircleAvatar(
                               radius: 65,
-                              backgroundImage: data!.image,
+                              backgroundColor: Colors.white,
+                              backgroundImage: AssetImage("assets/images/user_image.png"),
                             ),
                             SizedBox(width: 14),
                             Expanded(
@@ -92,7 +99,7 @@ final DummyData ?data;
                                           children: [
                                             SizedBox(width: 6),
                                             Text(
-                                              "15 years\nExperience",
+                                              data!.experience.toString(),
                                               style: GoogleFonts.leagueSpartan(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
@@ -122,14 +129,13 @@ final DummyData ?data;
                                           letterSpacing: 0.5,
                                           height: 0.9,
                                         ),
-                                        children: const [
+                                        children:  [
                                           TextSpan(
                                             text: "Focus: ",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                           TextSpan(
-                                            text:
-                                            "The impact of hormonal imbalances on skin conditions, specializing in acne, hirsutism, and other skin disorders.",
+                                            text:data!.description.toString(),
                                           ),
                                         ],
                                       ),
@@ -161,7 +167,7 @@ final DummyData ?data;
                                 ),
                               ),
                               Text(
-                                "Dermato-Genetics",
+                                data!.specialization.toString(),
                                 style: GoogleFonts.leagueSpartan(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w300,
@@ -268,14 +274,18 @@ final DummyData ?data;
                       ),),
                     ],
                   ),
-                  Text(
-                    data!.profileDetails.toString(),
-                    style: GoogleFonts.leagueSpartan(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      height: 1
-                    ),),
+                  Row(
+                    children: [
+                      Text(
+                        data!.profile.toString(),
+                        style: GoogleFonts.leagueSpartan(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          height: 1
+                        ),),
+                    ],
+                  ),
                   SizedBox(height: 20,),
                   Row(
                     children: [
@@ -287,13 +297,17 @@ final DummyData ?data;
                         ),),
                     ],
                   ),
-                  Text(data!.careerPath.toString(),
-                    style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        height: 1
-                    ),),
+                  Row(
+                    children: [
+                      Text(data!.careerPath.toString(),
+                        style: GoogleFonts.leagueSpartan(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            height: 1
+                        ),),
+                    ],
+                  ),
                   SizedBox(height: 20,),
                   Row(
                     children: [
@@ -305,19 +319,25 @@ final DummyData ?data;
                         ),),
                     ],
                   ),
-                  Text(data!.highlights.toString(),
-                    style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        height: 1
-                    ),)
+                  Row(
+                    children: [
+                      Text(data!.highlights.toString(),
+                        style: GoogleFonts.leagueSpartan(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            height: 1
+                        ),),
+                    ],
+                  )
                 ],
               ),
             ),
           ),
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

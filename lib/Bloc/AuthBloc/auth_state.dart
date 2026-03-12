@@ -7,7 +7,7 @@ class AuthState extends Equatable {
   final SignupModel? signupModel;
   final LoginModel? loginModel;
   final BiometricStatus? biometricStatus;
-
+  final SignupModel? currentUser;
 
   const AuthState({
     this.loginStatus = LoginStatus.initial,
@@ -15,6 +15,7 @@ class AuthState extends Equatable {
     this.biometricStatus = BiometricStatus.initial,
     this.signupModel,
     this.loginModel,
+    this.currentUser,
   });
 
   AuthState copyWith({
@@ -23,6 +24,7 @@ class AuthState extends Equatable {
     SignupModel? signupModel,
     LoginModel? loginModel,
     BiometricStatus? biometricStatus,
+    SignupModel? currentUser,
   }) {
     return AuthState(
       loginStatus: loginStatus ?? this.loginStatus,
@@ -30,6 +32,7 @@ class AuthState extends Equatable {
       signupModel: signupModel ?? this.signupModel,
       loginModel: loginModel ?? this.loginModel,
       biometricStatus: biometricStatus ?? this.biometricStatus,
+      currentUser: currentUser ?? this.currentUser,
     );
   }
 
@@ -39,6 +42,7 @@ class AuthState extends Equatable {
     signupStatus,
     signupModel,
     loginModel,
-    biometricStatus
+    biometricStatus,
+    currentUser,
   ];
 }

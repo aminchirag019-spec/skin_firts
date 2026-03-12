@@ -17,3 +17,6 @@ class BiometricLoginEvent extends AuthEvent {}
 class AskBiometricEvent extends AuthEvent {}
 
 class LogoutEvent extends AuthEvent {}
+class LoadCurrentUser extends AuthEvent{
+
+}

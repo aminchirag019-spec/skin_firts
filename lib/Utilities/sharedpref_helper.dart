@@ -52,11 +52,12 @@ class SharedPrefsHelper {
 
     return prefs.getString("userId");
   }
-  static Future<void> logout() async {
+  static Future<void> logout(String userId) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.remove(PrefKeys.isLoggedIn);
     await prefs.remove(PrefKeys.loginId);
+    await prefs.remove("biometricEnabled_$userId");
     await prefs.remove(PrefKeys.accessToken);
     await prefs.remove(PrefKeys.checkToken);
   }

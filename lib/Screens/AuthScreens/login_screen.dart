@@ -36,12 +36,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     return WillPopScope(
       onWillPop: () async {
         context.go(RouterName.welcomeScreen.path);
@@ -151,10 +151,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 30),
                   BlocConsumer<AuthBloc, AuthState>(
-                    listener: (context, state) {
+                    listener: (context, state) async {
+
                       if (state.loginStatus == LoginStatus.success) {
+
+                        String? userId = await SharedPrefsHelper.getUserId();
+
+                        if (userId != null) {
+
+                          bool? biometricEnabled =
+                          await SharedPrefsHelper.getBiometricEnabled(userId);
+
+                          if (biometricEnabled == true) {
+                            context.go(RouterName.fingerAuthenticationScreen.path);
+
+                          }
+                          else if (biometricEnabled == null) {
+                            context.go(RouterName.fingerAuthenticationScreen.path);
+                          }
+                          else {
+                            context.go(RouterName.fingerAuthenticationScreen.path);
+                          }
+                        }
+                      }
+
+                      if (state.biometricStatus == BiometricStatus.skip) {
                         context.go(RouterName.homeScreen.path);
                       }
+
                     },
                     builder: (context, state) {
                       if (state.loginStatus == LoginStatus.loading) {
@@ -169,20 +193,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 200,
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
-
-                          String? userId = await SharedPrefsHelper.getUserId();
-
-                          if (userId != null) {
-
-                            bool? biometricEnabled =
-                            await SharedPrefsHelper.getBiometricEnabled(userId);
-
-                            if (biometricEnabled == true) {
-                              context.read<AuthBloc>().add(BiometricLoginEvent());
-                              return;
-                            }
-                          }
-
                           context.read<AuthBloc>().add(
                             LoginEvent(
                               loginModel: LoginModel(
@@ -191,8 +201,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           );
-                          print(userId);
-                          print(emailController);
                         },
                       );
                     },
