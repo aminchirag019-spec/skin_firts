@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/global/app_string.dart';
@@ -8,7 +9,10 @@ import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
+import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Global/enums.dart';
 import '../../Utilities/sharedpref_helper.dart';
+import '../../Utilities/media_query.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,7 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void startSplash() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    final user = await FirebaseAuth.instance.authStateChanges().first;
+    final user = await FirebaseAuth.instance
+        .authStateChanges()
+        .first;
 
     if (!mounted) return;
 
@@ -35,46 +41,62 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(RouterName.loginScreen.path);
       return;
     }
-
+    String? userId = await SharedPrefsHelper.getUserId();
     bool biometricEnabled =
         await SharedPrefsHelper.getBiometricEnabled(user.uid) ?? false;
-
-    if (biometricEnabled) {
-      context.go(RouterName.fingerAuthenticationScreen.path);
+    if (userId != null && biometricEnabled) {
+      context.read<AuthBloc>().add(BiometricLoginEvent());
     } else {
       context.go(RouterName.loginScreen.path);
     }
+
+
+    // if (biometricEnabled) {
+    //   context.go(RouterName.fingerAuthenticationScreen.path);
+    // } else {
+    //   context.go(RouterName.loginScreen.path);
+    // }
+
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff2260FF),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset("assets/images/splash_image.png"),
-            SizedBox(height: 15),
-            Text(
-              AppString.skin,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.leagueSpartan(
-                fontSize: 48,
-                height: 0.8,
-                fontWeight: FontWeight.w200,
-                color: Colors.white,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.biometricStatus ==
+            BiometricStatus.enabled) {
+          context.go(RouterName.homeScreen.path);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xff2260FF),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/images/splash_image.png"),
+              SizedBox(height: AppSize.height(context) * 0.017), // 15
+              Text(
+                AppString.skin,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.leagueSpartan(
+                  fontSize: AppSize.width(context) * 0.123, // 48
+                  height: 0.8,
+                  fontWeight: FontWeight.w200,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SizedBox(height: 17),
-            Text(
-              AppString.dermetology,
-              style: GoogleFonts.leagueSpartan(
-                fontSize: 15,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+              SizedBox(height: AppSize.height(context) * 0.020), // 17
+              Text(
+                AppString.dermetology,
+                style: GoogleFonts.leagueSpartan(
+                  fontSize: AppSize.width(context) * 0.038, // 15
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

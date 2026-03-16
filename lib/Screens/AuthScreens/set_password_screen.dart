@@ -57,7 +57,9 @@ class SetPasswordScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                coustomTextField(hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
+                coustomTextField(
+                    context: context,
+                    hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
                 SizedBox(height: 20),
                 Row(
                   children: [
@@ -70,9 +72,12 @@ class SetPasswordScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                coustomTextField(hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
+                coustomTextField(
+                    context: context,
+                    hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
                 SizedBox(height: 30),
                 customButton(
+                  context,
                   text: "Create New Password",
                   fontSize: 23,
                   backgroundColor: Color(0xff2260FF),

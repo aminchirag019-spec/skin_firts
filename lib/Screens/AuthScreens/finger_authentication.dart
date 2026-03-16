@@ -19,15 +19,6 @@ class _FingerAuthenticationState extends State<FingerAuthentication> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      context.read<AuthBloc>().add(BiometricLoginEvent());
-      String? userId = await SharedPrefsHelper.getUserId();
-
-      if (userId != null) {
-        await SharedPrefsHelper.setBiometricEnabled(true,userId );
-      }
-    });
   }
 
   @override

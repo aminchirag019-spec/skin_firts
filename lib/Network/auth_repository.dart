@@ -57,22 +57,69 @@ class AuthRepository {
         .get();
 
     if (doc.exists) {
-      return AddDoctor.fromJson(doc.data() as Map<String, dynamic>);
+      return AddDoctor.fromJson(doc.data() as Map<String, dynamic>,doc.id);
     }
 
     return null;
   }
 
-  Future<List<AddDoctor>> getDoctors() async {
-    final snapshot = await firestore.collection("doctors").get();
+  Future<void> likedDoctor(String doctorUid, bool isLiked) async {
+    if (doctorUid.isEmpty) {
+      print("Doctor ID is empty ❌");
+      return;
+    }
 
-    return snapshot.docs.map((doc) => AddDoctor.fromJson(doc.data())).toList();
+    await firestore.collection("doctors").doc(doctorUid).update({
+      "isLiked": isLiked,
+    });
+  }
+
+  Future<List<AddDoctor>> getDoctors({
+    String? sortBy,
+    bool? liked,
+    String? gender,
+  }) async {
+
+    Query query = firestore.collection("doctors");
+
+    if (gender != null) {
+      query = query.where("gender", isEqualTo: gender);
+    }
+
+    if (liked != null) {
+      query = query.where("isLiked", isEqualTo: liked);
+    }
+
+    if (sortBy != null) {
+      if (sortBy == "A->Z") {
+        query = query.orderBy("doctorName");
+      }
+      else if (sortBy == "Z->A") {
+        query = query.orderBy("doctorName", descending: true);
+      }
+      else if (sortBy == "Rating") {
+        query = query.orderBy("rating",descending: true);
+      }
+    }
+
+    final snapshot = await query.get();
+
+    return snapshot.docs.map((doc) {
+      return AddDoctor.fromJson(
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
+    }).toList();
   }
 
   Future<void> addDoctor({required AddDoctor addDoctorModel}) async {
-    await firestore.collection('doctors').add(addDoctorModel.toJson());
-  }
+    final docRef = firestore.collection('doctors').doc();
 
+    await docRef.set({
+      ...addDoctorModel.toJson(),
+      "id": docRef.id,
+    });
+  }
   Future<SignupModel?> getCurrentUserDetails() async {
     try {
       final user = firebaseAuth.currentUser;

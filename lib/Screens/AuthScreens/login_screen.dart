@@ -13,6 +13,7 @@ import 'package:skin_firts/router/router_class.dart';
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Data/auth_model.dart';
 import '../../global/coustom_widgets.dart';
+import '../../Utilities/media_query.dart';
 
 String? validateEmail(String? value) {
   if (value == null || value.trim().isEmpty) {
@@ -50,25 +51,28 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(context) * 0.064, // 25
+              vertical: AppSize.height(context) * 0.017, // 15
+            ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
                   topRow(
-                    text: AppString.logIn,
                     context,
+                    text: AppString.logIn,
                     onPressed: () => context.go(RouterName.welcomeScreen.path),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: AppSize.height(context) * 0.011), // 10
                   Row(
                     children: [
                       Text(
                         AppString.welcome,
                         style: GoogleFonts.leagueSpartan(
-                          fontSize: 24,
+                          fontSize: AppSize.width(context) * 0.061, // 24
                           fontWeight: FontWeight.w600,
-                          color: Color(0xff2260FF),
+                          color: const Color(0xff2260FF),
                         ),
                       ),
                     ],
@@ -78,55 +82,59 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: formKey,
                     child: Column(
                       children: [
-                        SizedBox(height: 4),
+                        SizedBox(height: AppSize.height(context) * 0.004), // 4
                         Text(
                           AppString.loreum,
                           style: GoogleFonts.leagueSpartan(
-                            fontSize: 14,
+                            fontSize: AppSize.width(context) * 0.035, // 14
                             letterSpacing: -0.7,
                             height: 0.9,
                             fontWeight: FontWeight.w300,
-                            color: Color(0xff070707),
+                            color: const Color(0xff070707),
                           ),
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: AppSize.height(context) * 0.035), // 30
                         Row(
                           children: [
                             Text(
                               AppString.loginLabel,
                               style: GoogleFonts.leagueSpartan(
-                                fontSize: 21,
+                                fontSize: AppSize.width(context) * 0.053, // 21
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: AppSize.height(context) * 0.005), // 5
                         coustomTextField(
+                          context: context,
                           controller: emailController,
                           hintText: AppString.emailExample,
                           h: 14,
                           w: 10,
                           validator: validateEmail,
                         ),
-                        SizedBox(height: 15),
+                        SizedBox(height: AppSize.height(context) * 0.017), // 15
                         Row(
                           children: [
                             Text(
                               AppString.passwordLable,
                               style: GoogleFonts.leagueSpartan(
-                                fontSize: 21,
+                                fontSize: AppSize.width(context) * 0.053, // 21
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: AppSize.height(context) * 0.005), // 5
                         coustomTextField(
+                          context: context,
+                          controller: passwordController,
+                          validator: validatePassword,
                           hintText: "••••••••",
-                          image: AssetImage("assets/images/obsecure_image.png"),
+                          image: const AssetImage("assets/images/obsecure_image.png"),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: AppSize.height(context) * 0.005), // 5
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -137,19 +145,19 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 AppString.forgotPass,
                                 style: GoogleFonts.leagueSpartan(
-                                  fontSize: 13,
+                                  fontSize: AppSize.width(context) * 0.033, // 13
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xff2260FF),
+                                  color: const Color(0xff2260FF),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            SizedBox(width: AppSize.width(context) * 0.025), // 10
                           ],
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: AppSize.height(context) * 0.035), // 30
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) async {
 
@@ -158,27 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         String? userId = await SharedPrefsHelper.getUserId();
 
                         if (userId != null) {
-
-                          bool? biometricEnabled =
-                          await SharedPrefsHelper.getBiometricEnabled(userId);
-
-                          if (biometricEnabled == true) {
-                            context.go(RouterName.fingerAuthenticationScreen.path);
-
-                          }
-                          else if (biometricEnabled == null) {
-                            context.go(RouterName.fingerAuthenticationScreen.path);
-                          }
-                          else {
-                            context.go(RouterName.fingerAuthenticationScreen.path);
-                          }
+                          context.go(RouterName.fingerAuthenticationScreen.path);
                         }
                       }
-
-                      if (state.biometricStatus == BiometricStatus.skip) {
-                        context.go(RouterName.homeScreen.path);
-                      }
-
                     },
                     builder: (context, state) {
                       if (state.loginStatus == LoginStatus.loading) {
@@ -187,10 +177,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       }
                       return customButton(
+                        context,
                         text: AppString.logIn,
-                        backgroundColor:  Color(0xff2260FF),
+                        backgroundColor: const Color(0xff2260FF),
                         textColor: Colors.white,
-                        width: 200,
+                        width: AppSize.width(context) * 0.512, // 200
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
                           context.read<AuthBloc>().add(
@@ -205,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: AppSize.height(context) * 0.011), // 10
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -213,15 +204,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           AppString.signupOptionTitle,
                           style: GoogleFonts.leagueSpartan(
-                            fontSize: 13,
+                            fontSize: AppSize.width(context) * 0.033, // 13
                             fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: AppSize.height(context) * 0.011), // 10
                   loginRow(
+                    context,
                     icons: [
                       LoginRow(
                         svgPath: "assets/images/goole_svg.svg",
@@ -236,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 35),
+                  SizedBox(height: AppSize.height(context) * 0.041), // 35
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -244,10 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppString.dontHaveAccount,
                         style: GoogleFonts.leagueSpartan(
                           fontWeight: FontWeight.w300,
-                          fontSize: 14,
+                          fontSize: AppSize.width(context) * 0.035, // 14
                         ),
                       ),
-                      SizedBox(width: 2),
+                      SizedBox(width: AppSize.width(context) * 0.005), // 2
                       GestureDetector(
                         onTap: () {
                           context.go(RouterName.signupScreen.path);
@@ -256,8 +248,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           AppString.signUp,
                           style: GoogleFonts.leagueSpartan(
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Color(0xff2260FF),
+                            fontSize: AppSize.width(context) * 0.035, // 14
+                            color: const Color(0xff2260FF),
                           ),
                         ),
                       ),

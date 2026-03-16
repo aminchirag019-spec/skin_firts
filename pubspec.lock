@@ -440,6 +440,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  media_query_preview:
+    dependency: "direct main"
+    description:
+      name: media_query_preview
+      sha256: "0c782529000462558c58375a514585aef946bc96961c7751b2da8426e1a3ac09"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   meta:
     dependency: transitive
     description:
@@ -693,6 +701,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.7"
+  two_dimensional_scrollables:
+    dependency: transitive
+    description:
+      name: two_dimensional_scrollables
+      sha256: e9397ae372839aecb3135d246bff5cce5e738604c9afd03d65d06c7a246ae958
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.8"
   typed_data:
     dependency: transitive
     description:

@@ -4,6 +4,7 @@ import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
 import '../../Router/router_class.dart';
+import '../../Utilities/media_query.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -13,7 +14,10 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSize.width(context) * 0.064, // 25
+            vertical: AppSize.height(context) * 0.023,  // 20
+          ),
           child: Column(
             children: [
               topRow(
@@ -21,12 +25,12 @@ class SettingScreen extends StatelessWidget {
                 onPressed: () => context.go(RouterName.profileScreen.path),
                 text: "Setting",
               ),
-              SizedBox(height: 10,),
-              ProfileOptionTile(image: AssetImage("assets/images/user_icon.png"),title: "Notification Setting", onTap: () {},),
-              SizedBox(height: 10),
-              ProfileOptionTile(image: AssetImage("assets/images/lock_icon.png"), title: "Password Manager", onTap: () {},),
-              SizedBox(height: 10),
-              ProfileOptionTile(image: AssetImage("assets/images/lock_icon.png"), title: "Delete Account", onTap: () {},)
+              SizedBox(height: AppSize.height(context) * 0.011), // 10
+              ProfileOptionTile(context, image: const AssetImage("assets/images/user_icon.png"),title: "Notification Setting", onTap: () {},),
+              SizedBox(height: AppSize.height(context) * 0.011), // 10
+              ProfileOptionTile(context, image: const AssetImage("assets/images/lock_icon.png"), title: "Password Manager", onTap: () {},),
+              SizedBox(height: AppSize.height(context) * 0.011), // 10
+              ProfileOptionTile(context, image: const AssetImage("assets/images/lock_icon.png"), title: "Delete Account", onTap: () {},)
             ],
           ),
         ),

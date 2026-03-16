@@ -4,14 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
-import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
-
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Global/dummy_data.dart';
 import '../../Router/router_class.dart';
-import '../HomeScreen/home_screen.dart';
+import '../../Utilities/media_query.dart';
+import '../HomeScreen/coustom_home_widget.dart';
 import 'doctor_info_screen.dart';
 
 Widget likedBar() {
@@ -25,20 +24,26 @@ Widget likedBar() {
                 context.read<DoctorScreenBloc>().add(TabEvent(isTab: true));
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.011,
+                ), // 10
                 decoration: BoxDecoration(
                   color: state.isTab
                       ? const Color(0xff2260FF)
                       : const Color(0xffCAD6FF),
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width(context) * 0.064,
+                  ), // 25
                 ),
                 child: Center(
                   child: Text(
                     "Doctors",
                     style: GoogleFonts.leagueSpartan(
-                      color: state.isTab ? Colors.white : Color(0xff2260FF),
+                      color: state.isTab
+                          ? Colors.white
+                          : const Color(0xff2260FF),
                       fontWeight: FontWeight.w400,
-                      fontSize: 20,
+                      fontSize: AppSize.width(context) * 0.051, // 20
                     ),
                   ),
                 ),
@@ -46,7 +51,7 @@ Widget likedBar() {
             ),
           ),
 
-          SizedBox(width: 10),
+          SizedBox(width: AppSize.width(context) * 0.025), // 10
 
           Expanded(
             child: GestureDetector(
@@ -54,18 +59,26 @@ Widget likedBar() {
                 context.read<DoctorScreenBloc>().add(TabEvent(isTab: false));
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.011,
+                ), // 10
                 decoration: BoxDecoration(
-                  color: !state.isTab ? Color(0xff2260FF) : Color(0xffCAD6FF),
-                  borderRadius: BorderRadius.circular(25),
+                  color: !state.isTab
+                      ? const Color(0xff2260FF)
+                      : const Color(0xffCAD6FF),
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width(context) * 0.064,
+                  ), // 25
                 ),
                 child: Center(
                   child: Text(
                     "Services",
                     style: GoogleFonts.leagueSpartan(
-                      color: !state.isTab ? Colors.white : Color(0xff2260FF),
+                      color: !state.isTab
+                          ? Colors.white
+                          : const Color(0xff2260FF),
                       fontWeight: FontWeight.w400,
-                      fontSize: 20,
+                      fontSize: AppSize.width(context) * 0.051, // 20
                     ),
                   ),
                 ),
@@ -85,7 +98,9 @@ Widget doctorDetailsCard() {
         itemBuilder: (context, index) {
           final doctor = state.getDoctor[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(
+              vertical: AppSize.height(context) * 0.009,
+            ), // 8
             child: GestureDetector(
               onTap: () {
                 context.go(
@@ -94,21 +109,26 @@ Widget doctorDetailsCard() {
                 );
               },
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.011, // 10
+                  horizontal: AppSize.width(context) * 0.020, // 8
+                ),
                 decoration: BoxDecoration(
-                  color: Color(0xffCAD6FF).withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(20),
+                  color: const Color(0xffCAD6FF).withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width(context) * 0.051,
+                  ), // 20
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: AppSize.width(context) * 0.102, // 40
                       backgroundColor: Colors.white,
-                      backgroundImage: AssetImage(
+                      backgroundImage: const AssetImage(
                         "assets/images/user_image.png",
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSize.width(context) * 0.030), // 12
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,41 +137,50 @@ Widget doctorDetailsCard() {
                               ? Row(
                                   children: [
                                     Container(
-                                      height: 18,
-                                      width: 18,
-                                      decoration: BoxDecoration(
+                                      height:
+                                          AppSize.width(context) * 0.046, // 18
+                                      width:
+                                          AppSize.width(context) * 0.046, // 18
+                                      decoration:  BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Color(0xff2260FF),
                                       ),
-                                      child: Image(
+                                      child:  Image(
                                         image: AssetImage(
                                           "assets/images/qualification_badge_white.png",
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 5),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.012,
+                                    ), // 5
                                     Text(
                                       "Professional Doctor",
                                       style: GoogleFonts.leagueSpartan(
-                                        color: Color(0xff2260FF),
-                                        fontSize: 12,
+                                        color: const Color(0xff2260FF),
+                                        fontSize:
+                                            AppSize.width(context) *
+                                            0.030, // 12
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     state.selectedFilter == DoctorFilter.rating
                                         ? infoBadge(
+                                            context,
                                             "assets/images/star_svg.svg",
-                                            "5",
+                                            "${state.getDoctor[index].rating}",
                                           )
                                         : Container(),
                                   ],
                                 )
                               : Container(),
-                          SizedBox(height: 5),
+                          SizedBox(
+                            height: AppSize.height(context) * 0.005,
+                          ), // 5
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSize.width(context) * 0.025, // 10
+                              vertical: AppSize.height(context) * 0.007, // 6
                             ),
                             decoration: BoxDecoration(
                               color:
@@ -159,14 +188,16 @@ Widget doctorDetailsCard() {
                                       state.selectedFilter == DoctorFilter.liked
                                   ? Colors.white
                                   : Colors.transparent,
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(
+                                AppSize.width(context) * 0.038,
+                              ), // 15
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
-                                    Flexible(
+                                    Expanded(
                                       child: Text(
                                         "${doctor.doctorName},${doctor.qualification} ",
                                         overflow: TextOverflow.ellipsis,
@@ -174,30 +205,46 @@ Widget doctorDetailsCard() {
                                           fontSize:
                                               state.selectedFilter ==
                                                   DoctorFilter.rating
-                                              ? 15
-                                              : 17,
+                                              ? AppSize.width(context) *
+                                                    0.038 // 15
+                                              : AppSize.width(context) *
+                                                    0.043, // 17
                                           fontWeight: FontWeight.w500,
-                                          color: Color(0xff2260FF),
+                                          color: const Color(0xff2260FF),
                                           height: 1,
                                         ),
                                       ),
                                     ),
-                                    Text(
-                                      doctor.specialization,
-                                      style: GoogleFonts.leagueSpartan(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff2260FF),
-                                        height: 1,
-                                      ),
-                                    ),
+                                    state.selectedFilter == DoctorFilter.liked ?
+                                    BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                                      builder: (context, state) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            context.read<DoctorScreenBloc>().add(
+                                              LikedEvent(doctor.id,
+                                                  !doctor.isLiked),
+                                            );
+                                          },
+                                          child: circleIcon(
+                                            context,
+                                            doctor.isLiked
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            isBlue: true,
+                                          ),
+                                        );
+                                      },
+                                    ) : Container()
                                   ],
                                 ),
-                                SizedBox(height: 4),
+                                SizedBox(
+                                  height: AppSize.height(context) * 0.004,
+                                ), // 4
                                 Text(
                                   doctor.specialization,
                                   style: GoogleFonts.leagueSpartan(
-                                    fontSize: 14,
+                                    fontSize:
+                                        AppSize.width(context) * 0.035, // 14
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black87,
                                   ),
@@ -206,21 +253,29 @@ Widget doctorDetailsCard() {
                             ),
                           ),
                           state.selectedFilter == DoctorFilter.liked
-                              ? SizedBox(height: 10)
-                              : SizedBox(height: 15),
+                              ? SizedBox(
+                                  height: AppSize.height(context) * 0.011,
+                                ) // 10
+                              : SizedBox(
+                                  height: AppSize.height(context) * 0.017,
+                                ), // 15
                           state.selectedFilter == DoctorFilter.liked
                               ? Container(
-                                  height: 25,
+                                  height: AppSize.height(context) * 0.029, // 25
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff2260FF),
-                                    borderRadius: BorderRadius.circular(20),
+                                    color: const Color(0xff2260FF),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSize.width(context) * 0.051,
+                                    ), // 20
                                   ),
                                   child: Center(
                                     child: Text(
                                       "Make Appointment",
                                       style: GoogleFonts.leagueSpartan(
-                                        fontSize: 12,
+                                        fontSize:
+                                            AppSize.width(context) *
+                                            0.030, // 12
                                         fontWeight: FontWeight.w300,
                                         color: Colors.white,
                                         height: 1,
@@ -234,59 +289,82 @@ Widget doctorDetailsCard() {
                                     InkWell(
                                       onTap: () => context.go(
                                         RouterName.doctorInfoScreen.path,
+                                        extra: state.getDoctor[index],
                                       ),
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                          vertical: 2,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              AppSize.width(context) *
+                                              0.038, // 15
+                                          vertical:
+                                              AppSize.height(context) *
+                                              0.002, // 2
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Color(0xff1B5FE0),
+                                          color: const Color(0xff1B5FE0),
                                           borderRadius: BorderRadius.circular(
-                                            20,
+                                            AppSize.width(context) *
+                                                0.051, // 20
                                           ),
                                         ),
                                         child: Text(
                                           "Info",
                                           style: GoogleFonts.leagueSpartan(
-                                            fontSize: 18,
+                                            fontSize:
+                                                AppSize.width(context) *
+                                                0.046, // 18
                                             fontWeight: FontWeight.w400,
                                             color: Colors.white,
                                           ),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.025,
+                                    ), // 10
 
                                     servicesOptions(
+                                      context,
                                       icon: Icons.calendar_month,
-                                      size: 15,
+                                      size:
+                                          AppSize.width(context) * 0.038, // 15
                                     ),
-                                    SizedBox(width: 2),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.005,
+                                    ), // 2
                                     servicesOptions(
+                                      context,
                                       icon: Icons.info_outline,
-                                      size: 15,
+                                      size:
+                                          AppSize.width(context) * 0.038, // 15
                                     ),
-                                    SizedBox(width: 2),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.005,
+                                    ), // 2
                                     servicesOptions(
+                                      context,
                                       icon: Icons.question_mark,
-                                      size: 15,
+                                      size:
+                                          AppSize.width(context) * 0.038, // 15
                                     ),
-                                    SizedBox(width: 2),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.005,
+                                    ), // 2
                                     BlocBuilder<
                                       DoctorScreenBloc,
                                       DoctorScreenState
                                     >(
                                       builder: (context, state) {
-                                        final doctor = state.doctors[index];
-
                                         return GestureDetector(
                                           onTap: () {
                                             context
                                                 .read<DoctorScreenBloc>()
-                                                .add(LikedEvent(doctor.id));
+                                                .add(LikedEvent(
+                                                    doctor.id,
+                                                    !doctor.isLiked));
                                           },
                                           child: servicesOptions(
+                                            context,
                                             icon: doctor.isLiked
                                                 ? Icons.favorite
                                                 : Icons
@@ -294,13 +372,17 @@ Widget doctorDetailsCard() {
                                             size:
                                                 state.selectedFilter ==
                                                     DoctorFilter.liked
-                                                ? 18
-                                                : 15,
+                                                ? AppSize.width(context) *
+                                                      0.046 // 18
+                                                : AppSize.width(context) *
+                                                      0.038, // 15
                                           ),
                                         );
                                       },
                                     ),
-                                    SizedBox(width: 2),
+                                    SizedBox(
+                                      width: AppSize.width(context) * 0.005,
+                                    ), // 2
                                   ],
                                 ),
                         ],
@@ -326,7 +408,9 @@ Widget serviceDetails() {
           final service = state.service[index];
 
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(
+              vertical: AppSize.height(context) * 0.009,
+            ), // 8
             child: ServiceDropdown(
               title: service.title,
               discription: service.discription,

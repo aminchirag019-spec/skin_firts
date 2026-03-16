@@ -11,8 +11,9 @@ import 'doctor_screen_state.dart';
 class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   List<DummyData> allDoctors = doctors;
   final AuthRepository authRepository;
+
   DoctorScreenBloc(this.authRepository)
-    : super(DoctorScreenState(doctors: doctors)) {
+      : super(DoctorScreenState()) {
     on<FilterChangedEvent>(_onFilterChange);
     on<ApplyFilters>(_onApplyFilters);
     on<LikedEvent>(_onLiked);
@@ -23,15 +24,14 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<GetServiceEvent>(_onGetServiceEvent);
   }
 
-  void _onGetServiceEvent(
-    GetServiceEvent event,
-    Emitter<DoctorScreenState> emit,
-  ) async {
+  void _onGetServiceEvent(GetServiceEvent event,
+      Emitter<DoctorScreenState> emit,) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
       final serviceDetails = await authRepository.getServices();
       if (serviceDetails != null) {
-        emit(state.copyWith(doctorStatus: DoctorStatus.success,service: serviceDetails));
+        emit(state.copyWith(
+            doctorStatus: DoctorStatus.success, service: serviceDetails));
       } else {
         emit(state.copyWith(doctorStatus: DoctorStatus.failure));
       }
@@ -40,15 +40,15 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     }
   }
 
-  void _onGetDoctorDetails(
-    GetDoctorDetailsEvent event,
-    Emitter<DoctorScreenState> emit,
-  ) async {
+  void _onGetDoctorDetails(GetDoctorDetailsEvent event,
+      Emitter<DoctorScreenState> emit,) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
-      final doctorDetails = await authRepository.getDoctorByUid(event.doctorUid);
+      final doctorDetails = await authRepository.getDoctorByUid(
+          event.doctorUid);
       if (doctorDetails != null) {
-        emit(state.copyWith(doctorStatus: DoctorStatus.success, doctorDetails: doctorDetails));
+        emit(state.copyWith(
+            doctorStatus: DoctorStatus.success, doctorDetails: doctorDetails));
       } else {
         emit(state.copyWith(doctorStatus: DoctorStatus.failure));
       }
@@ -58,11 +58,8 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   }
 
 
-
-  void _onGetDoctor(
-    GetDoctorEvent event,
-    Emitter<DoctorScreenState> emit,
-  ) async {
+  void _onGetDoctor(GetDoctorEvent event,
+      Emitter<DoctorScreenState> emit,) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
     try {
@@ -76,17 +73,14 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     }
   }
 
-  void _onAddDoctor(
-    AddDoctorEvent event,
-    Emitter<DoctorScreenState> emit,
-  ) async {
+  void _onAddDoctor(AddDoctorEvent event,
+      Emitter<DoctorScreenState> emit,) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
     try {
       await authRepository.addDoctor(addDoctorModel: event.addDoctor);
 
-      /// refresh doctors after adding
-      final doctors = await authRepository.getDoctors();
+      final doctors = await authRepository.getDoctors(sortBy: "A->Z");
 
       emit(
         state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors),
@@ -100,87 +94,43 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     emit(state.copyWith(isTab: event.isTab));
   }
 
-  void _onLiked(LikedEvent event, Emitter<DoctorScreenState> emit) {
-    int index = allDoctors.indexWhere((doctor) => doctor.id == event.doctorId);
+  void _onLiked(LikedEvent event, Emitter<DoctorScreenState> emit)  async{
 
-    if (index != -1) {
-      final doctor = allDoctors[index];
+    await authRepository.likedDoctor(event.doctorId,event.isLiked);
 
-      allDoctors[index] = doctor.copyWith(isLiked: !doctor.isLiked);
-    }
+    add(ApplyFilters(
+      sortBy: state.selectedFilter == DoctorFilter.sortBy
+          ? "A->Z" : null,
+      liked: state.selectedFilter == DoctorFilter.liked ? true : null,
+      gender: null,
+    ));
 
-    List<DummyData> filteredDoctors = List.from(allDoctors);
+ }
 
-    switch (state.selectedFilter) {
-      case DoctorFilter.rating:
-        filteredDoctors.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
-
-      case DoctorFilter.liked:
-        filteredDoctors = allDoctors.where((d) => d.isLiked).toList();
-        break;
-
-      case DoctorFilter.female:
-        filteredDoctors = allDoctors
-            .where((d) => d.gender == "Female")
-            .toList();
-        break;
-
-      case DoctorFilter.male:
-        filteredDoctors = allDoctors.where((d) => d.gender == "Male").toList();
-        break;
-
-      case DoctorFilter.none:
-      default:
-        filteredDoctors = List.from(allDoctors);
-    }
-
-    emit(
-      state.copyWith(
-        doctors: filteredDoctors,
-        likedDoctors: allDoctors.where((d) => d.isLiked).toList(),
-      ),
-    );
+  void _onFilterChange(FilterChangedEvent event,
+      Emitter<DoctorScreenState> emit,) {
+    emit(state.copyWith(selectedIndex: event.index,
+    selectedFilter: event.filter,
+    ));
   }
 
-  void _onFilterChange(
-    FilterChangedEvent event,
-    Emitter<DoctorScreenState> emit,
-  ) {
-    emit(state.copyWith(selectedIndex: event.index));
-  }
+  void _onApplyFilters(ApplyFilters event, Emitter<DoctorScreenState> emit) async {
+    emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
-  void _onApplyFilters(ApplyFilters event, Emitter<DoctorScreenState> emit) {
-    List<DummyData> filteredDoctors = List.from(allDoctors);
-
-    switch (event.filter) {
-      case DoctorFilter.rating:
-        filteredDoctors.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
-
-      case DoctorFilter.liked:
-        filteredDoctors = allDoctors.where((d) => d.isLiked).toList();
-        break;
-
-      case DoctorFilter.female:
-        filteredDoctors = allDoctors
-            .where((d) => d.gender == "Female")
-            .toList();
-        break;
-
-      case DoctorFilter.male:
-        filteredDoctors = allDoctors.where((d) => d.gender == "Male").toList();
-        break;
-
-      case DoctorFilter.none:
-        filteredDoctors = List.from(allDoctors);
-        break;
-      case null:
-        throw UnimplementedError();
+    try {
+      final doctors = await authRepository.getDoctors(
+        sortBy: event.sortBy,
+        liked: event.liked,
+        gender: event.gender,
+      );
+      emit(state.copyWith(doctorStatus: DoctorStatus.success,
+      getDoctor: doctors,
+      ));
+    }  catch (e) {
+      emit(state.copyWith(doctorStatus: DoctorStatus.failure));
     }
 
-    emit(
-      state.copyWith(doctors: filteredDoctors, selectedFilter: event.filter),
-    );
+
+
   }
 }

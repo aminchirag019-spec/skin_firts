@@ -11,6 +11,7 @@ import 'package:skin_firts/Screens/HomeScreen/home_screen.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/dummy_data.dart';
+import '../../Utilities/media_query.dart';
 import 'doctor_info_screen.dart';
 import 'doctor_screen.dart';
 
@@ -41,110 +42,122 @@ class _DoctorScreenState extends State<DoctorScreen> {
           return Scaffold(
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 25,
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.017, // 15
+                  horizontal: AppSize.width(context) * 0.064, // 25
                 ),
                 child: Column(
                   children: [
                     doctorsTopRow(
+                      context,
                       text: "Doctors",
                       onPressed: () => context.go(RouterName.homeScreen.path),
                     ),
-                    SizedBox(height: 20),
-                    BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-                      builder: (context, state) {
-                        return Row(
+                    SizedBox(height: AppSize.height(context) * 0.023), // 20
+                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
                               "Sort By",
                               style: GoogleFonts.leagueSpartan(
-                                fontSize: 14,
+                                fontSize: AppSize.width(context) * 0.035, // 14
                                 fontWeight: FontWeight.w300,
                                 height: 1,
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(width: 5),
+                            SizedBox(
+                              width: AppSize.width(context) * 0.012,
+                            ),
                             GestureDetector(
                               onTap: () async {
                                 context.read<DoctorScreenBloc>().add(
-                                  ApplyFilters(filter: DoctorFilter.none),
+                                  ApplyFilters(sortBy: "A->Z"),
                                 );
                                 context.read<DoctorScreenBloc>().add(
-                                  FilterChangedEvent(-1),
+                                  FilterChangedEvent(-1,DoctorFilter.sortBy),
                                 );
                                 context.read<DoctorScreenBloc>().add(
                                   TabEvent(isTab: true),
                                 );
                               },
                               child: Container(
-                                width: 52,
-                                height: 22,
+                                width: AppSize.width(context) * 0.133, // 52
+                                height: AppSize.height(context) * 0.026, // 22
                                 decoration: BoxDecoration(
                                   color: state.selectedIndex == -1
-                                      ? Color(0xff2260FF)
-                                      : Color(0xffCAD6FF),
-                                  borderRadius: BorderRadius.circular(20),
+                                      ?  Color(0xff2260FF)
+                                      :  Color(0xffCAD6FF),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSize.width(context) * 0.051,
+                                  ),
                                 ),
                                 child: Center(
                                   child: Text(
                                     "A→Z",
                                     style: GoogleFonts.leagueSpartan(
-                                      fontSize: 15,
+                                      fontSize:
+                                          AppSize.width(context) * 0.038,
                                       fontWeight: FontWeight.w600,
                                       color: state.selectedIndex == -1
                                           ? Colors.white
-                                          : Color(0xff2260FF),
+                                          :  Color(0xff2260FF),
                                       height: 1,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 6),
+                            SizedBox(
+                              width: AppSize.width(context) * 0.015,
+                            ), // 6
                             filterOptions(
+                              context,
                               icon: Icons.star_outline,
-                              size: 18,
+                              size: AppSize.width(context) * 0.046, // 18
                               filter: DoctorFilter.rating,
                               index: 0,
                             ),
-                            SizedBox(width: 6),
+                            SizedBox(
+                              width: AppSize.width(context) * 0.015,
+                            ), // 6
                             filterOptions(
+                              context,
                               icon: Icons.favorite_border,
-                              size: 16,
+                              size: AppSize.width(context) * 0.041, // 16
                               filter: DoctorFilter.liked,
                               index: 1,
                             ),
-                            SizedBox(width: 6),
+                            SizedBox(
+                              width: AppSize.width(context) * 0.015,
+                            ), // 6
                             filterOptions(
+                              context,
                               icon: Icons.female,
-                              size: 18,
+                              size: AppSize.width(context) * 0.046, // 18
                               index: 2,
                               filter: DoctorFilter.female,
                             ),
-                            SizedBox(width: 6),
+                            SizedBox(
+                              width: AppSize.width(context) * 0.015,
+                            ), // 6
                             filterOptions(
+                              context,
                               icon: Icons.male,
-                              size: 18,
+                              size: AppSize.width(context) * 0.046, // 18
                               index: 3,
                               filter: DoctorFilter.male,
                             ),
                           ],
-                        );
-                      },
-                    ),
-                    SizedBox(height: 10),
+                        ),
+                    SizedBox(height: AppSize.height(context) * 0.011), // 10
                     if (state.selectedFilter == DoctorFilter.liked)
                       likedBar()
                     else
                       Container(),
-                    SizedBox(height: 10),
+                    SizedBox(height: AppSize.height(context) * 0.011), // 10
                     state.isTab
-                        ? Expanded(
-                            child: doctorDetailsCard(),
-                          )
+                        ? Expanded(child: doctorDetailsCard())
                         : Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
@@ -190,31 +203,38 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
             });
           },
           child: Container(
-            height: 55,
+            height: AppSize.height(context) * 0.065, // 55
             width: double.infinity,
             decoration: BoxDecoration(
               color: const Color(0xff2260FF),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(
+                AppSize.width(context) * 0.076,
+              ), // 30
             ),
             child: Row(
               children: [
-                SizedBox(width: 15),
+                SizedBox(width: AppSize.width(context) * 0.038),
                 Icon(Icons.favorite, color: Colors.white),
-                SizedBox(width: 10),
 
-                Text(
-                  widget.title,
-                  style: GoogleFonts.leagueSpartan(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    height: 1,
-                    letterSpacing: -0.1,
-                    fontSize: 19,
+                SizedBox(width: AppSize.width(context) * 0.025),
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    maxLines: 2,
+                    style: GoogleFonts.leagueSpartan(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      height: 1,
+                      letterSpacing: -0.1,
+                      fontSize: AppSize.width(context) * 0.048,
+                    ),
                   ),
                 ),
-                Spacer(),
+
+                 Spacer(),
+
                 Container(
-                  decoration: BoxDecoration(
+                  decoration:  BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
@@ -222,52 +242,62 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
                     isExpanded
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down,
-                    color: Color(0xff2260FF),
-                    size: 30,
+                    color:  Color(0xff2260FF),
+                    size: AppSize.width(context) * 0.076,
                   ),
                 ),
 
-                SizedBox(width: 10),
+                SizedBox(width: AppSize.width(context) * 0.025),
               ],
-            ),
+            )
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: AppSize.height(context) * 0.011), // 10
         if (isExpanded) ...[
           Container(
             decoration: BoxDecoration(
               color: const Color(0xffCAD6FF),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(
+                AppSize.width(context) * 0.038,
+              ), // 15
             ),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 13),
+            padding: EdgeInsets.symmetric(
+              vertical: AppSize.height(context) * 0.017, // 15
+              horizontal: AppSize.width(context) * 0.033, // 13
+            ),
             child: Text(
               widget.discription,
               style: GoogleFonts.leagueSpartan(
                 height: 1,
-                fontSize: 14,
+                fontSize: AppSize.width(context) * 0.035, // 14
                 letterSpacing: -0.3,
               ),
             ),
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: AppSize.height(context) * 0.011), // 10
 
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color(0xffCAD6FF),
-              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xffCAD6FF),
+              borderRadius: BorderRadius.circular(
+                AppSize.width(context) * 0.038,
+              ), // 15
             ),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 13),
+            padding: EdgeInsets.symmetric(
+              vertical: AppSize.height(context) * 0.017, // 15
+              horizontal: AppSize.width(context) * 0.033, // 13
+            ),
             child: Center(
               child: Text(
                 "Looking doctors",
                 style: GoogleFonts.leagueSpartan(
                   height: 0.8,
-                  fontSize: 20,
+                  fontSize: AppSize.width(context) * 0.051, // 20
                   letterSpacing: -0.3,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xff2260FF),
+                  color: const Color(0xff2260FF),
                 ),
               ),
             ),

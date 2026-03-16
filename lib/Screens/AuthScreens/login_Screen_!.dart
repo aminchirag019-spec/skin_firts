@@ -59,7 +59,7 @@ class LoginScreen_1 extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 5),
-                  coustomTextField(hintText: AppString.emailExample, size: 20),
+                  coustomTextField(context: context,hintText: AppString.emailExample, size: 20),
                   SizedBox(height: 15),
                   Row(
                     children: [
@@ -73,7 +73,7 @@ class LoginScreen_1 extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 5),
-                  coustomTextField(hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
+                  coustomTextField(context: context,hintText: "••••••••",image: AssetImage("assets/images/obsecure_image.png")),
                   SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -91,6 +91,7 @@ class LoginScreen_1 extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   customButton(
+                    context,
                     text: AppString.logIn,
                     backgroundColor: Color(0xff2260FF),
                     textColor: Colors.white,
@@ -116,6 +117,7 @@ class LoginScreen_1 extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   loginRow(
+                    context,
                     icons: [LoginRow(svgPath: "assets/images/finger_svg.svg",onTap: () => context.go(RouterName.fingerAuthenticationScreen.path),)],
                   ),
                   SizedBox(height: 35),

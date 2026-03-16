@@ -6,6 +6,7 @@ import 'package:skin_firts/Global/app_string.dart';
 
 enum DoctorFilter {
   none,
+  sortBy,
   rating,
   liked,
   female,

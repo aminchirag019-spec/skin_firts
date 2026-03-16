@@ -55,7 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     bool? enabled = await SharedPrefsHelper.getBiometricEnabled(userId);
 
     if (enabled == null) {
-      emit(state.copyWith(biometricStatus: BiometricStatus.initial));
+      emit(state.copyWith(biometricStatus: BiometricStatus.enabled));
     }
     else if (enabled == true) {
       emit(state.copyWith(biometricStatus: BiometricStatus.enabled));

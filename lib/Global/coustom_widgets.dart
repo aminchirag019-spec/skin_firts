@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../router/router_class.dart';
 
+import '../Utilities/media_query.dart';
+
 Widget topRow(
   BuildContext context, {
   required VoidCallback onPressed,
@@ -23,19 +25,20 @@ Widget topRow(
           child: Text(
             text,
             style: GoogleFonts.leagueSpartan(
-              fontSize: 25,
+              fontSize: AppSize.width(context) * 0.064, // 25
               fontWeight: FontWeight.w600,
               color: Color(0xff2260FF),
             ),
           ),
         ),
       ),
-      SizedBox(width: 30),
+      SizedBox(width: AppSize.width(context) * 0.077), // 30
     ],
   );
 }
 
-Widget coustomTextField({
+Widget coustomTextField(
+   {required BuildContext context,
   required String hintText,
   ImageProvider? image,
   double? size = 20,
@@ -59,22 +62,24 @@ Widget coustomTextField({
     decoration: InputDecoration(
       isCollapsed: true,
       alignLabelWithHint: true,
-
       isDense: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: h , vertical: w),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: h == 14 ? AppSize.width(context) * 0.036 : AppSize.width(context) * (h / 390.0),
+        vertical: w == 10 ? AppSize.height(context) * 0.012 : AppSize.height(context) * (w / 844.0),
+      ),
       hintText: hintText ?? "******",
       hintStyle: GoogleFonts.leagueSpartan(
         color: isBold ? Color(0xff2260FF) : Color(0xff809CFF),
-        fontSize: size ?? 20,
+        fontSize: size == 20 ? AppSize.width(context) * 0.058 : AppSize.width(context) * ((size ?? 20) / 390.0),
         fontWeight: isBold ? FontWeight.w500 : FontWeight.w400,
       ),
       filled: true,
       fillColor: Color(0xffECF1FF),
       border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppSize.width(context) * 0.038), // 15
         borderSide: BorderSide.none,
       ),
-      suffixIcon: image != null ? ImageIcon(image,size: 10,) : null
+      suffixIcon: image != null ? ImageIcon(image, size: AppSize.width(context) * 0.025) : null,
     ),
   );
 }
@@ -90,7 +95,8 @@ class LoginRow {
     this.iconSize,
   });
 }
-Widget loginRow({
+Widget loginRow(
+  BuildContext context, {
   required List<LoginRow> icons,
   double defaultRadius = 25,
   double defaultIconSize = 30,
@@ -104,11 +110,11 @@ Widget loginRow({
           onTap: icon.onTap,
           child: CircleAvatar(
             backgroundColor: const Color(0xffCAD6FF),
-            radius: icon.radius ?? defaultRadius,
+            radius: icon.radius == null ? AppSize.width(context) * (defaultRadius / 390.0) : AppSize.width(context) * (icon.radius! / 390.0),
             child: SvgPicture.asset(
               icon.svgPath,
-              height: icon.iconSize ?? defaultIconSize,
-              width: icon.iconSize ?? defaultIconSize,
+              height: icon.iconSize == null ? AppSize.width(context) * (defaultIconSize / 390.0) : AppSize.width(context) * (icon.iconSize! / 390.0),
+              width: icon.iconSize == null ? AppSize.width(context) * (defaultIconSize / 390.0) : AppSize.width(context) * (icon.iconSize! / 390.0),
               fit: BoxFit.contain,
             ),
           ),
@@ -116,17 +122,18 @@ Widget loginRow({
       );
     }).toList(),
   );
-}Widget customButton({
+}Widget customButton(
+  BuildContext context, {
   required String text,
   required Color backgroundColor,
   required Color textColor,
   required VoidCallback? onPressed,
   double? width,
-  double ? fontSize,
+  double? fontSize,
 }) {
   return SizedBox(
     width: width,
-    height: 50,
+    height: AppSize.height(context) * 0.059, // 50
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(backgroundColor: backgroundColor),
@@ -134,7 +141,7 @@ Widget loginRow({
         text,
         style: GoogleFonts.leagueSpartan(
           color: textColor,
-          fontSize: fontSize ?? 25,
+          fontSize: fontSize == null ? AppSize.width(context) * 0.064 : AppSize.width(context) * (fontSize / 390.0), // 25
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -184,9 +191,9 @@ List<Days> appointmentDates = [
   Days(date: 5, day: "FRI"),
   Days(date: 6, day: "SAT"),
 ];
-Widget circleIcon(String svgPath, {bool showDot = false}) {
+Widget homeCircleIcon(BuildContext context, String svgPath, {bool showDot = false}) {
   return Container(
-    padding: const EdgeInsets.all(5),
+    padding: EdgeInsets.all(AppSize.width(context) * 0.012), // 5
     decoration: const BoxDecoration(
       color: Color(0xffCAD6FF),
       shape: BoxShape.circle,
@@ -196,18 +203,18 @@ Widget circleIcon(String svgPath, {bool showDot = false}) {
       children: [
         SvgPicture.asset(
           svgPath,
-          height: 20,
-          width: 20,
+          height: AppSize.width(context) * 0.051, // 20
+          width: AppSize.width(context) * 0.051, // 20
         ),
 
         if (showDot)
           Positioned(
-            top: 1,
-            right: 1,
+            top: AppSize.height(context) * 0.001, // 1
+            right: AppSize.width(context) * 0.002, // 1
             child: Container(
-              height: 6,
-              width: 6,
-              decoration:  BoxDecoration(
+              height: AppSize.height(context) * 0.007, // 6
+              width: AppSize.width(context) * 0.015, // 6
+              decoration: BoxDecoration(
                 color: Color(0xff2260FF),
                 shape: BoxShape.circle,
               ),
@@ -217,29 +224,30 @@ Widget circleIcon(String svgPath, {bool showDot = false}) {
     ),
   );
 }
-
-Widget menuItem(String svgPath, String text) {
+Widget menuItem(String svgPath, String text,BuildContext context) {
   return Column(
     children: [
-      SizedBox(height: 8,),
+      SizedBox(height: AppSize.height(context) * 0.009),
+
       SvgPicture.asset(
         svgPath,
-        height: 17,
-        width: 15,
-        colorFilter:  ColorFilter.mode(
+        height: AppSize.height(context) * 0.020,
+        width: AppSize.width(context) * 0.038,
+        colorFilter: const ColorFilter.mode(
           Color(0xff2260FF),
           BlendMode.srcIn,
         ),
       ),
-      SizedBox(height: 6),
+
+      SizedBox(height: AppSize.height(context) * 0.007),
+
       Text(
         text,
         style: GoogleFonts.leagueSpartan(
-          fontSize: 12,
-          color:  Color(0xff2260FF),
+          fontSize: AppSize.width(context) * 0.030,
+          color: const Color(0xff2260FF),
         ),
       ),
     ],
   );
 }
-

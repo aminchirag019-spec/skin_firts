@@ -54,6 +54,8 @@ dependencies:
   shared_preferences: ^2.5.4
   # For Biometric
   local_auth: ^2.2.0
+  # For media query:
+  media_query_preview: ^0.1.0
 
 
 

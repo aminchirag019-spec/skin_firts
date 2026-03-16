@@ -5,21 +5,28 @@ class DoctorScreenEvent {}
 
 class FilterChangedEvent extends DoctorScreenEvent{
   final int index;
+  final DoctorFilter filter;
 
-  FilterChangedEvent(this.index);
+  FilterChangedEvent(this.index,this.filter);
 }
 
 class ApplyFilters extends DoctorScreenEvent {
-  final int? index;
-  final DoctorFilter? filter;
+  final String ? sortBy;
+  final bool ? liked;
+  final String ? gender;
 
-  ApplyFilters({this.filter,this.index});
+  ApplyFilters({
+    this.sortBy,
+    this.liked,
+    this.gender,
+  });
 }
 
 class LikedEvent extends DoctorScreenEvent {
-  final int doctorId;
+  final String doctorId;
+  final bool isLiked;
 
-  LikedEvent(this.doctorId);
+  LikedEvent(this.doctorId,this.isLiked);
 }
 class TabEvent extends DoctorScreenEvent {
   final bool isTab;
