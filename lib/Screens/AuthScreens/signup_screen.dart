@@ -26,9 +26,9 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
    final formKey = GlobalKey<FormState>();
 
-  TextEditingController emailController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
 
-  TextEditingController nameController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
 

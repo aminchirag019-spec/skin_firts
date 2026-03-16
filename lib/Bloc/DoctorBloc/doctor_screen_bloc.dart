@@ -5,14 +5,14 @@ import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 
 import '../../Data/dotor_model.dart';
+import '../../Utilities/firebase_message.dart';
 import 'doctor_screen_event.dart';
 import 'doctor_screen_state.dart';
 
 class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
-  List<DummyData> allDoctors = doctors;
+  final NotificationService notificationService;
   final AuthRepository authRepository;
-
-  DoctorScreenBloc(this.authRepository)
+  DoctorScreenBloc(this.authRepository,this.notificationService)
       : super(DoctorScreenState()) {
     on<FilterChangedEvent>(_onFilterChange);
     on<ApplyFilters>(_onApplyFilters);
@@ -81,7 +81,8 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
       await authRepository.addDoctor(addDoctorModel: event.addDoctor);
 
       final doctors = await authRepository.getDoctors(sortBy: "A->Z");
-
+      NotificationService.showNotification("New Doctor",
+          "A doctor name with ${state.doctorDetails!.doctorName} is added Succesfully");
       emit(
         state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors),
       );

@@ -23,6 +23,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AskBiometricEvent>(_onAskbiometric);
     on<LogoutEvent>(_onLogoutEvent);
     on<LoadCurrentUser>(_onLoadCurrentUser);
+    on<UpdateProfileEvent>(_onUpdateProfileEvent);
+  }
+
+
+  void _onUpdateProfileEvent(UpdateProfileEvent event, Emitter<AuthState> emit) async{
+    emit(state.copyWith(signupStatus: SignupStatus.loading));
+    try {
+      await repository.updateUserProfile(signupModel: event.signupModel);
+      emit(state.copyWith(signupStatus: SignupStatus.success));
+
+    }catch (e) {
+      emit(state.copyWith(signupStatus: SignupStatus.failure));
+    }
   }
 
   void _onLoadCurrentUser(LoadCurrentUser event, Emitter<AuthState> emit) async{

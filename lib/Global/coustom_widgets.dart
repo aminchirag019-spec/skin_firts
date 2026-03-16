@@ -53,10 +53,12 @@ Widget coustomTextField(
   double  h =14,
   double w = 10,
   VoidCallback ? onTap,
+     String ? initialValue,
 }) {
   return TextFormField(
     controller: controller,
     validator: validator,
+    initialValue:initialValue,
     obscureText: obscureText,
     onTap: onTap,
     decoration: InputDecoration(

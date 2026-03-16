@@ -4,6 +4,8 @@ import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
+import 'package:skin_firts/Screens/ProfileScreen/edit_user.dart';
+import 'package:skin_firts/Screens/ProfileScreen/password_manager_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/setting_screen.dart';
 import 'package:skin_firts/Screens/widgets/bottom_nav_bar.dart';
@@ -67,7 +69,7 @@ final GoRouter app_router = GoRouter(
               path: RouterName.doctorInfoScreen.path,
               builder: (context, state) {
                 final data = state.extra as AddDoctor;
-                  return DoctorInfoScreen(data: data);
+                return DoctorInfoScreen(data: data);
               },
             ),
           ],
@@ -106,8 +108,17 @@ final GoRouter app_router = GoRouter(
       path: RouterName.settingScreen.path,
       builder: (context, state) => SettingScreen(),
     ),
-    GoRoute(path: RouterName.addDoctorScreen.path,
-    builder: (context, state) => AddDoctorScreen(),
-    )
+    GoRoute(
+      path: RouterName.addDoctorScreen.path,
+      builder: (context, state) => AddDoctorScreen(),
+    ),
+    GoRoute(
+      path: RouterName.passwordManagerScreen.path,
+      builder: (context, state) => PasswordManagerScreen(),
+    ),
+    GoRoute(
+      path: RouterName.editUserScreen.path,
+      builder: (context, state) => EditUser(),
+    ),
   ],
 );

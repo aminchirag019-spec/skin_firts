@@ -4,6 +4,7 @@ import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 
 import '../Data/auth_model.dart';
 import '../Data/dotor_model.dart';
+import '../main.dart';
 
 class AuthRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -63,15 +64,39 @@ class AuthRepository {
     return null;
   }
 
-  Future<void> likedDoctor(String doctorUid, bool isLiked) async {
-    if (doctorUid.isEmpty) {
-      print("Doctor ID is empty ❌");
-      return;
-    }
+  Future<void> updateUserProfile({required SignupModel signupModel}) async {
 
-    await firestore.collection("doctors").doc(doctorUid).update({
-      "isLiked": isLiked,
+    if(user == null) return;
+
+    await firestore.collection('users').doc(user!.uid).update({
+      "name":signupModel.name,
+      "phone":signupModel.phone,
+      "dob":signupModel.dob,
+      "email":signupModel.email,  
+      "updatedAt":DateTime.now().toIso8601String(),
     });
+
+  }
+
+  Future<void> likedDoctor(String doctorUid, bool isLiked) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    final favRef = firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("favorites")
+        .doc(doctorUid);
+
+    if (isLiked) {
+      await favRef.set({
+        "doctorId": doctorUid,
+        "likedAt": FieldValue.serverTimestamp(),
+      });
+    } else {
+      await favRef.delete();
+    }
   }
 
   Future<List<AddDoctor>> getDoctors({
@@ -80,7 +105,7 @@ class AuthRepository {
     String? gender,
   }) async {
 
-    Query query = firestore.collection("doctors");
+    Query query = firestore.collection("doctors").where("userId",isEqualTo: user!.uid);
 
     if (gender != null) {
       query = query.where("gender", isEqualTo: gender);
@@ -118,6 +143,8 @@ class AuthRepository {
     await docRef.set({
       ...addDoctorModel.toJson(),
       "id": docRef.id,
+      "userId" : user!.uid,
+      "createdAt": DateTime.now().toIso8601String(),
     });
   }
   Future<SignupModel?> getCurrentUserDetails() async {

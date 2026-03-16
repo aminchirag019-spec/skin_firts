@@ -11,27 +11,37 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSize.width(context) * 0.064, // 25
-            vertical: AppSize.height(context) * 0.023,  // 20
-          ),
-          child: Column(
-            children: [
-              topRow(
-                context,
-                onPressed: () => context.go(RouterName.profileScreen.path),
-                text: "Setting",
-              ),
-              SizedBox(height: AppSize.height(context) * 0.011), // 10
-              ProfileOptionTile(context, image: const AssetImage("assets/images/user_icon.png"),title: "Notification Setting", onTap: () {},),
-              SizedBox(height: AppSize.height(context) * 0.011), // 10
-              ProfileOptionTile(context, image: const AssetImage("assets/images/lock_icon.png"), title: "Password Manager", onTap: () {},),
-              SizedBox(height: AppSize.height(context) * 0.011), // 10
-              ProfileOptionTile(context, image: const AssetImage("assets/images/lock_icon.png"), title: "Delete Account", onTap: () {},)
-            ],
+    return WillPopScope(
+      onWillPop: ()  async{
+        context.go(RouterName.profileScreen.path);
+        return false;
+
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(context) * 0.064, // 25
+              vertical: AppSize.height(context) * 0.023,  // 20
+            ),
+            child: Column(
+              children: [
+                topRow(
+                  context,
+                  onPressed: () => context.go(RouterName.profileScreen.path),
+                  text: "Setting",
+                ),
+                SizedBox(height: AppSize.height(context) * 0.011), // 10
+                settingOptionTile(context, image: const AssetImage("assets/images/notification.png"),title: "Notification Setting", onTap: () {},),
+                SizedBox(height: AppSize.height(context) * 0.015), // 10
+                settingOptionTile(context, image: const AssetImage("assets/images/key.png"), title: "Password Manager", onTap: () {
+                  context.go(RouterName.passwordManagerScreen.path);
+                },),
+                SizedBox(height: AppSize.height(context) * 0.015), // 10
+                settingOptionTile(context, image: const AssetImage("assets/images/user_icon.png"), title: "Delete Account", onTap: () {},)
+              ],
+            ),
           ),
         ),
       ),

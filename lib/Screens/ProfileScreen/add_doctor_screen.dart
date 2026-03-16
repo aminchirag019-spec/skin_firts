@@ -8,6 +8,7 @@ import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Utilities/firebase_message.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
@@ -67,38 +68,38 @@ class AddDoctorScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: AppSize.height(context) * 0.011), // 10
-                        Title(context, title: "Name"),
+                        title(context, title: "Name"),
                         AddDoctorField(context, hint: "Name", controller: nameController),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Profile"),
+                        title(context, title: "Profile"),
                         AddDoctorField(
                           context,
                           hint: "Profile",
                           controller: profileController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Specialization"),
+                        title(context, title: "Specialization"),
                         AddDoctorField(
                           context,
                           hint: "Specialization",
                           controller: specializationController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "qualification"),
+                        title(context, title: "qualification"),
                         AddDoctorField(
                           context,
                           hint: "qualification",
                           controller: qualificationController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Availybility"),
+                        title(context, title: "Availybility"),
                         AddDoctorField(
                           context,
                           hint: "Availybility",
                           controller: availybilityController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Career Path"),
+                        title(context, title: "Career Path"),
                         AddDoctorField(
                           context,
                           hint: "Career Path",
@@ -106,7 +107,7 @@ class AddDoctorScreen extends StatelessWidget {
                           isParagraph: true,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Highlights"),
+                        title(context, title: "Highlights"),
                         AddDoctorField(
                           context,
                           hint: "Highlights",
@@ -114,7 +115,7 @@ class AddDoctorScreen extends StatelessWidget {
                           isParagraph: true,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Experience"),
+                        title(context, title: "Experience"),
                         AddDoctorField(
                           context,
                           hint: "Experience",
@@ -122,7 +123,7 @@ class AddDoctorScreen extends StatelessWidget {
                           isParagraph: true,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Description"),
+                        title(context, title: "Description"),
                         AddDoctorField(
                           context,
                           hint: "Description",
@@ -130,21 +131,21 @@ class AddDoctorScreen extends StatelessWidget {
                           isParagraph: true,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Gender"),
+                        title(context, title: "Gender"),
                         AddDoctorField(
                           context,
                           hint: "Gender",
                           controller: genderController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "Rating"),
+                        title(context, title: "Rating"),
                         AddDoctorField(
                           context,
                           hint: "Rating",
                           controller: ratingController,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.008), // 7
-                        Title(context, title: "liked"),
+                        title(context, title: "liked"),
                         AddDoctorField(
                           context,
                           hint: "liked",
@@ -211,6 +212,7 @@ class AddDoctorScreen extends StatelessWidget {
                           ratingController.clear();
                           emailController.clear();
                           genderController.clear();
+                          NotificationService.showNotification("add Doctor", "A doctor Named ${doctor.doctorName} is added");
                         },
                       );
                     },
@@ -248,14 +250,14 @@ Widget AddDoctorField(
   );
 }
 
-Widget Title(BuildContext context, {required String title}) {
+Widget title(BuildContext context, {required String title,double?size}) {
   return Row(
     children: [
       SizedBox(width: AppSize.width(context) * 0.020), // 8
       Text(
         title,
         style: GoogleFonts.leagueSpartan(
-          fontSize: AppSize.width(context) * 0.046, // 18
+          fontSize: AppSize.width(context) *  0.046 , // 18
           fontWeight: FontWeight.w500,
         ),
       ),

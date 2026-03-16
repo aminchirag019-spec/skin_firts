@@ -59,8 +59,13 @@ class ProfileScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Color(0xff2260FF),
                           ),
-                          child: const Image(
-                            image: AssetImage("assets/images/pen.png"),
+                          child:  GestureDetector(
+                            onTap: () {
+                              context.go(RouterName.editUserScreen.path);
+                            },
+                            child: Image(
+                              image: AssetImage("assets/images/pen.png"),
+                            ),
                           ),
                         ),
                       ),
@@ -112,7 +117,9 @@ class ProfileScreen extends StatelessWidget {
                     context,
                     image: const AssetImage("assets/images/profile_setting.png"),
                     title: "Setting",
-                    onTap: () {},
+                    onTap: () {
+                      context.go(RouterName.settingScreen.path);
+                    },
                   ),
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
                   ProfileOptionTile(
@@ -170,6 +177,43 @@ Widget ProfileOptionTile(
             radius: AppSize.width(context) * 0.051, // 20
             backgroundColor: Colors.blue.withOpacity(0.1),
             child: ImageIcon(image, color: const Color(0xff2260FF), size: AppSize.width(context) * 0.051), // 20
+          ),
+
+          SizedBox(width: AppSize.width(context) * 0.035), // 14
+
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(fontSize: AppSize.width(context) * 0.041, fontWeight: FontWeight.w500), // 16
+            ),
+          ),
+
+          Icon(Icons.arrow_forward_ios, size: AppSize.width(context) * 0.041, color: Colors.grey), // 16
+        ],
+      ),
+    ),
+  );
+}
+
+
+
+Widget settingOptionTile(
+    BuildContext context, {
+      required ImageProvider image,
+      required String title,
+      required VoidCallback onTap,
+    }) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSize.width(context) * 0.030)), // 12
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: AppSize.width(context) * 0.051, // 20
+            backgroundColor: Colors.white,
+            child: ImageIcon(image, color: const Color(0xff2260FF), size: AppSize.width(context) * 0.068), // 20
           ),
 
           SizedBox(width: AppSize.width(context) * 0.035), // 14

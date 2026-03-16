@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +11,11 @@ import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
 
 import 'Utilities/bio_metric.dart';
-
+import 'Utilities/firebase_message.dart';
+final user = FirebaseAuth.instance.currentUser;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
@@ -20,7 +23,7 @@ void main() async{
     SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)),
   );
   runApp(MultiBlocProvider(providers: [
-    BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository())),
+    BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper()))
   ], child: MyApp()));
 }

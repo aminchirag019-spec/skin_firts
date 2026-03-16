@@ -17,6 +17,8 @@ class BiometricLoginEvent extends AuthEvent {}
 class AskBiometricEvent extends AuthEvent {}
 
 class LogoutEvent extends AuthEvent {}
-class LoadCurrentUser extends AuthEvent{
-
+class LoadCurrentUser extends AuthEvent{}
+class UpdateProfileEvent extends AuthEvent{
+   final SignupModel signupModel;
+   UpdateProfileEvent({required this.signupModel});
 }

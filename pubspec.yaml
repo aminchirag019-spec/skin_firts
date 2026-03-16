@@ -56,6 +56,10 @@ dependencies:
   local_auth: ^2.2.0
   # For media query:
   media_query_preview: ^0.1.0
+  # for Firebase Messaging
+  firebase_messaging: ^16.1.2
+  flutter_local_notifications: ^17.1.0
+
 
 
 
