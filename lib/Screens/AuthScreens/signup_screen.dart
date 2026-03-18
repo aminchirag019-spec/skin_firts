@@ -4,12 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
 import '../../Utilities/sharedpref_helper.dart';
 import '../../router/router_class.dart';
@@ -17,18 +22,18 @@ import '../../Utilities/media_query.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-   SignupScreen({super.key});
+  SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-   final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-    TextEditingController emailController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
-    TextEditingController nameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
 
@@ -80,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         coustomTextField(
                           context: context,
                           controller: nameController,
-                          validator: validateEmail,
+                          validator: Validators().validateEmail,
                           hintText: AppString.nameExample,
                           size: 20,
                         ),
@@ -96,12 +101,17 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ],
                         ),
-                        coustomTextField(
-                          context: context,
-                          hintText: "••••••••",
-                          obscureText: true,
-                          controller: passwordController,
-                          image: const AssetImage("assets/images/obsecure_image.png"),
+                        BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                          builder: (context, state) {
+                            return coustomTextField(
+                              context: context,
+                              hintText: "••••••••",
+                              obscureText: state.isPasswordHidden,
+                              controller: passwordController,
+                              image:  AssetImage(
+                                  "assets/images/obsecure_image.png"),
+                            );
+                          },
                         ),
                         SizedBox(height: AppSize.height(context) * 0.014), // 12
                         Row(
@@ -136,6 +146,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         coustomTextField(
                           context: context,
+                          maxLength: 10,
+                          textInputType: TextInputType.number,
                           hintText: AppString.numberExample,
                           h: 16,
                           w: 13,
@@ -155,25 +167,25 @@ class _SignupScreenState extends State<SignupScreen> {
                           ],
                         ),
                         coustomTextField(
-                          context: context,
-                          hintText: AppString.dobExample,
-                          isBold: true,
-                          controller: dobController,
-                          size: 20,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(2000),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now(),
-                            );
+                            context: context,
+                            hintText: AppString.dobExample,
+                            isBold: true,
+                            controller: dobController,
+                            size: 20,
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime(2000),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime.now(),
+                              );
 
-                            if (pickedDate != null) {
-                              dobController.text =
-                              "${pickedDate.day}/${pickedDate
-                                  .month}/${pickedDate.year}";
-                            }
-                          } ),
+                              if (pickedDate != null) {
+                                dobController.text =
+                                "${pickedDate.day}/${pickedDate
+                                    .month}/${pickedDate.year}";
+                              }
+                            }),
                         SizedBox(height: AppSize.height(context) * 0.017), // 15
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -223,43 +235,43 @@ class _SignupScreenState extends State<SignupScreen> {
                     ],
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011), // 10
-                BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if (state.signupStatus == SignupStatus.success) {
-                      context.go(RouterName.fingerAuthenticationScreen.path);
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.signupStatus == SignupStatus.loading) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(),
-                      );
-                    }
-
-                    return customButton(
-                      context,
-                      text: AppString.signUp,
-                      backgroundColor: const Color(0xff2260FF),
-                      width: AppSize.width(context) * 0.538, // 210
-                      textColor: Colors.white,
-                      onPressed: () async{
-                        if (!formKey.currentState!.validate()) return;
-                        context.read<AuthBloc>().add(
-                          SignUpEvent(
-                            signupModel: SignupModel(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              name: nameController.text,
-                              dob: dobController.text,
-                              phone: phoneController.text,
-                            ),
-                          ),
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state.signupStatus == SignupStatus.success) {
+                        context.go(RouterName.fingerAuthenticationScreen.path);
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state.signupStatus == SignupStatus.loading) {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
                         );
+                      }
 
-                      },
-                    );
-                  },
-                ),
+                      return customButton(
+                        context,
+                        text: AppString.signUp,
+                        backgroundColor: const Color(0xff2260FF),
+                        width: AppSize.width(context) * 0.538,
+                        // 210
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          if (!formKey.currentState!.validate()) return;
+                          context.read<AuthBloc>().add(
+                            SignUpEvent(
+                              signupModel: SignupModel(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                name: nameController.text,
+                                dob: dobController.text,
+                                phone: phoneController.text,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                   SizedBox(height: AppSize.height(context) * 0.011), // 10
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -286,9 +298,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
                       LoginRow(
                         svgPath: "assets/images/finger_svg.svg",
-                        onTap: () => context.go(
-                          RouterName.fingerAuthenticationScreen.path,
-                        ),
+                        onTap: () =>
+                            context.go(
+                              RouterName.fingerAuthenticationScreen.path,
+                            ),
                       ),
                     ],
                   ),

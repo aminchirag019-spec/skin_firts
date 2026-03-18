@@ -121,3 +121,40 @@ class ServiceModel {
       discription: json['discription'] ?? '',);
   }
 }
+
+
+class NotificationModel {
+  final String title;
+  final String body;
+
+  NotificationModel({
+    required this.title,
+    required this.body,
+  });
+  /// CopyWith (immutable update)
+  NotificationModel copyWith({
+    String? title,
+    String? body,
+  }) {
+    return NotificationModel(
+      title: title ?? this.title,
+      body: body ?? this.body,
+    );
+  }
+
+  /// Convert JSON -> Model
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      title: json['title'] ?? '',
+      body: json['body'] ?? '',
+    );
+  }
+
+  /// Convert Model -> JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'body': body,
+    };
+  }
+}

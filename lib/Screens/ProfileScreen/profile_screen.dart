@@ -28,11 +28,11 @@ class ProfileScreen extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: AppSize.width(context) * 0.064, // 25
-                vertical: AppSize.height(context) * 0.023,  // 20
+                vertical: AppSize.height(context) * 0.023, // 20
               ),
               child: Column(
                 children: [
-                   topRow(
+                  topRow(
                     context,
                     onPressed: () => context.go(RouterName.homeScreen.path),
                     text: "My Profile",
@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Color(0xff2260FF),
                           ),
-                          child:  GestureDetector(
+                          child: GestureDetector(
                             onTap: () {
                               context.go(RouterName.editUserScreen.path);
                             },
@@ -72,17 +72,24 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: AppSize.height(context) * 0.005), // 5
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "John Doe",
-                        style: GoogleFonts.leagueSpartan(
-                          fontSize: AppSize.width(context) * 0.064, // 25
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if(state.currentUser!.name.isEmpty){
+                        Text("hii");
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            state.currentUser!.name ?? "",
+                            style: GoogleFonts.leagueSpartan(
+                              fontSize: AppSize.width(context) * 0.064, // 25
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011), // 10
                   ProfileOptionTile(
@@ -115,7 +122,9 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
                   ProfileOptionTile(
                     context,
-                    image: const AssetImage("assets/images/profile_setting.png"),
+                    image: const AssetImage(
+                      "assets/images/profile_setting.png",
+                    ),
                     title: "Setting",
                     onTap: () {
                       context.go(RouterName.settingScreen.path);
@@ -131,14 +140,16 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
-                      if(state.loginStatus == LoginStatus.logout) {
+                      if (state.loginStatus == LoginStatus.logout) {
                         context.go(RouterName.welcomeScreen.path);
                       }
                     },
                     builder: (context, state) {
                       return ProfileOptionTile(
                         context,
-                        image: const AssetImage("assets/images/logout_icon.png"),
+                        image: const AssetImage(
+                          "assets/images/logout_icon.png",
+                        ),
                         title: "Logout",
                         onTap: () {
                           context.read<AuthBloc>().add(LogoutEvent());
@@ -147,9 +158,14 @@ class ProfileScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
-                  ProfileOptionTile(context, image: const AssetImage("assets/images/plus_icon.png"), title: "Add Doctor", onTap: () {
-                    context.go(RouterName.addDoctorScreen.path);
-                  },)
+                  ProfileOptionTile(
+                    context,
+                    image: AssetImage("assets/images/plus_icon.png"),
+                    title: "Add Doctor",
+                    onTap: () {
+                      context.go(RouterName.addDoctorScreen.path);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -170,13 +186,19 @@ Widget ProfileOptionTile(
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSize.width(context) * 0.030)), // 12
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSize.width(context) * 0.030),
+      ), // 12
       child: Row(
         children: [
           CircleAvatar(
             radius: AppSize.width(context) * 0.051, // 20
             backgroundColor: Colors.blue.withOpacity(0.1),
-            child: ImageIcon(image, color: const Color(0xff2260FF), size: AppSize.width(context) * 0.051), // 20
+            child: ImageIcon(
+              image,
+              color: const Color(0xff2260FF),
+              size: AppSize.width(context) * 0.051,
+            ), // 20
           ),
 
           SizedBox(width: AppSize.width(context) * 0.035), // 14
@@ -184,50 +206,56 @@ Widget ProfileOptionTile(
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: AppSize.width(context) * 0.041, fontWeight: FontWeight.w500), // 16
+              style: TextStyle(
+                fontSize: AppSize.width(context) * 0.041,
+                fontWeight: FontWeight.w500,
+              ), // 16
             ),
           ),
 
-          Icon(Icons.arrow_forward_ios, size: AppSize.width(context) * 0.041, color: Colors.grey), // 16
+          Icon(
+            Icons.arrow_forward_ios,
+            size: AppSize.width(context) * 0.041,
+            color: Colors.grey,
+          ), // 16
         ],
       ),
     ),
   );
 }
 
-
-
 Widget settingOptionTile(
-    BuildContext context, {
-      required ImageProvider image,
-      required String title,
-      required VoidCallback onTap,
-    }) {
+  BuildContext context, {
+  required ImageProvider image,
+  required String title,
+  required VoidCallback onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSize.width(context) * 0.030)), // 12
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: AppSize.width(context) * 0.051, // 20
-            backgroundColor: Colors.white,
-            child: ImageIcon(image, color: const Color(0xff2260FF), size: AppSize.width(context) * 0.068), // 20
+    child: Row(
+      children: [
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(image: DecorationImage(image: image)),
+        ),
+        SizedBox(width: AppSize.width(context) * 0.037), // 14
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: AppSize.width(context) * 0.046,
+              fontWeight: FontWeight.w500,
+            ), // 16
           ),
+        ),
 
-          SizedBox(width: AppSize.width(context) * 0.035), // 14
-
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(fontSize: AppSize.width(context) * 0.041, fontWeight: FontWeight.w500), // 16
-            ),
-          ),
-
-          Icon(Icons.arrow_forward_ios, size: AppSize.width(context) * 0.041, color: Colors.grey), // 16
-        ],
-      ),
+        Icon(
+          Icons.arrow_forward_ios,
+          size: AppSize.width(context) * 0.05,
+          color: Color(0xff2260FF),
+        ), // 16
+      ],
     ),
   );
 }

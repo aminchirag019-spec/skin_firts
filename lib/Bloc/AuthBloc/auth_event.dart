@@ -22,3 +22,9 @@ class UpdateProfileEvent extends AuthEvent{
    final SignupModel signupModel;
    UpdateProfileEvent({required this.signupModel});
 }
+class UpdatePasswordEvent extends AuthEvent{
+    final String currentPassword;
+    final String newPassword;
+    final String confirmPassword;
+    UpdatePasswordEvent({required this.currentPassword,required this.newPassword,required this.confirmPassword});
+}

@@ -22,6 +22,7 @@ import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 import '../Global/dummy_data.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/CalenderScreen/calender_screen.dart';
+import '../Screens/ProfileScreen/notification_setting.dart';
 
 final GoRouter app_router = GoRouter(
   initialLocation: RouterName.splashScreen.path,
@@ -120,5 +121,8 @@ final GoRouter app_router = GoRouter(
       path: RouterName.editUserScreen.path,
       builder: (context, state) => EditUser(),
     ),
+    GoRoute(path:RouterName.notificationSetting.path,
+    builder: (context, state) => NotificationSetting(),
+    )
   ],
 );

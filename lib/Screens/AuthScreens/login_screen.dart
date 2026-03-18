@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
+import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/router/router_class.dart';
 
@@ -15,18 +16,6 @@ import '../../Data/auth_model.dart';
 import '../../global/coustom_widgets.dart';
 import '../../Utilities/media_query.dart';
 
-String? validateEmail(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return "Please enter the email";
-  }
-  return null;
-}
-String? validatePassword(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return "Please enter your password";
-  }
-  return null;
-}
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
@@ -112,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: AppString.emailExample,
                           h: 14,
                           w: 10,
-                          validator: validateEmail,
+                          validator: Validators().validateEmail,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.017), // 15
                         Row(
@@ -130,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         coustomTextField(
                           context: context,
                           controller: passwordController,
-                          validator: validatePassword,
+                          validator: Validators().validatePassword,
                           hintText: "••••••••",
                           image: const AssetImage("assets/images/obsecure_image.png"),
                         ),
@@ -184,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: AppSize.width(context) * 0.512, // 200
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
+
                           context.read<AuthBloc>().add(
                             LoginEvent(
                               loginModel: LoginModel(

@@ -17,6 +17,7 @@ enum RouterName {
   settingScreen('/SettingScreen','SettingScreen'),
   addDoctorScreen('/AddDoctorScreen','AddDoctorScreen'),
   editUserScreen('/EditUserScreen','EditUserScreen'),
+  notificationSetting('/NotificationScreen','NotificationScreen'),
   passwordManagerScreen('/PasswordManagerScreen','PasswordManagerScreen'),
   welcomeScreen('/WelcomeScreen','WelcomeScreen');
 

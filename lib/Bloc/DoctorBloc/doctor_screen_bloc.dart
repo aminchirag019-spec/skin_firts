@@ -12,8 +12,8 @@ import 'doctor_screen_state.dart';
 class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   final NotificationService notificationService;
   final AuthRepository authRepository;
-  DoctorScreenBloc(this.authRepository,this.notificationService)
-      : super(DoctorScreenState()) {
+  DoctorScreenBloc(this.authRepository, this.notificationService)
+    : super(DoctorScreenState()) {
     on<FilterChangedEvent>(_onFilterChange);
     on<ApplyFilters>(_onApplyFilters);
     on<LikedEvent>(_onLiked);
@@ -22,16 +22,43 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<GetDoctorEvent>(_onGetDoctor);
     on<GetDoctorDetailsEvent>(_onGetDoctorDetails);
     on<GetServiceEvent>(_onGetServiceEvent);
+    on<SwitchEvent>(_onSwitch);
+    on<TogglePasswordVisibility>(_onTogglePasswordVisibility);
   }
 
-  void _onGetServiceEvent(GetServiceEvent event,
-      Emitter<DoctorScreenState> emit,) async {
+  void _onTogglePasswordVisibility(
+      TogglePasswordVisibility event,
+      Emitter<DoctorScreenState> emit,
+      ) {
+    emit(state.copyWith(isPasswordHidden: !state.isPasswordHidden));
+  }
+
+
+  void _onSwitch(
+      SwitchEvent event,
+      Emitter<DoctorScreenState> emit,
+      ) async {
+    final updatedSwitches = List<bool>.from(state.switches);
+
+    updatedSwitches[event.index] = event.isSwitched;
+
+    emit(state.copyWith(switches: updatedSwitches));
+  }
+
+  void _onGetServiceEvent(
+    GetServiceEvent event,
+    Emitter<DoctorScreenState> emit,
+  ) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
       final serviceDetails = await authRepository.getServices();
       if (serviceDetails != null) {
-        emit(state.copyWith(
-            doctorStatus: DoctorStatus.success, service: serviceDetails));
+        emit(
+          state.copyWith(
+            doctorStatus: DoctorStatus.success,
+            service: serviceDetails,
+          ),
+        );
       } else {
         emit(state.copyWith(doctorStatus: DoctorStatus.failure));
       }
@@ -40,15 +67,22 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     }
   }
 
-  void _onGetDoctorDetails(GetDoctorDetailsEvent event,
-      Emitter<DoctorScreenState> emit,) async {
+  void _onGetDoctorDetails(
+    GetDoctorDetailsEvent event,
+    Emitter<DoctorScreenState> emit,
+  ) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
       final doctorDetails = await authRepository.getDoctorByUid(
-          event.doctorUid);
+        event.doctorUid,
+      );
       if (doctorDetails != null) {
-        emit(state.copyWith(
-            doctorStatus: DoctorStatus.success, doctorDetails: doctorDetails));
+        emit(
+          state.copyWith(
+            doctorStatus: DoctorStatus.success,
+            doctorDetails: doctorDetails,
+          ),
+        );
       } else {
         emit(state.copyWith(doctorStatus: DoctorStatus.failure));
       }
@@ -57,9 +91,10 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     }
   }
 
-
-  void _onGetDoctor(GetDoctorEvent event,
-      Emitter<DoctorScreenState> emit,) async {
+  void _onGetDoctor(
+    GetDoctorEvent event,
+    Emitter<DoctorScreenState> emit,
+  ) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
     try {
@@ -73,16 +108,20 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     }
   }
 
-  void _onAddDoctor(AddDoctorEvent event,
-      Emitter<DoctorScreenState> emit,) async {
+  void _onAddDoctor(
+    AddDoctorEvent event,
+    Emitter<DoctorScreenState> emit,
+  ) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
     try {
       await authRepository.addDoctor(addDoctorModel: event.addDoctor);
 
       final doctors = await authRepository.getDoctors(sortBy: "A->Z");
-      NotificationService.showNotification("New Doctor",
-          "A doctor name with ${state.doctorDetails!.doctorName} is added Succesfully");
+      // NotificationService.showNotification(
+      //   "New Doctor",
+      //   "A doctor name with ${state.doctorDetails!.doctorName} is added Successfully",
+      // );
       emit(
         state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors),
       );
@@ -95,27 +134,31 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     emit(state.copyWith(isTab: event.isTab));
   }
 
-  void _onLiked(LikedEvent event, Emitter<DoctorScreenState> emit)  async{
+  void _onLiked(LikedEvent event, Emitter<DoctorScreenState> emit) async {
+    await authRepository.likedDoctor(event.doctorId, event.isLiked);
 
-    await authRepository.likedDoctor(event.doctorId,event.isLiked);
-
-    add(ApplyFilters(
-      sortBy: state.selectedFilter == DoctorFilter.sortBy
-          ? "A->Z" : null,
-      liked: state.selectedFilter == DoctorFilter.liked ? true : null,
-      gender: null,
-    ));
-
- }
-
-  void _onFilterChange(FilterChangedEvent event,
-      Emitter<DoctorScreenState> emit,) {
-    emit(state.copyWith(selectedIndex: event.index,
-    selectedFilter: event.filter,
-    ));
+    add(
+      ApplyFilters(
+        sortBy: state.selectedFilter == DoctorFilter.sortBy ? "A->Z" : null,
+        liked: state.selectedFilter == DoctorFilter.liked ? true : null,
+        gender: null,
+      ),
+    );
   }
 
-  void _onApplyFilters(ApplyFilters event, Emitter<DoctorScreenState> emit) async {
+  void _onFilterChange(
+    FilterChangedEvent event,
+    Emitter<DoctorScreenState> emit,
+  ) {
+    emit(
+      state.copyWith(selectedIndex: event.index, selectedFilter: event.filter),
+    );
+  }
+
+  void _onApplyFilters(
+    ApplyFilters event,
+    Emitter<DoctorScreenState> emit,
+  ) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
 
     try {
@@ -124,14 +167,11 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
         liked: event.liked,
         gender: event.gender,
       );
-      emit(state.copyWith(doctorStatus: DoctorStatus.success,
-      getDoctor: doctors,
-      ));
-    }  catch (e) {
+      emit(
+        state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors),
+      );
+    } catch (e) {
       emit(state.copyWith(doctorStatus: DoctorStatus.failure));
     }
-
-
-
   }
 }

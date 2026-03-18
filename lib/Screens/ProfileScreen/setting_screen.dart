@@ -15,31 +15,35 @@ class SettingScreen extends StatelessWidget {
       onWillPop: ()  async{
         context.go(RouterName.profileScreen.path);
         return false;
-
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.064, // 25
+              horizontal: AppSize.width(context) * 0.054, // 25
               vertical: AppSize.height(context) * 0.023,  // 20
             ),
             child: Column(
               children: [
-                topRow(
-                  context,
-                  onPressed: () => context.go(RouterName.profileScreen.path),
-                  text: "Setting",
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:6),
+                  child: topRow(
+                    context,
+                    onPressed: () => context.go(RouterName.profileScreen.path),
+                    text: "Setting",
+                  ),
                 ),
-                SizedBox(height: AppSize.height(context) * 0.011), // 10
-                settingOptionTile(context, image: const AssetImage("assets/images/notification.png"),title: "Notification Setting", onTap: () {},),
-                SizedBox(height: AppSize.height(context) * 0.015), // 10
-                settingOptionTile(context, image: const AssetImage("assets/images/key.png"), title: "Password Manager", onTap: () {
+                SizedBox(height: AppSize.height(context) * 0.04),
+                settingOptionTile(context, image:  AssetImage("assets/images/notification.png"),title: "Notification Setting", onTap: () {
+                  context.go(RouterName.notificationSetting.path);
+                },),
+                SizedBox(height: AppSize.height(context) * 0.029),
+                settingOptionTile(context, image:  AssetImage("assets/images/key.png"), title: "Password Manager", onTap: () {
                   context.go(RouterName.passwordManagerScreen.path);
                 },),
-                SizedBox(height: AppSize.height(context) * 0.015), // 10
-                settingOptionTile(context, image: const AssetImage("assets/images/user_icon.png"), title: "Delete Account", onTap: () {},)
+                SizedBox(height: AppSize.height(context) * 0.029),
+                settingOptionTile(context, image:  AssetImage("assets/images/user_icon.png"), title: "Delete Account", onTap: () {},)
               ],
             ),
           ),

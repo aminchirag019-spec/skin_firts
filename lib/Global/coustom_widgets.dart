@@ -1,16 +1,21 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 
+import '../Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import '../Bloc/DoctorBloc/doctor_screen_event.dart';
+import '../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../router/router_class.dart';
 
 import '../Utilities/media_query.dart';
 
-Widget topRow(
-  BuildContext context, {
+Widget topRow(BuildContext context, {
   required VoidCallback onPressed,
   required String text,
 }) {
@@ -37,8 +42,8 @@ Widget topRow(
   );
 }
 
-Widget coustomTextField(
-   {required BuildContext context,
+Widget coustomTextField({
+  required BuildContext context,
   required String hintText,
   ImageProvider? image,
   double? size = 20,
@@ -48,17 +53,22 @@ Widget coustomTextField(
   TextAlignVertical? alignment,
   bool isBold = false,
   bool obscureText = false,
-  String ? SvgPath,
-  String ? padding,
-  double  h =14,
+  String? SvgPath,
+  String? padding,
+  double h = 14,
   double w = 10,
-  VoidCallback ? onTap,
-     String ? initialValue,
+  VoidCallback? onTap,
+  String? initialValue,
+  String ? type,
+  TextInputType ? textInputType,
+  int ? maxLength
 }) {
   return TextFormField(
     controller: controller,
+    keyboardType: textInputType,
     validator: validator,
-    initialValue:initialValue,
+    maxLength: maxLength,
+    initialValue: initialValue,
     obscureText: obscureText,
     onTap: onTap,
     decoration: InputDecoration(
@@ -66,39 +76,62 @@ Widget coustomTextField(
       alignLabelWithHint: true,
       isDense: true,
       contentPadding: EdgeInsets.symmetric(
-        horizontal: h == 14 ? AppSize.width(context) * 0.036 : AppSize.width(context) * (h / 390.0),
-        vertical: w == 10 ? AppSize.height(context) * 0.012 : AppSize.height(context) * (w / 844.0),
+        horizontal: h == 14
+            ? AppSize.width(context) * 0.036
+            : AppSize.width(context) * (h / 390.0),
+        vertical: w == 10
+            ? AppSize.height(context) * 0.012
+            : AppSize.height(context) * (w / 844.0),
       ),
       hintText: hintText ?? "******",
       hintStyle: GoogleFonts.leagueSpartan(
         color: isBold ? Color(0xff2260FF) : Color(0xff809CFF),
-        fontSize: size == 20 ? AppSize.width(context) * 0.058 : AppSize.width(context) * ((size ?? 20) / 390.0),
+        fontSize: size == 20
+            ? AppSize.width(context) * 0.058
+            : AppSize.width(context) * ((size ?? 20) / 390.0),
         fontWeight: isBold ? FontWeight.w500 : FontWeight.w400,
       ),
       filled: true,
       fillColor: Color(0xffECF1FF),
       border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSize.width(context) * 0.038), // 15
+        borderRadius: BorderRadius.circular(
+          AppSize.width(context) * 0.038,
+        ),
         borderSide: BorderSide.none,
       ),
-      suffixIcon: image != null ? ImageIcon(image, size: AppSize.width(context) * 0.025) : null,
+      suffixIcon: image != null
+          ? BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+        builder: (context, state) {
+          return IconButton(
+            onPressed: () {
+              context
+                  .read<DoctorScreenBloc>()
+                  .add(TogglePasswordVisibility());
+              },
+
+            icon: Icon(
+              state.isPasswordHidden
+                  ? Icons.visibility_off
+                  : Icons.visibility,
+            ),
+          );
+        },
+      )
+          : null,
     ),
   );
 }
+
 class LoginRow {
   final String svgPath;
   final VoidCallback? onTap;
   final double? radius;
   final double? iconSize;
-  LoginRow({
-    required this.svgPath,
-    this.onTap,
-    this.radius,
-    this.iconSize,
-  });
+
+  LoginRow({required this.svgPath, this.onTap, this.radius, this.iconSize});
 }
-Widget loginRow(
-  BuildContext context, {
+
+Widget loginRow(BuildContext context, {
   required List<LoginRow> icons,
   double defaultRadius = 25,
   double defaultIconSize = 30,
@@ -112,11 +145,17 @@ Widget loginRow(
           onTap: icon.onTap,
           child: CircleAvatar(
             backgroundColor: const Color(0xffCAD6FF),
-            radius: icon.radius == null ? AppSize.width(context) * (defaultRadius / 390.0) : AppSize.width(context) * (icon.radius! / 390.0),
+            radius: icon.radius == null
+                ? AppSize.width(context) * (defaultRadius / 390.0)
+                : AppSize.width(context) * (icon.radius! / 390.0),
             child: SvgPicture.asset(
               icon.svgPath,
-              height: icon.iconSize == null ? AppSize.width(context) * (defaultIconSize / 390.0) : AppSize.width(context) * (icon.iconSize! / 390.0),
-              width: icon.iconSize == null ? AppSize.width(context) * (defaultIconSize / 390.0) : AppSize.width(context) * (icon.iconSize! / 390.0),
+              height: icon.iconSize == null
+                  ? AppSize.width(context) * (defaultIconSize / 390.0)
+                  : AppSize.width(context) * (icon.iconSize! / 390.0),
+              width: icon.iconSize == null
+                  ? AppSize.width(context) * (defaultIconSize / 390.0)
+                  : AppSize.width(context) * (icon.iconSize! / 390.0),
               fit: BoxFit.contain,
             ),
           ),
@@ -124,8 +163,9 @@ Widget loginRow(
       );
     }).toList(),
   );
-}Widget customButton(
-  BuildContext context, {
+}
+
+Widget customButton(BuildContext context, {
   required String text,
   required Color backgroundColor,
   required Color textColor,
@@ -143,7 +183,9 @@ Widget loginRow(
         text,
         style: GoogleFonts.leagueSpartan(
           color: textColor,
-          fontSize: fontSize == null ? AppSize.width(context) * 0.064 : AppSize.width(context) * (fontSize / 390.0), // 25
+          fontSize: fontSize == null
+              ? AppSize.width(context) * 0.064
+              : AppSize.width(context) * (fontSize / 390.0), // 25
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -193,7 +235,11 @@ List<Days> appointmentDates = [
   Days(date: 5, day: "FRI"),
   Days(date: 6, day: "SAT"),
 ];
-Widget homeCircleIcon(BuildContext context, String svgPath, {bool showDot = false}) {
+
+Widget homeCircleIcon(BuildContext context,
+    String svgPath, {
+      bool showDot = false,
+    }) {
   return Container(
     padding: EdgeInsets.all(AppSize.width(context) * 0.012), // 5
     decoration: const BoxDecoration(
@@ -226,7 +272,8 @@ Widget homeCircleIcon(BuildContext context, String svgPath, {bool showDot = fals
     ),
   );
 }
-Widget menuItem(String svgPath, String text,BuildContext context) {
+
+Widget menuItem(String svgPath, String text, BuildContext context) {
   return Column(
     children: [
       SizedBox(height: AppSize.height(context) * 0.009),
@@ -235,10 +282,7 @@ Widget menuItem(String svgPath, String text,BuildContext context) {
         svgPath,
         height: AppSize.height(context) * 0.020,
         width: AppSize.width(context) * 0.038,
-        colorFilter: const ColorFilter.mode(
-          Color(0xff2260FF),
-          BlendMode.srcIn,
-        ),
+        colorFilter: const ColorFilter.mode(Color(0xff2260FF), BlendMode.srcIn),
       ),
 
       SizedBox(height: AppSize.height(context) * 0.007),

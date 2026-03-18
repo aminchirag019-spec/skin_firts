@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:skin_firts/Data/auth_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
+import 'package:skin_firts/main.dart';
 
 import '../../Utilities/bio_metric.dart';
 
@@ -24,17 +26,78 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutEvent>(_onLogoutEvent);
     on<LoadCurrentUser>(_onLoadCurrentUser);
     on<UpdateProfileEvent>(_onUpdateProfileEvent);
+    on<UpdatePasswordEvent>(_onUpdatePasswordEvent);
   }
+  void _onUpdatePasswordEvent(
+      UpdatePasswordEvent event,
+      Emitter<AuthState> emit,
+      ) async {
+    if (event.currentPassword.isEmpty ||
+        event.newPassword.isEmpty ||
+        event.confirmPassword.isEmpty) {
+      emit(state.copyWith(
+        passwordStatus: PasswordStatus.failure,
+      ));
+      return;
+    }
 
+    if (event.newPassword != event.confirmPassword) {
+      emit(state.copyWith(
+        passwordStatus: PasswordStatus.failure,
+      ));
+      return;
+    }
 
-  void _onUpdateProfileEvent(UpdateProfileEvent event, Emitter<AuthState> emit) async{
-    emit(state.copyWith(signupStatus: SignupStatus.loading));
+    if (event.newPassword.length < 6) {
+      emit(state.copyWith(
+        passwordStatus: PasswordStatus.failure,
+      ));
+      return;
+    }
+
+    emit(state.copyWith(passwordStatus: PasswordStatus.loading));
+
     try {
-      await repository.updateUserProfile(signupModel: event.signupModel);
-      emit(state.copyWith(signupStatus: SignupStatus.success));
+      await repository.updateUserPassword(
+        currentPassword: event.currentPassword,
+        newPassword: event.newPassword,
+      );
 
-    }catch (e) {
-      emit(state.copyWith(signupStatus: SignupStatus.failure));
+      emit(state.copyWith(
+        passwordStatus: PasswordStatus.success,
+      ));
+
+    } catch (e) {
+      print(e);
+      emit(state.copyWith(
+        passwordStatus: PasswordStatus.failure,
+      ));
+    }
+  }
+  void _onUpdateProfileEvent(
+      UpdateProfileEvent event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(state.copyWith(signupStatus: SignupStatus.loading));
+
+    try {
+      await repository.updateUserProfile(
+        signupModel: event.signupModel,
+      );
+
+      if (event.signupModel.email != FirebaseAuth.instance.currentUser?.email) {
+        emit(state.copyWith(
+          signupStatus: SignupStatus.emailVerificationSent,
+        ));
+      } else {
+        emit(state.copyWith(signupStatus: SignupStatus.success));
+      }
+
+    } catch (e) {
+      print("----------------------------------------------------${e}-----------------------------------------");
+      emit(state.copyWith(
+        signupStatus: SignupStatus.failure,
+      ));
     }
   }
 

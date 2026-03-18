@@ -48,4 +48,12 @@ class GetDoctorDetailsEvent extends DoctorScreenEvent{
   GetDoctorDetailsEvent(this.doctorUid);
 }
 class GetServiceEvent extends DoctorScreenEvent{}
+class SwitchEvent extends DoctorScreenEvent {
+  final int index;
+  final bool isSwitched;
+
+  SwitchEvent({required this.index, required this.isSwitched});
+
+}
+class TogglePasswordVisibility extends DoctorScreenEvent {}
 

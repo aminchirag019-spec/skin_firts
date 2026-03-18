@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
@@ -13,6 +14,7 @@ import 'package:skin_firts/router/app_router.dart';
 import 'Utilities/bio_metric.dart';
 import 'Utilities/firebase_message.dart';
 final user = FirebaseAuth.instance.currentUser;
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
@@ -24,7 +26,8 @@ void main() async{
   );
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
-    BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper()))
+    BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
+    BlocProvider(create: (context) => NotificationBloc(AuthRepository()),)
   ], child: MyApp()));
 }
 

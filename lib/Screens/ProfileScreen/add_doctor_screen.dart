@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
+import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
+import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
 import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
@@ -170,7 +172,6 @@ class AddDoctorScreen extends StatelessWidget {
                       if (state.doctorStatus == DoctorStatus.loading) {
                         return const CircularProgressIndicator();
                       }
-
                       return customButton(
                         context,
                         text: "Add Doctor",
@@ -212,7 +213,13 @@ class AddDoctorScreen extends StatelessWidget {
                           ratingController.clear();
                           emailController.clear();
                           genderController.clear();
-                          NotificationService.showNotification("add Doctor", "A doctor Named ${doctor.doctorName} is added");
+                          context.read<NotificationBloc>().add(SendNotificationEvent(
+                            doctor,
+                            NotificationModel(
+                              title: "Add Doctor",
+                              body: "You successfully added a ${doctor.doctorName}",
+                            ),
+                          ));
                         },
                       );
                     },
