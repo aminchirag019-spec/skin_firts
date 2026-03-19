@@ -1,3 +1,7 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AddDoctor {
   final String id;
   final String doctorName;
@@ -126,27 +130,33 @@ class ServiceModel {
 class NotificationModel {
   final String title;
   final String body;
+  final Timestamp? createdAt;
 
   NotificationModel({
     required this.title,
     required this.body,
+     this.createdAt,
   });
-  /// CopyWith (immutable update)
+
   NotificationModel copyWith({
     String? title,
     String? body,
+    Timestamp? createdAt,
   }) {
     return NotificationModel(
       title: title ?? this.title,
       body: body ?? this.body,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
-  /// Convert JSON -> Model
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
       title: json['title'] ?? '',
       body: json['body'] ?? '',
+      createdAt: json['createdAt'] != null
+          ? Timestamp.fromDate(DateTime.parse(json['createdAt']))
+          : null,
     );
   }
 
@@ -155,6 +165,7 @@ class NotificationModel {
     return {
       'title': title,
       'body': body,
+      'createdAt': createdAt?.toDate().toIso8601String(),
     };
   }
 }

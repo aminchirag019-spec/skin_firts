@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
 import 'package:skin_firts/Data/dotor_model.dart';
+import 'package:skin_firts/Utilities/time_zones.dart';
 
 import '../../Bloc/NotificationBloc/notification_bloc.dart';
 import '../../Bloc/NotificationBloc/notification_state.dart';
@@ -28,90 +29,129 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSize.width(context) * 0.064, // 25
-            vertical: AppSize.height(context) * 0.023, //
-          ),
-          child: Column(
-            children: [
-              topRow(
-                context,
-                onPressed: () => context.go(RouterName.homeScreen.path),
-                text: "Notification",
-              ),
-              SizedBox(height: AppSize.height(context) * 0.023), // 10
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  customDayContainers(text: "Today", context),
-                  Text(
-                    "Mark all",
-                    style: GoogleFonts.leagueSpartan(
-                      fontSize: AppSize.width(context) * 0.046, // 18
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff2260FF),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppSize.height(context) * 0.023), // 10
-              Expanded(
-                child: BlocConsumer<NotificationBloc, NotificationState>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:AppSize.width(context) * 0.050, // 12
-                                    vertical: AppSize.height(context) * 0.025, // 5
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff2260FF),
-                                    shape: BoxShape.circle
-                                  ),
-                                  child:SvgPicture.asset("assets/images/bottom_calender.svg"),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: AppSize.width(context) * 0.050), // 12
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(state.notifications[index].title,
-                                    style: GoogleFonts.leagueSpartan(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: AppSize.width(context) * 0.05, // 18
-                                    ),),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(state.notifications[index].body,),
-                                  ],
-                                ),
-
-                              ],
-                            )
-                           ],
-                        );
-                      },
-                      itemCount: state.notifications.length,
-                    );
-                  },
+    return WillPopScope(
+      onWillPop: () async {
+        context.go(RouterName.homeScreen.path);
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width(context) * 0.064, // 25
+              vertical: AppSize.height(context) * 0.023, //
+            ),
+            child: Column(
+              children: [
+                topRow(
+                  context,
+                  onPressed: () => context.go(RouterName.homeScreen.path),
+                  text: "Notification",
                 ),
-              ),
-            ],
+                SizedBox(height: AppSize.height(context) * 0.023), // 10
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        context.go(RouterName.chatScreen.path);
+                      },
+                      child: customDayContainers(text: "Today", context),
+                    ),
+                    Text(
+                      "Mark all",
+                      style: GoogleFonts.leagueSpartan(
+                        fontSize: AppSize.width(context) * 0.046, // 18
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff2260FF),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppSize.height(context) * 0.023), // 10
+                Expanded(
+                  child: BlocConsumer<NotificationBloc, NotificationState>(
+                    listener: (context, state) {},
+                    builder: (context, state) {
+                      return ListView.builder(
+                        itemCount: state.notifications.length,
+                        itemBuilder: (context, index) {
+                          final notification = state.notifications[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              context.go(RouterName.chatScreen.path);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: AppSize.width(context) * 0.00,
+                                vertical: AppSize.height(context) * 0.01,
+                              ),
+                              padding: EdgeInsets.all(
+                                AppSize.width(context) * 0.01,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: AppSize.width(context) * 0.04,
+                                      vertical: AppSize.height(context) * 0.02,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff2260FF),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      "assets/images/bottom_calender.svg",
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(width: AppSize.width(context) * 0.04),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          notification.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.leagueSpartan(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: AppSize.width(context) * 0.045,
+                                          ),
+                                        ),
+                                        Text(
+                                          notification.body,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.leagueSpartan(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: AppSize.width(context) * 0.045,
+                                            color: Colors.black,
+                                            height: 1
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(notificationFormatTime(time))
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

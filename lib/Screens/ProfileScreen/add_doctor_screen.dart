@@ -45,9 +45,9 @@ class AddDoctorScreen extends StatelessWidget {
       onWillPop: () async{
         context.go(RouterName.profileScreen.path);
         return false;
-
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(

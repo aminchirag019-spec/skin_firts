@@ -22,6 +22,7 @@ class ProfileScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,

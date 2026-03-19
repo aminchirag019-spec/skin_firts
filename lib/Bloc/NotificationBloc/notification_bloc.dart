@@ -23,7 +23,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     try {
       emit(state.copyWith(notificationStatus: NotificationStatus.loading));
 
-      final notifications = await repository.getNotifications();
+      final notifications = await repository.getNotifications(
+
+      );
 
       emit(
         state.copyWith(

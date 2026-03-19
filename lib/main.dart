@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
+import 'package:skin_firts/Bloc/ChatBloc/chat_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
@@ -21,13 +22,13 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)),
-  );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)));
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
-    BlocProvider(create: (context) => NotificationBloc(AuthRepository()),)
+    BlocProvider(create: (context) => NotificationBloc(AuthRepository()),),
+    BlocProvider(create: (context) => ChatBloc(),)
   ], child: MyApp()));
 }
 

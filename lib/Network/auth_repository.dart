@@ -92,7 +92,6 @@ class AuthRepository {
         print("User is null");
         return [];
       }
-
       final snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(user!.uid)

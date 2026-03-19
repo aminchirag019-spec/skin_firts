@@ -58,8 +58,14 @@ dependencies:
   media_query_preview: ^0.1.0
   # for Firebase Messaging
   firebase_messaging: ^16.1.2
+  # for local notifications
   flutter_local_notifications: ^17.1.0
-
+  # for get real time
+  intl: ^0.18.0
+  # for file sending:
+  file_picker: ^10.3.10
+  # for image sending
+  image_picker: ^1.2.1
 
 
 
