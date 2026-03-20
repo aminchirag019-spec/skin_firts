@@ -127,7 +127,7 @@ class _EditUserState extends State<EditUser> {
                           password: pass.text,
                           name: nameController.text,
                           phone: phoneController.text,
-                          dob: dobController.text
+                          dob: dobController.text, role: '', uid: user!.uid
                       )));
                     },)
 

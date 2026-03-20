@@ -19,7 +19,9 @@ enum RouterName {
   editUserScreen('/EditUserScreen','EditUserScreen'),
   notificationSetting('/NotificationScreen','NotificationScreen'),
   passwordManagerScreen('/PasswordManagerScreen','PasswordManagerScreen'),
-  welcomeScreen('/WelcomeScreen','WelcomeScreen');
+  welcomeScreen('/WelcomeScreen','WelcomeScreen'),
+  chatListScreen('/ChatListScreen','ChatListScreen'),
+  chatScreen('/ChatScreen','ChatScreen');
 
 
   final String path;

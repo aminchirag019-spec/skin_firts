@@ -88,7 +88,7 @@ Widget doctorInformationCard() {
                                     ),
                                   ),
                                   Text(
-                                    "${doctor.specialization}",
+                                    doctor.specialization,
                                     style: GoogleFonts.leagueSpartan(
                                       fontSize:
                                           AppSize.width(context) * 0.033, // 13

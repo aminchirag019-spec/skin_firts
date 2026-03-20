@@ -11,24 +11,40 @@ import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
 
+import 'Bloc/ChatBloc/chat_bloc.dart';
 import 'Utilities/bio_metric.dart';
 import 'Utilities/firebase_message.dart';
+
 final user = FirebaseAuth.instance.currentUser;
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)),
   );
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
-    BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
-    BlocProvider(create: (context) => NotificationBloc(AuthRepository()),)
-  ], child: MyApp()));
+  final authRepo = AuthRepository();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              DoctorScreenBloc(AuthRepository(), NotificationService()),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(
+            AuthRepository(),
+            BiometricAuthService(),
+            SharedPrefsHelper(),
+          ),
+        ),
+        BlocProvider(create: (context) => NotificationBloc(AuthRepository())),
+        BlocProvider(create: (context) => ChatBloc(authRepo) ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

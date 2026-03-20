@@ -59,6 +59,9 @@ dependencies:
   # for Firebase Messaging
   firebase_messaging: ^16.1.2
   flutter_local_notifications: ^17.1.0
+  image_picker: ^1.2.1
+  file_picker: ^10.3.10
+  emoji_picker_flutter: ^4.4.0
 
 
 

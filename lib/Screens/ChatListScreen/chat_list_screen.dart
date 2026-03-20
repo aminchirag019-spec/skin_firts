@@ -84,7 +84,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
                 SizedBox(height: 10),
 
-                Expanded(
+               (state.doctors.isEmpty&&state.users.isEmpty)?Center(child: Text("No List of Data")): Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     itemCount: state.role == "user"

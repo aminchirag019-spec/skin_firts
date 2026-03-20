@@ -141,7 +141,7 @@ class _FingerAuthenticationState extends State<FingerAuthentication> {
                           return GestureDetector(
                             onTap: () async {
                               String? userId = await SharedPrefsHelper.getUserId();
-                              await SharedPrefsHelper.setBiometricEnabled(false,userId as String);
+                              await SharedPrefsHelper.setBiometricEnabled(false,userId.toString());
                               context.go(RouterName.homeScreen.path);
                             },
                             child: Container(
