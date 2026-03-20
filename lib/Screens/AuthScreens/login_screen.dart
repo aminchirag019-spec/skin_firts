@@ -155,7 +155,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         String? userId = await SharedPrefsHelper.getUserId();
 
                         if (userId != null) {
+
                           context.go(RouterName.fingerAuthenticationScreen.path);
+                          // context.go(RouterName.chatListScreen.path);
                         }
                       }
                     },
@@ -212,6 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
                       LoginRow(
                         svgPath: "assets/images/finger_svg.svg",
+                        // onTap: () => context.go(
+                        //   RouterName.fingerAuthenticationScreen.path,
+                        // ),
                         onTap: () => context.go(
                           RouterName.fingerAuthenticationScreen.path,
                         ),
