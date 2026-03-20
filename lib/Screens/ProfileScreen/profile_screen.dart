@@ -134,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
                   ProfileOptionTile(
                     context,
-                    image: const AssetImage(
+                    image:  AssetImage(
                       "assets/images/chat_img.png",
                     ),
                     title: "Chat List",

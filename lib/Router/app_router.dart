@@ -20,9 +20,10 @@ import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 
 import '../Global/dummy_data.dart';
+import '../Screens/ChatScreens/chat_list_screen.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/CalenderScreen/calender_screen.dart';
-import '../Screens/MessageScreen/chat_screen.dart';
+import '../Screens/ChatScreens/chat_screen.dart';
 import '../Screens/ProfileScreen/notification_setting.dart';
 
 final GoRouter app_router = GoRouter(
@@ -82,8 +83,6 @@ final GoRouter app_router = GoRouter(
               path: RouterName.messageScreen.path,
               builder: (context, state) => MessageScreen(),
             ),
-
-
           ],
         ),
         StatefulShellBranch(
@@ -131,6 +130,10 @@ final GoRouter app_router = GoRouter(
     GoRoute(
       path: RouterName.chatScreen.path,
       builder: (context, state) => ChatScreen(),
+    ),
+    GoRoute(
+      path: RouterName.chatListScreen.path,
+      builder: (context, state) => ChatListScreen(),
     ),
   ],
 );
