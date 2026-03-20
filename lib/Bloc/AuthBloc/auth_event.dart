@@ -28,3 +28,9 @@ class UpdatePasswordEvent extends AuthEvent{
     final String confirmPassword;
     UpdatePasswordEvent({required this.currentPassword,required this.newPassword,required this.confirmPassword});
 }
+class LoadChatListEvent extends AuthEvent{}
+
+class SelectRoleEvent extends AuthEvent {
+  final String role;
+  SelectRoleEvent(this.role);
+}

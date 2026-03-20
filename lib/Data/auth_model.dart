@@ -1,9 +1,11 @@
 class SignupModel {
+  final String uid;
   final String email;
   final String password;
   final String name;
   final String phone;
   final String dob;
+  final String role;
 
   SignupModel({
     required this.email,
@@ -11,6 +13,8 @@ class SignupModel {
     required this.name,
     required this.phone,
     required this.dob,
+    required this.role,
+    required this.uid
   });
 
   SignupModel copyWith({
@@ -19,6 +23,8 @@ class SignupModel {
     String? name,
     String? phone,
     String? dob,
+    String? role,
+    String? uid,
   }) {
     return SignupModel(
       email: email ?? this.email,
@@ -26,6 +32,8 @@ class SignupModel {
       name: name ?? this.name,
       phone: phone ?? this.phone,
       dob: dob ?? this.dob,
+      role: role??this.role,
+      uid: uid??this.uid,
     );
   }
 
@@ -36,6 +44,8 @@ class SignupModel {
       "name": name,
       "phone": phone,
       "dob": dob,
+      "role":role,
+      "uid":uid
     };
   }
 
@@ -47,6 +57,8 @@ class SignupModel {
       name: json["name"] ?? "",
       phone: json["phone"] ?? "",
       dob: json["dob"] ?? "",
+      role: json["role"]??'',
+      uid: json["uid"]??'',
     );
   }
 }

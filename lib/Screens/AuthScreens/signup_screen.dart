@@ -17,6 +17,7 @@ import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
 import '../../Utilities/sharedpref_helper.dart';
+import '../../main.dart';
 import '../../router/router_class.dart';
 import '../../Utilities/media_query.dart';
 import 'login_screen.dart';
@@ -41,6 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   TextEditingController phoneController = TextEditingController();
 
+  // String selectedRole = "user";
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -59,6 +61,31 @@ class _SignupScreenState extends State<SignupScreen> {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ChoiceChip(
+                            label: Text("User"),
+                            selected: state.selectedRole == "user",
+                            onSelected: (_) {
+                              context.read<AuthBloc>().add(SelectRoleEvent("user"));
+                            },
+                          ),
+                          SizedBox(width: 10),
+                          ChoiceChip(
+                            label: Text("Doctor"),
+                            selected: state.selectedRole == "doctor",
+                            onSelected: (_) {
+                              context.read<AuthBloc>().add(SelectRoleEvent("doctor"));
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  SizedBox(height: 15),
                   topRow(
                     context,
                     onPressed: () {
@@ -108,7 +135,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               hintText: "••••••••",
                               obscureText: state.isPasswordHidden,
                               controller: passwordController,
-                              image:  AssetImage(
+                              image: AssetImage(
                                   "assets/images/obsecure_image.png"),
                             );
                           },
@@ -212,7 +239,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: AppSize.width(context) * 0.030, // 12
                           fontWeight: FontWeight.w500,
-                          color: const Color(0xff2260FF),
+                          color: Color(0xff2260FF),
                         ),
                       ),
                       SizedBox(width: AppSize.width(context) * 0.005), // 2
@@ -239,6 +266,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     listener: (context, state) {
                       if (state.signupStatus == SignupStatus.success) {
                         context.go(RouterName.fingerAuthenticationScreen.path);
+                        // context.go(RouterName.chatListScreen.path);
                       }
                     },
                     builder: (context, state) {
@@ -265,6 +293,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                 name: nameController.text,
                                 dob: dobController.text,
                                 phone: phoneController.text,
+                                role: state.selectedRole.toString(),
+                                uid: "",
                               ),
                             ),
                           );
@@ -272,7 +302,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011), // 10
+                  SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -326,7 +356,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: GoogleFonts.leagueSpartan(
                             fontWeight: FontWeight.w500,
                             fontSize: AppSize.width(context) * 0.035, // 14
-                            color: const Color(0xff2260FF),
+                            color: Color(0xff2260FF),
                           ),
                         ),
                       ),
