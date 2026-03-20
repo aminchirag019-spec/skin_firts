@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+
 import '../../Data/auth_model.dart';
 import '../../Data/dotor_model.dart';
 import '../../Network/auth_repository.dart';
@@ -30,7 +31,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     final repo = AuthRepository();
 
     final currentUser = await repo.getCurrentUserDetails();
-    role = currentUser?.role;
+    role = currentUser!.role;
 
     if (role == "user") {
       doctors = await repo.getAllDoctors();

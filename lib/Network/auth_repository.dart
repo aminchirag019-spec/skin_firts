@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:skin_firts/Data/message_model.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 
 import '../Data/auth_model.dart';
@@ -329,24 +328,24 @@ class AuthRepository {
     }
   }
 
-  Future<void> sendMessage(String conversationId, MessageModel message) async {
-    await FirebaseFirestore.instance
-        .collection("conversations")
-        .doc(conversationId)
-        .collection("messages")
-        .add(message.toJson());
-  }
-
-  Stream<List<MessageModel>> getMessages(String conversationId) {
-    return FirebaseFirestore.instance
-        .collection("conversations")
-        .doc(conversationId)
-        .collection("messages")
-        .orderBy("time")
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((e) => MessageModel.fromJson(e.data()))
-        .toList());
-  }
+  // Future<void> sendMessage(String conversationId, MessageModel message) async {
+  //   await FirebaseFirestore.instance
+  //       .collection("conversations")
+  //       .doc(conversationId)
+  //       .collection("messages")
+  //       .add(message.toJson());
+  // }
+  //
+  // Stream<List<MessageModel>> getMessages(String conversationId) {
+  //   return FirebaseFirestore.instance
+  //       .collection("conversations")
+  //       .doc(conversationId)
+  //       .collection("messages")
+  //       .orderBy("time")
+  //       .snapshots()
+  //       .map((snapshot) => snapshot.docs
+  //       .map((e) => MessageModel.fromJson(e.data()))
+  //       .toList());
+  // }
 
 }
