@@ -4,3 +4,4 @@ enum BiometricStatus{initial ,enabled , skip}
 enum DoctorStatus {initial, loading, success, failure}
 enum PasswordStatus {initial, loading, success, failure}
 enum NotificationStatus {initial, loading, success, failure}
+enum ChatListStatus {initial, loading, success, failure}
