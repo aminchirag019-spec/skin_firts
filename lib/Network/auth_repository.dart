@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skin_firts/Data/message_model.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 
 import '../Data/auth_model.dart';
@@ -27,6 +28,7 @@ class AuthRepository {
           'phone': signupModel.phone,
           'dob': signupModel.dob,
           'password': signupModel.password,
+          'role': signupModel.role,
           'createdAt': DateTime.now().toIso8601String(),
           'updatedAt': DateTime.now().toIso8601String(),
         });
@@ -67,19 +69,18 @@ class AuthRepository {
   }
 
   Future<void> storeNotification({
-  required NotificationModel notificationModel,
+    required NotificationModel notificationModel,
   }) async {
-
     try {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(user!.uid)
           .collection("notification")
           .add({
-        "title": notificationModel.title,
-        "body": notificationModel.body,
-        "createdAt": DateTime.now().toIso8601String(),
-      });
+            "title": notificationModel.title,
+            "body": notificationModel.body,
+            "createdAt": DateTime.now().toIso8601String(),
+          });
       print("Notification stored successfully");
     } catch (e) {
       print("Error storing notification: $e");
@@ -102,7 +103,6 @@ class AuthRepository {
       return snapshot.docs
           .map((doc) => NotificationModel.fromJson(doc.data()))
           .toList();
-
     } catch (e) {
       print("Error fetching notifications: $e");
       return []; // ✅ IMPORTANT
@@ -133,19 +133,16 @@ class AuthRepository {
   }
 
   Future<void> updateUserProfile({required SignupModel signupModel}) async {
-
-    if(user == null) return;
+    if (user == null) return;
 
     await firestore.collection('users').doc(user!.uid).update({
-      "name":signupModel.name,
-      "phone":signupModel.phone,
-      "dob":signupModel.dob,
-      "email":signupModel.email,
-      "updatedAt":DateTime.now().toIso8601String(),
+      "name": signupModel.name,
+      "phone": signupModel.phone,
+      "dob": signupModel.dob,
+      "email": signupModel.email,
+      "updatedAt": DateTime.now().toIso8601String(),
     });
-
   }
-
 
   Future<void> likedDoctor(String doctorUid, bool isLiked) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -233,7 +230,30 @@ class AuthRepository {
     }
   }
 
-  Future<User?> login({required LoginModel loginModel}) async {
+  // Future<User?> login({required LoginModel loginModel}) async {
+  //   try {
+  //     final credential = await firebaseAuth.signInWithEmailAndPassword(
+  //       email: loginModel.email,
+  //       password: loginModel.password,
+  //     );
+  //
+  //     final user = credential.user;
+  //     final token = await user?.getIdToken();
+  //     if (user != null) {
+  //       await SharedPrefsHelper.setLogin(
+  //         userId: user.uid,
+  //         accessToken: token ?? "",
+  //         checkToken: token ?? "",
+  //       );
+  //       print("Login successful: ${user.uid}");
+  //       return user;
+  //     }
+  //   } catch (e) {
+  //     print("Error logging in: $e");
+  //   }
+  //   return null;
+  // }
+  Future<Map<String, dynamic>?> login({required LoginModel loginModel}) async {
     try {
       final credential = await firebaseAuth.signInWithEmailAndPassword(
         email: loginModel.email,
@@ -241,18 +261,24 @@ class AuthRepository {
       );
 
       final user = credential.user;
-      final token = await user?.getIdToken();
+
       if (user != null) {
+        final token = await user.getIdToken();
+
         await SharedPrefsHelper.setLogin(
           userId: user.uid,
           accessToken: token ?? "",
           checkToken: token ?? "",
         );
-        print("Login successful: ${user.uid}");
-        return user;
+
+        final doc = await firestore.collection('users').doc(user.uid).get();
+
+        final userModel = SignupModel.fromJson(doc.data()!);
+
+        return {"user": userModel, "role": userModel.role};
       }
     } catch (e) {
-      print("Error logging in: $e");
+      print(e);
     }
     return null;
   }
@@ -270,4 +296,57 @@ class AuthRepository {
       print("Logout Error: $e");
     }
   }
+
+  Future<List<SignupModel>> getAllDoctors() async {
+    try {
+      final snapshot = await firestore
+          .collection("users")
+          .where("role", isEqualTo: "doctor")
+          .get();
+
+      return snapshot.docs.map((doc) {
+        return SignupModel.fromJson(doc.data());
+      }).toList();
+    } catch (e) {
+      print("Error fetching doctors: $e");
+      return [];
+    }
+  }
+
+  Future<List<SignupModel>> getAllUsers() async {
+    try {
+      final snapshot = await firestore
+          .collection("users")
+          .where("role", isEqualTo: "user")
+          .get();
+
+      return snapshot.docs.map((doc) {
+        return SignupModel.fromJson(doc.data());
+      }).toList();
+    } catch (e) {
+      print("Error fetching users: $e");
+      return [];
+    }
+  }
+
+  Future<void> sendMessage(String conversationId, MessageModel message) async {
+    await FirebaseFirestore.instance
+        .collection("conversations")
+        .doc(conversationId)
+        .collection("messages")
+        .add(message.toJson());
+  }
+
+  Stream<List<MessageModel>> getMessages(String conversationId) {
+    return FirebaseFirestore.instance
+        .collection("conversations")
+        .doc(conversationId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((e) => MessageModel.fromJson(e.data()))
+        .toList());
+  }
+
 }
