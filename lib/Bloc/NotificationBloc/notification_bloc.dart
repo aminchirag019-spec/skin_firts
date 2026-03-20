@@ -55,6 +55,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         "Add Doctor",
         "You successfully added a ${event.doctor.doctorName}",
       );
+      print("Notification poped");
     } catch (e) {
       NotificationService.showNotification("Error", "Something went wrong");
     }

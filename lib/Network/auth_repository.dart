@@ -164,7 +164,6 @@ class AuthRepository {
         "likedAt": FieldValue.serverTimestamp(),
       });
     } else {
-      await favRef.delete();
     }
   }
 

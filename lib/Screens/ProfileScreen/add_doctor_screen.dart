@@ -167,6 +167,13 @@ class AddDoctorScreen extends StatelessWidget {
                           ),
                         );
                       }
+                      if(state.doctorStatus == DoctorStatus.failure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Something went wrong"),
+                          ),
+                        );
+                      }
                     },
                     builder: (context, state) {
                       if (state.doctorStatus == DoctorStatus.loading) {

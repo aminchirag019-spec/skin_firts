@@ -27,17 +27,13 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   }
 
   void _onTogglePasswordVisibility(
-      TogglePasswordVisibility event,
-      Emitter<DoctorScreenState> emit,
-      ) {
+    TogglePasswordVisibility event,
+    Emitter<DoctorScreenState> emit,
+  ) {
     emit(state.copyWith(isPasswordHidden: !state.isPasswordHidden));
   }
 
-
-  void _onSwitch(
-      SwitchEvent event,
-      Emitter<DoctorScreenState> emit,
-      ) async {
+  void _onSwitch(SwitchEvent event, Emitter<DoctorScreenState> emit) async {
     final updatedSwitches = List<bool>.from(state.switches);
 
     updatedSwitches[event.index] = event.isSwitched;
@@ -118,10 +114,6 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
       await authRepository.addDoctor(addDoctorModel: event.addDoctor);
 
       final doctors = await authRepository.getDoctors(sortBy: "A->Z");
-      // NotificationService.showNotification(
-      //   "New Doctor",
-      //   "A doctor name with ${state.doctorDetails!.doctorName} is added Successfully",
-      // );
       emit(
         state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors),
       );
