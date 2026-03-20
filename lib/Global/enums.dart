@@ -5,5 +5,5 @@ enum DoctorStatus {initial, loading, success, failure}
 enum PasswordStatus {initial, loading, success, failure}
 enum NotificationStatus {initial, loading, success, failure}
 enum ChatStatus{initial, loading, success, failure}
-enum ChatType{ file , image , text}
+enum ChatType{ file , image , text , audio}
  enum ChatListStatus {initial, loading, success, failure}

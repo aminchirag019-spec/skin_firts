@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:skin_firts/Bloc/ChatBloc/chat_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
+import 'package:skin_firts/Network/chat_repository.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
@@ -28,7 +30,7 @@ void main() async{
     BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
     BlocProvider(create: (context) => NotificationBloc(AuthRepository()),),
-    BlocProvider(create: (context) => ChatBloc(),)
+    BlocProvider(create: (context) => ChatBloc(ChatRepository(FirebaseFirestore.instance)),)
   ], child: MyApp()));
 }
 

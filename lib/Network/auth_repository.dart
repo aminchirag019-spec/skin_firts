@@ -328,24 +328,5 @@ class AuthRepository {
     }
   }
 
-  // Future<void> sendMessage(String conversationId, MessageModel message) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("conversations")
-  //       .doc(conversationId)
-  //       .collection("messages")
-  //       .add(message.toJson());
-  // }
-  //
-  // Stream<List<MessageModel>> getMessages(String conversationId) {
-  //   return FirebaseFirestore.instance
-  //       .collection("conversations")
-  //       .doc(conversationId)
-  //       .collection("messages")
-  //       .orderBy("time")
-  //       .snapshots()
-  //       .map((snapshot) => snapshot.docs
-  //       .map((e) => MessageModel.fromJson(e.data()))
-  //       .toList());
-  // }
 
 }

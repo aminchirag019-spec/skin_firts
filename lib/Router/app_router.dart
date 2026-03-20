@@ -129,7 +129,14 @@ final GoRouter app_router = GoRouter(
     ),
     GoRoute(
       path: RouterName.chatScreen.path,
-      builder: (context, state) => ChatScreen(),
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+
+        return ChatScreen(
+          receiverId: data['receiverId'],
+          receiverName: data['receiverName'],
+        );
+      },
     ),
     GoRoute(
       path: RouterName.chatListScreen.path,

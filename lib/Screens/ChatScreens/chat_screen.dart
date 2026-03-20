@@ -21,7 +21,9 @@ import '../../main.dart';
 import 'chat_widget.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({super.key,required this.receiverId,required this.receiverName});
+  final String? receiverId;
+  final String? receiverName;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -29,6 +31,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController chatController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  context.read<ChatBloc>().add(LoadMessageEvent(widget.receiverId!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
       value: SystemUiOverlayStyle(statusBarColor: Colors.white),
       child: WillPopScope(
         onWillPop: () async{
-          context.go(RouterName.homeScreen.path);
+          context.go(RouterName.chatListScreen.path);
           return false;
         },
         child: Scaffold(
@@ -53,13 +61,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          context.go(RouterName.messageScreen.path);
+                          context.go(RouterName.chatListScreen.path);
                         },
                         child: Icon(Icons.arrow_back_ios, color: Colors.white),
                       ),
                       SizedBox(width: AppSize.width(context) * 0.025), // 12
                       Text(
-                        "Dr. Olivia Turner",
+                        widget.receiverName ?? "",
                         style: GoogleFonts.leagueSpartan(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -141,13 +149,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           return GestureDetector(
                             onTap: () {
                               if (chatController.text.trim().isEmpty) return;
-                              final chatModel = ChatModel(
-                                message: chatController.text.trim(),
-                                senderId: user!.uid,
-                                timestamp: DateTime.now(),
-                              );
+                              final text = chatController.text.trim();
                               context.read<ChatBloc>().add(
-                                SendChatEvent(chatModel),
+                                SendTextMessage(message:text, receiverId:widget.receiverId! ),
                               );
                               chatController.clear();
                             },

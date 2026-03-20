@@ -135,7 +135,7 @@ class ProfileScreen extends StatelessWidget {
                   ProfileOptionTile(
                     context,
                     image:  AssetImage(
-                      "assets/images/chat_img.png",
+                      "assets/images/img.png",
                     ),
                     title: "Chat List",
                     onTap: () {

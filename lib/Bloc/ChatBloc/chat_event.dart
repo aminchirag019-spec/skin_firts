@@ -1,20 +1,49 @@
- import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:skin_firts/Data/chat_model.dart';
+import '../../Data/chat_model.dart';
 
-class ChatEvent {}
+abstract class ChatEvent {}
 
- class SendChatEvent extends ChatEvent{
-  final ChatModel? chatModel;
+/// TEXT MESSAGE
+class SendTextMessage extends ChatEvent {
+  final String message;
+  final String receiverId;
 
-  SendChatEvent(this.chatModel);
- }
+  SendTextMessage({
+    required this.message,
+    required this.receiverId,
+  });
+}
 
- class SendImageMessage extends ChatEvent {
+/// IMAGE MESSAGE
+class SendImageMessage extends ChatEvent {
   final String imagePath;
-  SendImageMessage(this.imagePath);
- }
+  final String receiverId;
 
- class SendFileMessage extends ChatEvent {
+  SendImageMessage({
+    required this.imagePath,
+    required this.receiverId,
+  });
+}
+
+/// FILE MESSAGE
+class SendFileMessage extends ChatEvent {
   final String filePath;
-  SendFileMessage(this.filePath);
- }
+  final String receiverId;
+
+  SendFileMessage({
+    required this.filePath,
+    required this.receiverId,
+  });
+}
+
+/// LOAD CHAT
+class LoadMessageEvent extends ChatEvent {
+  final String receiverId;
+
+  LoadMessageEvent(this.receiverId);
+}
+
+class MessagesUpdated extends ChatEvent {
+  final List<ChatModel> messages;
+
+  MessagesUpdated(this.messages);
+}

@@ -17,10 +17,6 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  // List<SignupModel> doctors = [];
-  // List<SignupModel> users = [];
-
-  // String? role;
 
   @override
   void initState() {
@@ -97,16 +93,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
                       return GestureDetector(
                         onTap: () async {
-                          final repo = AuthRepository();
-
-                          final currentUser = await repo
-                              .getCurrentUserDetails();
-                          final otherUserId = item.uid;
-                          context.push(RouterName.chatScreen.path, extra: {
-                            "currentUserId": currentUser?.uid,
-                            "otherUserId": otherUserId,
-                            "name":item.name
-                          },);
+                          context.push(
+                            RouterName.chatScreen.path,
+                            extra: {
+                              "receiverId": item.uid,
+                              "receiverName": item.name,
+                            },
+                          );
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 6),

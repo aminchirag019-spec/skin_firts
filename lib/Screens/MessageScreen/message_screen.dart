@@ -12,6 +12,7 @@ import '../../Bloc/NotificationBloc/notification_state.dart';
 import '../../Global/coustom_widgets.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
+import '../../main.dart';
 
 class MessageScreen extends StatefulWidget {
   MessageScreen({super.key});
@@ -55,7 +56,13 @@ class _MessageScreenState extends State<MessageScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        context.go(RouterName.chatScreen.path);
+                        context.push(
+                          RouterName.chatScreen.path,
+                          extra: {
+                            "receiverId": user!.uid,
+                            "receiverName": user!.email,
+                          },
+                        );
                       },
                       child: customDayContainers(text: "Today", context),
                     ),
