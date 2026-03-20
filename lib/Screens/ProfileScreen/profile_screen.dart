@@ -82,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            state.currentUser!.name ?? "",
+                            state.currentUser!.name,
                             style: GoogleFonts.leagueSpartan(
                               fontSize: AppSize.width(context) * 0.064, // 25
                               fontWeight: FontWeight.w500,
@@ -129,6 +129,17 @@ class ProfileScreen extends StatelessWidget {
                     title: "Setting",
                     onTap: () {
                       context.go(RouterName.settingScreen.path);
+                    },
+                  ),
+                  SizedBox(height: AppSize.height(context) * 0.017), // 15
+                  ProfileOptionTile(
+                    context,
+                    image: const AssetImage(
+                      "assets/images/chat_img.png",
+                    ),
+                    title: "Chat List",
+                    onTap: () {
+                      context.push(RouterName.chatListScreen.path);
                     },
                   ),
                   SizedBox(height: AppSize.height(context) * 0.017), // 15
