@@ -9,6 +9,7 @@ import 'package:skin_firts/Router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import 'notification_setting.dart';
 
@@ -18,7 +19,7 @@ class NotificationSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -78,23 +79,23 @@ Widget switchSetting({
             data: SwitchThemeData(
               thumbColor: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Colors.white;
+                  return AppColors.white;
                 }
-                return Colors.white;
+                return AppColors.white;
               }),
               trackColor: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Color(0xff2260FF);
+                  return AppColors.darkPurple;
                 }
-                return Color(0xffCAD6FF);
+                return AppColors.lightPurple;
               }),
             ),
             child: Switch(
               value: state.switches[index],
-              activeColor: Colors.white,
-              activeTrackColor: Color(0xff2260FF),
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: Color(0xffCAD6FF),
+              activeColor: AppColors.white,
+              activeTrackColor: AppColors.darkPurple,
+              inactiveThumbColor: AppColors.white,
+              inactiveTrackColor: AppColors.lightPurple,
               trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
               overlayColor: MaterialStateProperty.all(Colors.transparent),
               onChanged: (value) {

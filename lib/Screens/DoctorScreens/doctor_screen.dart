@@ -11,6 +11,7 @@ import 'package:skin_firts/Screens/HomeScreen/home_screen.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/dummy_data.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import 'doctor_info_screen.dart';
 import 'doctor_screen.dart';
@@ -63,7 +64,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                 fontSize: AppSize.width(context) * 0.035, // 14
                                 fontWeight: FontWeight.w300,
                                 height: 1,
-                                color: Colors.black,
+                                color: AppColors.black,
                               ),
                             ),
                             SizedBox(
@@ -86,8 +87,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                 height: AppSize.height(context) * 0.026, // 22
                                 decoration: BoxDecoration(
                                   color: state.selectedIndex == -1
-                                      ?  Color(0xff2260FF)
-                                      :  Color(0xffCAD6FF),
+                                      ?  AppColors.darkPurple
+                                      :  AppColors.lightPurple,
                                   borderRadius: BorderRadius.circular(
                                     AppSize.width(context) * 0.051,
                                   ),
@@ -100,8 +101,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                           AppSize.width(context) * 0.038,
                                       fontWeight: FontWeight.w600,
                                       color: state.selectedIndex == -1
-                                          ? Colors.white
-                                          :  Color(0xff2260FF),
+                                          ? AppColors.white
+                                          :  AppColors.darkPurple,
                                       height: 1,
                                     ),
                                   ),
@@ -206,7 +207,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
             height: AppSize.height(context) * 0.065, // 55
             width: double.infinity,
             decoration: BoxDecoration(
-              color: const Color(0xff2260FF),
+              color: AppColors.darkPurple,
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.076,
               ), // 30
@@ -214,7 +215,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
             child: Row(
               children: [
                 SizedBox(width: AppSize.width(context) * 0.038),
-                Icon(Icons.favorite, color: Colors.white),
+                Icon(Icons.favorite, color: AppColors.white),
 
                 SizedBox(width: AppSize.width(context) * 0.025),
                 Expanded(
@@ -222,7 +223,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
                     widget.title,
                     maxLines: 2,
                     style: GoogleFonts.leagueSpartan(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontWeight: FontWeight.w600,
                       height: 1,
                       letterSpacing: -0.1,
@@ -236,13 +237,13 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
                 Container(
                   decoration:  BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                   child: Icon(
                     isExpanded
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down,
-                    color:  Color(0xff2260FF),
+                    color:  AppColors.darkPurple,
                     size: AppSize.width(context) * 0.076,
                   ),
                 ),
@@ -256,7 +257,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
         if (isExpanded) ...[
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xffCAD6FF),
+              color: AppColors.lightPurple,
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.038,
               ), // 15
@@ -280,7 +281,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: const Color(0xffCAD6FF),
+              color: AppColors.lightPurple,
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.038,
               ), // 15
@@ -297,7 +298,7 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
                   fontSize: AppSize.width(context) * 0.051, // 20
                   letterSpacing: -0.3,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xff2260FF),
+                  color: AppColors.darkPurple
                 ),
               ),
             ),

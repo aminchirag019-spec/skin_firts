@@ -1,9 +1,12 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
@@ -29,8 +32,8 @@ Widget likedBar() {
                 ), // 10
                 decoration: BoxDecoration(
                   color: state.isTab
-                      ? const Color(0xff2260FF)
-                      : const Color(0xffCAD6FF),
+                      ? AppColors.darkPurple
+                      : AppColors.lightPurple,
                   borderRadius: BorderRadius.circular(
                     AppSize.width(context) * 0.064,
                   ), // 25
@@ -40,8 +43,8 @@ Widget likedBar() {
                     "Doctors",
                     style: GoogleFonts.leagueSpartan(
                       color: state.isTab
-                          ? Colors.white
-                          : const Color(0xff2260FF),
+                          ? AppColors.white
+                          : AppColors.darkPurple,
                       fontWeight: FontWeight.w400,
                       fontSize: AppSize.width(context) * 0.051, // 20
                     ),
@@ -64,8 +67,8 @@ Widget likedBar() {
                 ), // 10
                 decoration: BoxDecoration(
                   color: !state.isTab
-                      ? const Color(0xff2260FF)
-                      : const Color(0xffCAD6FF),
+                      ? AppColors.darkPurple
+                      : AppColors.lightPurple,
                   borderRadius: BorderRadius.circular(
                     AppSize.width(context) * 0.064,
                   ), // 25
@@ -75,8 +78,8 @@ Widget likedBar() {
                     "Services",
                     style: GoogleFonts.leagueSpartan(
                       color: !state.isTab
-                          ? Colors.white
-                          : const Color(0xff2260FF),
+                          ? AppColors.white
+                          : AppColors.darkPurple,
                       fontWeight: FontWeight.w400,
                       fontSize: AppSize.width(context) * 0.051, // 20
                     ),
@@ -123,7 +126,7 @@ Widget doctorDetailsCard() {
                   children: [
                     CircleAvatar(
                       radius: AppSize.width(context) * 0.102, // 40
-                      backgroundColor: Colors.white,
+                      backgroundColor: AppColors.white,
                       backgroundImage: const AssetImage(
                         "assets/images/user_image.png",
                       ),
@@ -143,7 +146,7 @@ Widget doctorDetailsCard() {
                                           AppSize.width(context) * 0.046, // 18
                                       decoration:  BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Color(0xff2260FF),
+                                        color: AppColors.darkPurple
                                       ),
                                       child:  Image(
                                         image: AssetImage(
@@ -157,7 +160,7 @@ Widget doctorDetailsCard() {
                                     Text(
                                       "Professional Doctor",
                                       style: GoogleFonts.leagueSpartan(
-                                        color: const Color(0xff2260FF),
+                                        color: AppColors.darkPurple,
                                         fontSize:
                                             AppSize.width(context) *
                                             0.030, // 12
@@ -186,7 +189,7 @@ Widget doctorDetailsCard() {
                               color:
                                   state.selectedFilter == DoctorFilter.rating ||
                                       state.selectedFilter == DoctorFilter.liked
-                                  ? Colors.white
+                                  ? AppColors.white
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(
                                 AppSize.width(context) * 0.038,
@@ -210,7 +213,7 @@ Widget doctorDetailsCard() {
                                               : AppSize.width(context) *
                                                     0.043, // 17
                                           fontWeight: FontWeight.w500,
-                                          color: const Color(0xff2260FF),
+                                          color: AppColors.darkPurple,
                                           height: 1,
                                         ),
                                       ),
@@ -264,7 +267,7 @@ Widget doctorDetailsCard() {
                                   height: AppSize.height(context) * 0.029, // 25
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff2260FF),
+                                    color:AppColors.darkPurple,
                                     borderRadius: BorderRadius.circular(
                                       AppSize.width(context) * 0.051,
                                     ), // 20
@@ -277,7 +280,7 @@ Widget doctorDetailsCard() {
                                             AppSize.width(context) *
                                             0.030, // 12
                                         fontWeight: FontWeight.w300,
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         height: 1,
                                       ),
                                     ),
@@ -314,7 +317,7 @@ Widget doctorDetailsCard() {
                                                 AppSize.width(context) *
                                                 0.046, // 18
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                           ),
                                         ),
                                       ),

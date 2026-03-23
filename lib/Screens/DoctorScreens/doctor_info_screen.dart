@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Global/app_string.dart';
 import '../../Global/dummy_data.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
@@ -62,7 +63,7 @@ class DoctorInfoScreen extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   radius: AppSize.width(context) * 0.166, // 65
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: AppColors.white,
                                   backgroundImage: const AssetImage(
                                     "assets/images/user_image.png",
                                   ),
@@ -77,7 +78,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                           vertical: 3,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Color(0xff2260FF),
+                                          color: AppColors.darkPurple,
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
@@ -91,7 +92,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                                   width: AppSize.width(context) * 0.058, // 23
                                                   decoration: const BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Colors.white,
+                                                    color: AppColors.white,
                                                   ),
                                                   child: Center(
                                                     child: Image(
@@ -116,7 +117,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                                         fontSize: AppSize.width(context) * 0.035, // 14
                                                         fontWeight:
                                                             FontWeight.w400,
-                                                        color: Colors.white,
+                                                        color: AppColors.white,
                                                         height: 1,
                                                       ),
                                                 ),
@@ -139,7 +140,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: AppSize.width(context) * 0.035, // 14
                                               fontWeight: FontWeight.w200,
-                                              color: Colors.white,
+                                              color: AppColors.white,
                                               letterSpacing: 0.5,
                                               height: 0.9,
                                             ),
@@ -178,7 +179,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                     style: GoogleFonts.leagueSpartan(
                                       fontSize: AppSize.width(context) * 0.048, // 19
                                       fontWeight: FontWeight.w500,
-                                      color: const Color(0xff2260FF),
+                                      color: AppColors.darkPurple,
                                       height: 1,
                                       letterSpacing: -0.3,
                                     ),
@@ -188,7 +189,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                     style: GoogleFonts.leagueSpartan(
                                       fontSize: AppSize.width(context) * 0.038, // 15
                                       fontWeight: FontWeight.w300,
-                                      color: Colors.black,
+                                      color: AppColors.black,
                                       height: 1,
                                     ),
                                   ),
@@ -216,7 +217,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                   child: Container(
                                     height: AppSize.height(context) * 0.026, // 22
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                       borderRadius: BorderRadius.circular(AppSize.width(context) * 0.051), // 20
                                     ),
                                     child: Row(
@@ -227,7 +228,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                           "assets/images/alarm_svg.svg",
                                           height: AppSize.width(context) * 0.041, // 16
                                           width: AppSize.width(context) * 0.041, // 16
-                                          color: const Color(0xff2260FF),
+                                          color: AppColors.darkPurple
                                         ),
                                         SizedBox(width: AppSize.width(context) * 0.010), // 4
                                         Text(
@@ -236,7 +237,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                             fontSize: AppSize.width(context) * 0.033, // 13
                                             fontWeight: FontWeight.w300,
                                             letterSpacing: -0.5,
-                                            color: const Color(0xff2260FF),
+                                            color: AppColors.darkPurple
                                           ),
                                         ),
                                       ],
@@ -252,7 +253,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                   height: AppSize.height(context) * 0.035, // 30
                                   width: AppSize.width(context) * 0.256, // 100
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff2260FF),
+                                    color:AppColors.darkPurple,
                                     borderRadius: BorderRadius.circular(AppSize.width(context) * 0.051), // 20
                                   ),
                                   child: Row(
@@ -260,13 +261,13 @@ class DoctorInfoScreen extends StatelessWidget {
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         size: AppSize.width(context) * 0.046, // 18
                                       ),
                                       SizedBox(width: AppSize.width(context) * 0.015), // 6
                                       const Text(
                                         "Schedule",
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: AppColors.white),
                                       ),
                                     ],
                                   ),
@@ -307,7 +308,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             "Profile",
                             style: GoogleFonts.leagueSpartan(
                               fontSize: AppSize.width(context) * 0.041, // 16
-                              color: const Color(0xff2260FF),
+                              color: AppColors.darkPurple,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -335,7 +336,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             "Career Path",
                             style: GoogleFonts.leagueSpartan(
                               fontSize: AppSize.width(context) * 0.041, // 16
-                              color: const Color(0xff2260FF),
+                              color: AppColors.darkPurple,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -348,7 +349,7 @@ class DoctorInfoScreen extends StatelessWidget {
                               data!.careerPath.toString(),
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: AppSize.width(context) * 0.035, // 14
-                                color: Colors.black,
+                                color: AppColors.black,
                                 fontWeight: FontWeight.w400,
                                 height: 1,
                               ),
@@ -363,7 +364,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             "Highlights",
                             style: GoogleFonts.leagueSpartan(
                               fontSize: AppSize.width(context) * 0.041, // 16
-                              color: const Color(0xff2260FF),
+                              color: AppColors.darkPurple,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -376,7 +377,7 @@ class DoctorInfoScreen extends StatelessWidget {
                               data!.highlights.toString(),
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: AppSize.width(context) * 0.035, // 14
-                                color: Colors.black,
+                                color: AppColors.black,
                                 fontWeight: FontWeight.w400,
                                 height: 1,
                               ),
@@ -401,7 +402,7 @@ Widget doctorsTopRow(BuildContext context, {required String text, required VoidC
     children: [
       GestureDetector(
         onTap: onPressed,
-        child: const Icon(Icons.arrow_back_ios, color: Color(0xff2260FF)),
+        child:  Icon(Icons.arrow_back_ios, color:AppColors.darkPurple),
       ),
       SizedBox(width: AppSize.width(context) * 0.012), // 5
       Expanded(
@@ -411,7 +412,7 @@ Widget doctorsTopRow(BuildContext context, {required String text, required VoidC
             style: GoogleFonts.leagueSpartan(
               fontSize: AppSize.width(context) * 0.064, // 25
               fontWeight: FontWeight.w600,
-              color: const Color(0xff2260FF),
+              color: AppColors.darkPurple,
             ),
           ),
         ),
@@ -419,14 +420,14 @@ Widget doctorsTopRow(BuildContext context, {required String text, required VoidC
       Container(
         height: AppSize.width(context) * 0.064, // 25
         width: AppSize.width(context) * 0.064, // 25
-        decoration: const BoxDecoration(
-          color: Color(0xffCAD6FF),
+        decoration:  BoxDecoration(
+          color: AppColors.lightPurple,
           shape: BoxShape.circle,
         ),
         child: Center(
           child: ImageIcon(
             const AssetImage("assets/images/search.png"),
-            color: const Color(0xff2260FF),
+            color:AppColors.darkPurple,
             size: AppSize.width(context) * 0.035, // 14
           ),
         ),
@@ -435,14 +436,14 @@ Widget doctorsTopRow(BuildContext context, {required String text, required VoidC
       Container(
         height: AppSize.width(context) * 0.064, // 25
         width: AppSize.width(context) * 0.064, // 25
-        decoration: const BoxDecoration(
-          color: Color(0xffCAD6FF),
+        decoration:  BoxDecoration(
+          color: AppColors.lightPurple,
           shape: BoxShape.circle,
         ),
         child: Center(
           child: ImageIcon(
             const AssetImage("assets/images/tune.png"),
-            color: const Color(0xff2260FF),
+            color: AppColors.darkPurple,
             size: AppSize.width(context) * 0.038, // 15
           ),
         ),
@@ -478,14 +479,14 @@ Widget filterOptions(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isSelected
-                ?  Color(0xff2260FF)
-                :  Color(0xffCAD6FF),
+                ?  AppColors.darkPurple
+                :  AppColors.lightPurple,
           ),
           child: Center(
             child: Icon(
               icon,
               size: size,
-              color: isSelected ? Colors.white : const Color(0xff2260FF),
+              color: isSelected ? AppColors.white : AppColors.darkPurple,
             ),
           ),
         ),
@@ -498,9 +499,9 @@ Widget servicesOptions(BuildContext context, {required IconData icon, required d
   return Container(
     height: AppSize.width(context) * 0.064, // 25
     width: AppSize.width(context) * 0.061, // 24
-    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+    decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.white),
     child: Center(
-      child: Icon(icon, size: size, color: const Color(0xff2260FF)),
+      child: Icon(icon, size: size, color: AppColors.darkPurple),
     ),
   );
 }

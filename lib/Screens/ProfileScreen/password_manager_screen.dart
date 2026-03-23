@@ -6,6 +6,7 @@ import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Global/app_string.dart';
+import '../../Utilities/colors.dart';
 import '../../Global/coustom_widgets.dart';
 import '../../Global/enums.dart';
 import '../../Router/router_class.dart';
@@ -40,7 +41,7 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {},
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           body: SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -78,7 +79,7 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
                             style: GoogleFonts.leagueSpartan(
                               fontSize: AppSize.width(context) * 0.043, // 13
                               fontWeight: FontWeight.w500,
-                              color: const Color(0xff2260FF),
+                              color: AppColors.darkPurple,
                             ),
                           ),
                         ),
@@ -119,12 +120,11 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
                         return customButton(
                           context,
                           text: "Change Password",
-                          backgroundColor: Color(0xff2260FF),
+                          backgroundColor:AppColors.darkPurple,
                           fontSize: 20,
                           width: 280,
-                          textColor: Colors.white,
+                          textColor: AppColors.white,
                           onPressed: () {
-                            print(newPassController.text);
                             context.read<AuthBloc>().add(UpdatePasswordEvent(
                                 currentPassword: currentPassController.text,
                                 newPassword: newPassController.text,

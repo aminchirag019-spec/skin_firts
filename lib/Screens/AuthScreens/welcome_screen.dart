@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../global/app_string.dart';
@@ -45,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                     AppString.dermetology,
                     style: GoogleFonts.leagueSpartan(
                       fontSize: AppSize.width(context) * 0.043, // 17
-                      color: const Color(0xff2260FF),
+                      color: AppColors.darkPurple,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -65,8 +66,8 @@ class WelcomeScreen extends StatelessWidget {
                     context,
                     text: AppString.logIn,
                     width: AppSize.width(context) * 0.512, // 200
-                    backgroundColor: const Color(0xff2260FF),
-                    textColor: Colors.white,
+                    backgroundColor: AppColors.darkPurple,
+                    textColor: AppColors.white,
                     onPressed: () {
                       context.go(RouterName.loginScreen.path);
                     },
@@ -76,8 +77,8 @@ class WelcomeScreen extends StatelessWidget {
                     context,
                     width: AppSize.width(context) * 0.512, // 200
                     text: AppString.signUp,
-                    backgroundColor: const Color(0xffCAD6FF),
-                    textColor: const Color(0xff2260FF),
+                    backgroundColor: AppColors.lightPurple,
+                    textColor: AppColors.darkPurple,
                     onPressed: () => context.go(RouterName.signupScreen.path),
                   ),
                 ],

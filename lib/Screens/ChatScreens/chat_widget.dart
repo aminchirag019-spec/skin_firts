@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/ChatBloc/chat_bloc.dart';
 import '../../Bloc/ChatBloc/chat_event.dart';
@@ -147,7 +148,7 @@ Widget _textMessage(ChatModel chat, bool isMe) {
     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
     constraints: BoxConstraints(maxWidth: 250),
     decoration: BoxDecoration(
-      color: isMe ? Color(0xFFCAD6FF) : Colors.grey.shade300,
+      color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
       borderRadius: BorderRadius.circular(12),
     ),
     child: Column(
@@ -171,7 +172,7 @@ Widget _fileMessage(ChatModel chat, bool isMe) {
     padding: EdgeInsets.all(12),
     constraints: BoxConstraints(maxWidth: 250),
     decoration: BoxDecoration(
-      color: isMe ? Color(0xFFCAD6FF) : Colors.grey.shade300,
+      color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
       borderRadius: BorderRadius.circular(12),
     ),
     child: Row(
@@ -197,7 +198,7 @@ Widget _imageMessage(ChatModel chat, bool isMe) {
     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
     padding: EdgeInsets.all(5),
     decoration: BoxDecoration(
-      color: isMe ? Colors.blue : Colors.grey.shade300,
+      color: isMe ? AppColors.blue : Colors.grey.shade300,
       borderRadius: BorderRadius.circular(12),
     ),
     child: ClipRRect(

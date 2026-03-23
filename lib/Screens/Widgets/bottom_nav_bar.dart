@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -38,7 +39,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             child: BottomNavigationBar(
               currentIndex: widget.navigationShell.currentIndex,
               onTap: _onTap,
-              backgroundColor:  Color(0xff1E63F3),
+              backgroundColor: AppColors.darkPurple,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: false,
@@ -51,8 +52,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     height: AppSize.width(context) * 0.056, // 22
                     width: AppSize.width(context) * 0.056, // 22
                     color: widget.navigationShell.currentIndex == 0
-                        ? const Color(0xff00278C)
-                        : Colors.white,
+                        ? AppColors.selectedColor
+                        : AppColors.white,
                   ),
                   label: "",
                 ),
@@ -62,8 +63,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     height: AppSize.width(context) * 0.056, // 22
                     width: AppSize.width(context) * 0.056, // 22
                     color: widget.navigationShell.currentIndex == 1
-                        ? const Color(0xff00278C)
-                        : Colors.white,
+                        ? AppColors.selectedColor
+                        : AppColors.white,
                   ),
                   label: "",
                 ),
@@ -73,8 +74,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     height: AppSize.width(context) * 0.056, // 22
                     width: AppSize.width(context) * 0.056, // 22
                     color: widget.navigationShell.currentIndex == 2
-                        ? const Color(0xff00278C)
-                        : Colors.white,
+                        ? AppColors.selectedColor
+                        : AppColors.white,
                   ),
                   label: "",
                 ),
@@ -84,8 +85,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     height: AppSize.width(context) * 0.056, // 22
                     width: AppSize.width(context) * 0.056, // 22
                     color: widget.navigationShell.currentIndex == 3
-                        ? const Color(0xff00278C)
-                        : Colors.white,
+                        ? AppColors.selectedColor
+                        : AppColors.white,
                   ),
                   label: "",
                 ),

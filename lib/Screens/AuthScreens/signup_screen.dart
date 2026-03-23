@@ -16,6 +16,7 @@ import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/sharedpref_helper.dart';
 import '../../main.dart';
 import '../../router/router_class.dart';
@@ -23,7 +24,7 @@ import '../../Utilities/media_query.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+ const SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -51,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -240,7 +241,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: AppSize.width(context) * 0.030, // 12
                           fontWeight: FontWeight.w500,
-                          color: Color(0xff2260FF),
+                          color: AppColors.darkPurple,
                         ),
                       ),
                       SizedBox(width: AppSize.width(context) * 0.005), // 2
@@ -257,7 +258,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: AppSize.width(context) * 0.030, // 12
                           fontWeight: FontWeight.w500,
-                          color: const Color(0xff2260FF),
+                          color: AppColors.darkPurple,
                         ),
                       ),
                     ],
@@ -280,10 +281,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       return customButton(
                         context,
                         text: AppString.signUp,
-                        backgroundColor: const Color(0xff2260FF),
+                        backgroundColor: AppColors.darkPurple,
                         width: AppSize.width(context) * 0.538,
                         // 210
-                        textColor: Colors.white,
+                        textColor: AppColors.white,
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
                           context.read<AuthBloc>().add(
@@ -357,7 +358,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: GoogleFonts.leagueSpartan(
                             fontWeight: FontWeight.w500,
                             fontSize: AppSize.width(context) * 0.035, // 14
-                            color: Color(0xff2260FF),
+                            color:AppColors.darkPurple
                           ),
                         ),
                       ),

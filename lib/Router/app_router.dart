@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Data/chat_model.dart';
 import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
@@ -131,7 +132,6 @@ final GoRouter app_router = GoRouter(
       path: RouterName.chatScreen.path,
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>;
-
         return ChatScreen(
           receiverId: data['receiverId'],
           receiverName: data['receiverName'],

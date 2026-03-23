@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Data/auth_model.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Router/router_class.dart';
@@ -121,7 +122,7 @@ class _EditUserState extends State<EditUser> {
                         controller: dobController,
                         hintText: ""),
                     SizedBox(height: AppSize.height(context) * 0.2),
-                    customButton(context, text: "Update Profile", backgroundColor: Color(0xff2260FF), textColor: Colors.white, onPressed: () {
+                    customButton(context, text: "Update Profile", backgroundColor: AppColors.darkPurple, textColor: AppColors.white, onPressed: () {
                       context.read<AuthBloc>().add(UpdateProfileEvent(signupModel: SignupModel(
                           email:_emailController.text,
                           password: pass.text,

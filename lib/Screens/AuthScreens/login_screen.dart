@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/app_string.dart';
@@ -61,8 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: AppSize.width(context) * 0.061, // 24
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xff2260FF),
-                        ),
+                          color: AppColors.darkPurple),
                       ),
                     ],
                   ),
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: GoogleFonts.leagueSpartan(
                                   fontSize: AppSize.width(context) * 0.033, // 13
                                   fontWeight: FontWeight.w500,
-                                  color: const Color(0xff2260FF),
+                                  color:AppColors.darkPurple
                                 ),
                               ),
                             ),
@@ -170,8 +170,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       return customButton(
                         context,
                         text: AppString.logIn,
-                        backgroundColor: const Color(0xff2260FF),
-                        textColor: Colors.white,
+                        backgroundColor: AppColors.darkPurple,
+                        textColor: AppColors.white,
                         width: AppSize.width(context) * 0.512, // 200
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
@@ -244,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: GoogleFonts.leagueSpartan(
                             fontWeight: FontWeight.w500,
                             fontSize: AppSize.width(context) * 0.035, // 14
-                            color: const Color(0xff2260FF),
+                            color: AppColors.darkPurple
                           ),
                         ),
                       ),

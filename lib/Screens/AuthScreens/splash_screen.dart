@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/router/router_class.dart';
@@ -69,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xff2260FF),
+        backgroundColor:AppColors.darkPurple,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontSize: AppSize.width(context) * 0.123, // 48
                   height: 0.8,
                   fontWeight: FontWeight.w200,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
               SizedBox(height: AppSize.height(context) * 0.020), // 17
@@ -91,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 AppString.dermetology,
                 style: GoogleFonts.leagueSpartan(
                   fontSize: AppSize.width(context) * 0.038, // 15
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),

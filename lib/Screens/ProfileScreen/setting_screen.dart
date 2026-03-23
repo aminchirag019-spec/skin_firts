@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
+import '../../Utilities/colors.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
 
@@ -17,7 +18,7 @@ class SettingScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(

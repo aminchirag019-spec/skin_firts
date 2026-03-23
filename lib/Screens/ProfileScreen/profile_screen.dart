@@ -6,6 +6,7 @@ import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
+import '../../Utilities/colors.dart';
 import '../../Global/dummy_data.dart';
 import '../../Global/enums.dart';
 
@@ -228,7 +229,7 @@ Widget ProfileOptionTile(
           Icon(
             Icons.arrow_forward_ios,
             size: AppSize.width(context) * 0.041,
-            color: Colors.grey,
+            color: AppColors.grey,
           ), // 16
         ],
       ),
@@ -265,7 +266,7 @@ Widget settingOptionTile(
         Icon(
           Icons.arrow_forward_ios,
           size: AppSize.width(context) * 0.05,
-          color: Color(0xff2260FF),
+          color: AppColors.darkPurple
         ), // 16
       ],
     ),

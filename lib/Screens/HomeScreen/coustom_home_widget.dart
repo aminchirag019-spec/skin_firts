@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
+import '../../Utilities/colors.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
 import 'home_screen.dart';
@@ -164,7 +165,7 @@ Widget appointmentInformation(BuildContext context) {
     height: AppSize.height(context) * 0.154, // 130
     width: AppSize.width(context) * 3,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppColors.white,
       borderRadius: BorderRadius.circular(AppSize.width(context) * 0.064), // 25
     ),
     child: Stack(
@@ -175,7 +176,7 @@ Widget appointmentInformation(BuildContext context) {
           child: Text(
             "11 Wednesday - Today",
             style: GoogleFonts.leagueSpartan(
-              color: const Color(0xff2260FF),
+              color: AppColors.darkPurple,
               letterSpacing: 0.6,
               fontSize: AppSize.width(context) * 0.035,
             ),
@@ -185,13 +186,13 @@ Widget appointmentInformation(BuildContext context) {
           top: AppSize.height(context) * 0.027,
           left: AppSize.width(context) * 0.128,
           right: AppSize.width(context) * 0.128,
-          child: Divider(color: const Color(0xff2260FF), thickness: 1),
+          child: Divider(color: AppColors.darkPurple, thickness: 1),
         ),
         Positioned(
           bottom: AppSize.height(context) * 0.015,
           left: AppSize.width(context) * 0.128,
           right: AppSize.width(context) * 0.128,
-          child: Divider(color: const Color(0xff2260FF), thickness: 1),
+          child: Divider(color: AppColors.darkPurple, thickness: 1),
         ),
         Positioned(
           top: AppSize.height(context) * 0.017, // 15
@@ -202,7 +203,7 @@ Widget appointmentInformation(BuildContext context) {
               Text(
                 "9 AM",
                 style: GoogleFonts.leagueSpartan(
-                  color: const Color(0xff2260FF),
+                  color: AppColors.darkPurple,
                   fontSize: AppSize.width(context) * 0.035,
                 ),
               ),
@@ -210,7 +211,7 @@ Widget appointmentInformation(BuildContext context) {
               Text(
                 "10 AM",
                 style: GoogleFonts.leagueSpartan(
-                  color: const Color(0xff2260FF),
+                  color: AppColors.darkPurple,
                   fontSize: AppSize.width(context) * 0.035,
                 ),
               ),
@@ -218,7 +219,7 @@ Widget appointmentInformation(BuildContext context) {
               Text(
                 "11 AM",
                 style: GoogleFonts.leagueSpartan(
-                  color: const Color(0xff2260FF),
+                  color: AppColors.darkPurple,
                   fontSize: AppSize.width(context) * 0.035,
                 ),
               ),
@@ -226,7 +227,7 @@ Widget appointmentInformation(BuildContext context) {
               Text(
                 "12 AM",
                 style: GoogleFonts.leagueSpartan(
-                  color: const Color(0xff2260FF),
+                  color: AppColors.darkPurple,
                   fontSize: AppSize.width(context) * 0.035,
                 ),
               ),
@@ -243,7 +244,7 @@ Widget appointmentInformation(BuildContext context) {
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.051, // 20
               ),
-              color: const Color(0xffCAD6FF),
+              color: AppColors.lightPurple,
             ),
             child: Stack(
               children: [
@@ -255,7 +256,7 @@ Widget appointmentInformation(BuildContext context) {
                     style: GoogleFonts.leagueSpartan(
                       fontSize: AppSize.width(context) * 0.041, // 16
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xff2260FF),
+                      color: AppColors.darkPurple,
                     ),
                   ),
                 ),
@@ -281,7 +282,7 @@ Widget appointmentInformation(BuildContext context) {
                         height: AppSize.width(context) * 0.038, // 15
                         width: AppSize.width(context) * 0.038, // 15
                         decoration:  BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage("assets/images/right_icon.png"),
@@ -293,7 +294,7 @@ Widget appointmentInformation(BuildContext context) {
                         height: AppSize.width(context) * 0.038, // 15
                         width: AppSize.width(context) * 0.038, // 15
                         decoration:  BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage("assets/images/wrong_icon.png"),
@@ -317,14 +318,14 @@ Widget circleIcon(BuildContext context, IconData icon, {bool isBlue = false}) {
     height: AppSize.width(context) * 0.056, // 22
     width: AppSize.width(context) * 0.056, // 22
     decoration: const BoxDecoration(
-      color: Colors.white,
+      color: AppColors.white,
       shape: BoxShape.circle,
     ),
     child: Center(
       child: Icon(
         icon,
         size: AppSize.width(context) * 0.038,
-        color: const Color(0xff2260FF),
+        color: AppColors.darkPurple
       ), // 15
     ),
   );
@@ -340,7 +341,7 @@ Widget infoBadge(
     width: AppSize.width(context) * (width / 390.0),
     height: AppSize.height(context) * 0.026, // 22
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppColors.white,
       borderRadius: BorderRadius.circular(AppSize.width(context) * 0.051), // 20
     ),
     child: Row(
@@ -351,13 +352,13 @@ Widget infoBadge(
           svgPath,
           height: AppSize.width(context) * 0.041, // 16
           width: AppSize.width(context) * 0.041, // 16
-          color: const Color(0xff2260FF),
+          color: AppColors.darkPurple
         ),
         SizedBox(width: AppSize.width(context) * 0.010), // 4
         Text(
           text,
           style: TextStyle(
-            color: const Color(0xff2260FF),
+            color: AppColors.darkPurple,
             fontWeight: FontWeight.w300,
             fontSize: AppSize.width(context) * 0.030, // 12
           ),

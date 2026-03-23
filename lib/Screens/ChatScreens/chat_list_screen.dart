@@ -8,6 +8,7 @@ import '../../Data/auth_model.dart';
 import '../../Data/dotor_model.dart';
 import '../../Network/auth_repository.dart';
 import '../../Router/router_class.dart';
+import '../../Utilities/colors.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -31,19 +32,22 @@ class _ChatListScreenState extends State<ChatListScreen> {
       builder: (context, state) {
         return Scaffold(
           backgroundColor:  Color(0xffF7F8FA),
-
           body: state.role == null
               ?  Center(child: CircularProgressIndicator())
               : SafeArea(
             child: Column(
               children: [
-
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      GestureDetector(
+                          onTap: () {
+                            context.go(RouterName.profileScreen.path);
+                          }
+                          ,child: Icon(Icons.arrow_back_ios)),
                       Text(
                         state.role == "doctor" ? "Patients" : "Doctors",
                         style: TextStyle(
@@ -53,8 +57,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       ),
                       CircleAvatar(
                         radius: 22,
-                        backgroundColor: Colors.blue,
-                        child: Icon(Icons.person, color: Colors.white),
+                        backgroundColor: AppColors.blue,
+                        child: Icon(Icons.person, color: AppColors.white),
                       )
                     ],
                   ),
@@ -65,7 +69,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextField(
@@ -105,7 +109,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 6),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             borderRadius: BorderRadius.circular(16),
                           ),
 
@@ -127,10 +131,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       height: 12,
                                       width: 12,
                                       decoration: BoxDecoration(
-                                        color: Colors.green,
+                                        color: AppColors.green,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: Colors.white, width: 2),
+                                            color: AppColors.white, width: 2),
                                       ),
                                     ),
                                   )
@@ -155,7 +159,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       item.email,
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: Colors.grey,
+                                        color: AppColors.grey,
                                       ),
                                     ),
                                   ],
@@ -169,20 +173,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                     "2:30 PM",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey,
+                                      color: AppColors.grey,
                                     ),
                                   ),
                                   SizedBox(height: 6),
                                   Container(
                                     padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue,
+                                      color: AppColors.blue,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
                                       "2",
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         fontSize: 10,
                                       ),
                                     ),

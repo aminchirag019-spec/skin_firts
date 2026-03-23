@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: GoogleFonts.leagueSpartan(
                                   fontSize:
                                   AppSize.width(context) * 0.035, // 14
-                                  color: const Color(0xff2260FF),
+                                  color: AppColors.darkPurple,
                                   fontWeight: FontWeight.w300,
                                   height: 1,
                                 ),
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize:
                                   AppSize.width(context) * 0.043, // 17
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.black,
+                                  color: AppColors.black,
                                 ),
                               ),
                             ],
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         AppSize.width(context) * 0.017,
                                       ), // 7
                                       decoration: const BoxDecoration(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         shape: BoxShape.circle,
                                       ),
                                       child: ImageIcon(
@@ -167,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: ImageIcon(
                                   const AssetImage("assets/images/search.png"),
-                                  color: const Color(0xff2260FF),
+                                  color: AppColors.darkPurple,
                                   size: AppSize.width(context) * 0.061, // 24
                                 ),
                               ),
@@ -236,8 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               0.115, // 45
                                           decoration: BoxDecoration(
                                             color: isSelected
-                                                ? const Color(0xff2260FF)
-                                                : Colors.white,
+                                                ? AppColors.darkPurple
+                                                : AppColors.white,
                                             borderRadius: BorderRadius.circular(
                                               AppSize.width(context) *
                                                   0.051, // 20
@@ -255,8 +256,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       0.064, // 25
                                                   fontWeight: FontWeight.bold,
                                                   color: isSelected
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                      ? AppColors.white
+                                                      : AppColors.black,
                                                   height: 1,
                                                 ),
                                               ),
@@ -267,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   AppSize.width(context) *
                                                       0.030, // 12
                                                   color: isSelected
-                                                      ? Colors.white
+                                                      ? AppColors.white
                                                       : Colors.black54,
                                                 ),
                                               ),

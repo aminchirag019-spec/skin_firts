@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 import 'package:skin_firts/global/image_class.dart';
 import 'package:skin_firts/screens/authScreens/login_screen.dart';
@@ -80,9 +81,9 @@ class SetPasswordScreen extends StatelessWidget {
                   context,
                   text: "Create New Password",
                   fontSize: 23,
-                  backgroundColor: Color(0xff2260FF),
+                  backgroundColor: AppColors.darkPurple,
                   width: 280,
-                  textColor: Colors.white,
+                  textColor: AppColors.white,
                   onPressed: () {
                     if (!formKey.currentState!.validate()) return;
                     context.go(RouterName.loginScreen1.path);

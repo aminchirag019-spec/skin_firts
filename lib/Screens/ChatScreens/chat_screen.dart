@@ -1,27 +1,21 @@
-               import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:skin_firts/Router/router_class.dart';
-
 import '../../Bloc/ChatBloc/chat_bloc.dart';
 import '../../Bloc/ChatBloc/chat_event.dart';
 import '../../Bloc/ChatBloc/chat_state.dart';
-import '../../Data/chat_model.dart';
-import '../../Global/enums.dart';
 import '../../Utilities/media_query.dart';
-import '../../Utilities/time_zones.dart';
-import '../../main.dart';
 import 'chat_widget.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key,required this.receiverId,required this.receiverName});
+  const ChatScreen({
+    super.key,
+    required this.receiverId,
+    required this.receiverName,
+  });
   final String? receiverId;
   final String? receiverName;
 
@@ -35,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-  context.read<ChatBloc>().add(LoadMessageEvent(widget.receiverId!));
+    context.read<ChatBloc>().add(LoadMessageEvent(widget.receiverId!));
   }
 
   @override
@@ -43,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(statusBarColor: Colors.white),
       child: WillPopScope(
-        onWillPop: () async{
+        onWillPop: () async {
           context.go(RouterName.chatListScreen.path);
           return false;
         },
@@ -151,7 +145,10 @@ class _ChatScreenState extends State<ChatScreen> {
                               if (chatController.text.trim().isEmpty) return;
                               final text = chatController.text.trim();
                               context.read<ChatBloc>().add(
-                                SendTextMessage(message:text, receiverId:widget.receiverId! ),
+                                SendTextMessage(
+                                  message: text,
+                                  receiverId: widget.receiverId!,
+                                ),
                               );
                               chatController.clear();
                             },

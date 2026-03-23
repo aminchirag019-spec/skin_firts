@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 
 import '../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../Bloc/DoctorBloc/doctor_screen_event.dart';
@@ -23,7 +24,7 @@ Widget topRow(BuildContext context, {
     children: [
       GestureDetector(
         onTap: onPressed,
-        child: Icon(Icons.arrow_back_ios, color: Color(0xff2260FF)),
+        child: Icon(Icons.arrow_back_ios, color:AppColors.darkPurple),
       ),
       Expanded(
         child: Center(
@@ -32,7 +33,7 @@ Widget topRow(BuildContext context, {
             style: GoogleFonts.leagueSpartan(
               fontSize: AppSize.width(context) * 0.064, // 25
               fontWeight: FontWeight.w600,
-              color: Color(0xff2260FF),
+              color: AppColors.darkPurple,
             ),
           ),
         ),
@@ -85,7 +86,7 @@ Widget coustomTextField({
       ),
       hintText: hintText ?? "******",
       hintStyle: GoogleFonts.leagueSpartan(
-        color: isBold ? Color(0xff2260FF) : Color(0xff809CFF),
+        color: isBold ? AppColors.darkPurple : Color(0xff809CFF),
         fontSize: size == 20
             ? AppSize.width(context) * 0.058
             : AppSize.width(context) * ((size ?? 20) / 390.0),
@@ -144,7 +145,7 @@ Widget loginRow(BuildContext context, {
         child: GestureDetector(
           onTap: icon.onTap,
           child: CircleAvatar(
-            backgroundColor: const Color(0xffCAD6FF),
+            backgroundColor: AppColors.lightPurple,
             radius: icon.radius == null
                 ? AppSize.width(context) * (defaultRadius / 390.0)
                 : AppSize.width(context) * (icon.radius! / 390.0),
@@ -242,8 +243,8 @@ Widget homeCircleIcon(BuildContext context,
     }) {
   return Container(
     padding: EdgeInsets.all(AppSize.width(context) * 0.012), // 5
-    decoration: const BoxDecoration(
-      color: Color(0xffCAD6FF),
+    decoration:  BoxDecoration(
+      color: AppColors.lightPurple,
       shape: BoxShape.circle,
     ),
     child: Stack(
@@ -263,7 +264,7 @@ Widget homeCircleIcon(BuildContext context,
               height: AppSize.height(context) * 0.007, // 6
               width: AppSize.width(context) * 0.015, // 6
               decoration: BoxDecoration(
-                color: Color(0xff2260FF),
+                color: AppColors.darkPurple,
                 shape: BoxShape.circle,
               ),
             ),
@@ -282,7 +283,7 @@ Widget menuItem(String svgPath, String text, BuildContext context) {
         svgPath,
         height: AppSize.height(context) * 0.020,
         width: AppSize.width(context) * 0.038,
-        colorFilter: const ColorFilter.mode(Color(0xff2260FF), BlendMode.srcIn),
+        colorFilter:  ColorFilter.mode(AppColors.darkPurple, BlendMode.srcIn),
       ),
 
       SizedBox(height: AppSize.height(context) * 0.007),
@@ -291,7 +292,7 @@ Widget menuItem(String svgPath, String text, BuildContext context) {
         text,
         style: GoogleFonts.leagueSpartan(
           fontSize: AppSize.width(context) * 0.030,
-          color: const Color(0xff2260FF),
+          color: AppColors.darkPurple,
         ),
       ),
     ],

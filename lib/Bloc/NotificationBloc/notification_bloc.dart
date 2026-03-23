@@ -8,10 +8,11 @@ import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Utilities/firebase_message.dart';
 
 import '../../Global/enums.dart';
+import '../../Network/notification_repository.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
-  final AuthRepository repository;
-  NotificationBloc(this.repository) : super(NotificationState()) {
+  final NotificationRepository notificationRepository;
+  NotificationBloc(this.notificationRepository) : super(NotificationState()) {
     on<SendNotificationEvent>(_onSendNotificationEvent);
     on<GetNotificationEvent>(_onGetNotificationEvent);
   }
@@ -23,7 +24,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     try {
       emit(state.copyWith(notificationStatus: NotificationStatus.loading));
 
-      final notifications = await repository.getNotifications(
+      final notifications = await notificationRepository.getNotifications(
 
       );
 
@@ -48,7 +49,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     Emitter<NotificationState> emit,
   ) async {
     try {
-      await repository.storeNotification(
+      await notificationRepository.storeNotification(
         notificationModel: event.notificationModel,
       );
       NotificationService.showNotification(

@@ -10,6 +10,7 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Network/chat_repository.dart';
+import 'package:skin_firts/Network/notification_repository.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
@@ -29,7 +30,7 @@ void main() async{
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
-    BlocProvider(create: (context) => NotificationBloc(AuthRepository()),),
+    BlocProvider(create: (context) => NotificationBloc(NotificationRepository()),),
     BlocProvider(create: (context) => ChatBloc(ChatRepository(FirebaseFirestore.instance)),)
   ], child: MyApp()));
 }

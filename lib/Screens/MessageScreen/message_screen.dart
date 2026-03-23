@@ -11,6 +11,7 @@ import '../../Bloc/NotificationBloc/notification_bloc.dart';
 import '../../Bloc/NotificationBloc/notification_state.dart';
 import '../../Global/coustom_widgets.dart';
 import '../../Router/router_class.dart';
+import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import '../../main.dart';
 
@@ -36,7 +37,7 @@ class _MessageScreenState extends State<MessageScreen> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -71,7 +72,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       style: GoogleFonts.leagueSpartan(
                         fontSize: AppSize.width(context) * 0.046, // 18
                         fontWeight: FontWeight.w600,
-                        color: Color(0xff2260FF),
+                        color: AppColors.darkPurple,
                       ),
                     ),
                   ],
@@ -99,7 +100,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                 AppSize.width(context) * 0.01,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
@@ -111,12 +112,12 @@ class _MessageScreenState extends State<MessageScreen> {
                                       vertical: AppSize.height(context) * 0.02,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Color(0xff2260FF),
+                                      color:AppColors.darkPurple,
                                       shape: BoxShape.circle,
                                     ),
                                     child: SvgPicture.asset(
                                       "assets/images/bottom_calender.svg",
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                     ),
                                   ),
                                   SizedBox(width: AppSize.width(context) * 0.04),
@@ -140,7 +141,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                           style: GoogleFonts.leagueSpartan(
                                             fontWeight: FontWeight.w300,
                                             fontSize: AppSize.width(context) * 0.045,
-                                            color: Colors.black,
+                                            color: AppColors.black,
                                             height: 1
                                           ),
                                         ),

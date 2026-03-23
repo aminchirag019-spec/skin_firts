@@ -10,8 +10,7 @@ class ChatRepository {
 
   /// SEND MESSAGE
   Future<void> sendMessage(ChatModel message) async {
-    final chatId =
-    generateChatId(message.senderId, message.receiverId);
+    final chatId = generateChatId(message.senderId, message.receiverId);
 
     final chatRef = firestore.collection('chats').doc(chatId);
 
@@ -27,8 +26,7 @@ class ChatRepository {
   }
 
   /// GET MESSAGES (STREAM)
-  Stream<List<ChatModel>> getMessages(
-      String currentUserId, String receiverId) {
+  Stream<List<ChatModel>> getMessages(String currentUserId, String receiverId) {
     final chatId = generateChatId(currentUserId, receiverId);
 
     return firestore
@@ -37,9 +35,10 @@ class ChatRepository {
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) =>
-        ChatModel.fromJson(doc.data(), doc.id))
-        .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => ChatModel.fromJson(doc.data(), doc.id))
+              .toList(),
+        );
   }
 }
