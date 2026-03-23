@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddDoctor {
@@ -17,7 +15,6 @@ class AddDoctor {
   final double rating;
   final String email;
   final String gender;
-
 
   AddDoctor({
     required this.id,
@@ -111,32 +108,26 @@ class AddDoctor {
   }
 }
 
-
 class ServiceModel {
   final String title;
   final String discription;
 
-  ServiceModel({ required this.title,required this.discription});
-
+  ServiceModel({required this.title, required this.discription});
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       title: json['title'] ?? '',
-      discription: json['discription'] ?? '',);
+      discription: json['discription'] ?? '',
+    );
   }
 }
-
 
 class NotificationModel {
   final String title;
   final String body;
   final Timestamp? createdAt;
 
-  NotificationModel({
-    required this.title,
-    required this.body,
-     this.createdAt,
-  });
+  NotificationModel({required this.title, required this.body, this.createdAt});
 
   NotificationModel copyWith({
     String? title,

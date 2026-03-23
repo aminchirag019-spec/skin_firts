@@ -7,9 +7,7 @@ import '../../Utilities/media_query.dart';
 class BottomNavBar extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
 
-  const BottomNavBar({
-    required this.navigationShell,
-  });
+  const BottomNavBar({required this.navigationShell});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -35,7 +33,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             right: AppSize.width(context) * 0.053, // 21
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppSize.width(context) * 0.076), // 30
+            borderRadius: BorderRadius.circular(
+              AppSize.width(context) * 0.076,
+            ), // 30
             child: BottomNavigationBar(
               currentIndex: widget.navigationShell.currentIndex,
               onTap: _onTap,

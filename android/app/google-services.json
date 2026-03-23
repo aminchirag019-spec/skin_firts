@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "346029486466",
+    "project_id": "skin-firts-3eab4",
+    "storage_bucket": "skin-firts-3eab4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346029486466:android:1b4b726564853a90729f9b",
+        "android_client_info": {
+          "package_name": "com.example.skin_firts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPJciG1JvlJM90D2xuUQyeDvk1cqPjkec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

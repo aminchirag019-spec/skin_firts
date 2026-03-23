@@ -13,11 +13,7 @@ class ChatRepository {
     final chatId = generateChatId(message.senderId, message.receiverId);
 
     final chatRef = firestore.collection('chats').doc(chatId);
-
-    // Save message
     await chatRef.collection('messages').add(message.toJson());
-
-    // Update chat meta
     await chatRef.set({
       'participants': [message.senderId, message.receiverId],
       'lastMessage': message.message ?? '',

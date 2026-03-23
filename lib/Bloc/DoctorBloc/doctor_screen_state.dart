@@ -14,8 +14,6 @@ class DoctorScreenState extends Equatable {
   final List<ServiceModel> service;
   final bool isPasswordHidden;
 
-
-
   const DoctorScreenState({
     this.service = const [],
     this.selectedIndex = -1,
@@ -25,7 +23,7 @@ class DoctorScreenState extends Equatable {
     this.selectedFilter = DoctorFilter.none,
     this.isTab = true,
     this.isPasswordHidden = true,
-    this.switches = const [false,false,true,false,false,true,true,true],
+    this.switches = const [false, false, true, false, false, true, true, true],
   });
 
   DoctorScreenState copyWith({
@@ -36,8 +34,8 @@ class DoctorScreenState extends Equatable {
     List<AddDoctor>? getDoctor,
     AddDoctor? doctorDetails,
     List<ServiceModel>? service,
-      List<bool>? switches,
-      bool ? isPasswordHidden
+    List<bool>? switches,
+    bool? isPasswordHidden,
   }) {
     return DoctorScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
@@ -53,5 +51,15 @@ class DoctorScreenState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [selectedIndex, selectedFilter,isTab,doctorStatus,getDoctor,doctorDetails,service,switches,isPasswordHidden];
+  List<Object?> get props => [
+    selectedIndex,
+    selectedFilter,
+    isTab,
+    doctorStatus,
+    getDoctor,
+    doctorDetails,
+    service,
+    switches,
+    isPasswordHidden,
+  ];
 }

@@ -12,10 +12,8 @@ import 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository chatRepository;
-  StreamSubscription<List<ChatModel>>?streamSubscription;
-  ChatBloc(
-      this.chatRepository,
-      ) : super(const ChatState(chats: [])) {
+  StreamSubscription<List<ChatModel>>? streamSubscription;
+  ChatBloc(this.chatRepository) : super(const ChatState(chats: [])) {
     on<SendTextMessage>(_onSendChatEvent);
     on<SendImageMessage>(_onSendImageMessage);
     on<SendFileMessage>(_onSendFileMessage);
@@ -23,29 +21,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<MessagesUpdated>(_onMessagesUpdated);
   }
 
-  void _onMessagesUpdated(
-      MessagesUpdated event,
-      Emitter<ChatState> emit,
-      ) {
+  void _onMessagesUpdated(MessagesUpdated event, Emitter<ChatState> emit) {
     emit(state.copyWith(chats: event.messages));
   }
 
   void _onLoadMessageEvent(
-      LoadMessageEvent event, Emitter<ChatState> emit) async {
-
+    LoadMessageEvent event,
+    Emitter<ChatState> emit,
+  ) async {
     streamSubscription?.cancel();
 
     streamSubscription = chatRepository
         .getMessages(user!.uid, event.receiverId)
         .listen((messages) {
-      print("MESSAGES: ${messages.length}");
-      add(MessagesUpdated(messages));
-    });
+          print("MESSAGES: ${messages.length}");
+          add(MessagesUpdated(messages));
+        });
   }
 
   void _onSendChatEvent(SendTextMessage event, Emitter<ChatState> emit) async {
     final newMessage = ChatModel(
-      message:event.message,
+      message: event.message,
       senderId: user!.uid,
       timestamp: DateTime.now(),
       chatType: ChatType.text,
@@ -66,11 +62,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       chatType: ChatType.image,
       id: '',
       receiverId: event.receiverId,
-
     );
     await chatRepository.sendMessage(sendImage);
   }
-
 
   void _onSendFileMessage(
     SendFileMessage event,
@@ -81,8 +75,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       senderId: user!.uid,
       timestamp: DateTime.now(),
       chatType: ChatType.file,
-        id: '',
-        receiverId:event.receiverId
+      id: '',
+      receiverId: event.receiverId,
     );
     await chatRepository.sendMessage(sendFile);
   }

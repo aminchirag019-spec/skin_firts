@@ -14,7 +14,7 @@ class SignupModel {
     required this.phone,
     required this.dob,
     required this.role,
-    required this.uid
+    required this.uid,
   });
 
   SignupModel copyWith({
@@ -32,8 +32,8 @@ class SignupModel {
       name: name ?? this.name,
       phone: phone ?? this.phone,
       dob: dob ?? this.dob,
-      role: role??this.role,
-      uid: uid??this.uid,
+      role: role ?? this.role,
+      uid: uid ?? this.uid,
     );
   }
 
@@ -44,8 +44,8 @@ class SignupModel {
       "name": name,
       "phone": phone,
       "dob": dob,
-      "role":role,
-      "uid":uid
+      "role": role,
+      "uid": uid,
     };
   }
 
@@ -57,8 +57,8 @@ class SignupModel {
       name: json["name"] ?? "",
       phone: json["phone"] ?? "",
       dob: json["dob"] ?? "",
-      role: json["role"]??'',
-      uid: json["uid"]??'',
+      role: json["role"] ?? '',
+      uid: json["uid"] ?? '',
     );
   }
 }
@@ -67,15 +67,9 @@ class LoginModel {
   final String email;
   final String password;
 
-  LoginModel({
-    required this.email,
-    required this.password,
-  });
+  LoginModel({required this.email, required this.password});
 
-  LoginModel copyWith({
-    String? email,
-    String? password,
-  }) {
+  LoginModel copyWith({String? email, String? password}) {
     return LoginModel(
       email: email ?? this.email,
       password: password ?? this.password,

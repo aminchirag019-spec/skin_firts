@@ -50,7 +50,7 @@ class ChatModel {
       receiverId: json['receiverId'] ?? '',
       filePath: json['filePath'] ?? '',
       chatType: ChatType.values.firstWhere(
-            (e) => e.name == json['chatType'],
+        (e) => e.name == json['chatType'],
         orElse: () => ChatType.text,
       ),
       timestamp: (json['timestamp'] as Timestamp).toDate(),
