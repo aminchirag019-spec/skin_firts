@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -164,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     builder: (context, state) {
                       if (state.loginStatus == LoginStatus.loading) {
                         return  Center(
-                          child: CircularProgressIndicator(),
+                          child: CupertinoActivityIndicator(),
                         );
                       }
                       return customButton(

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -6,13 +7,17 @@ class NotificationService {
   FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
-
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
     const androidSettings =
     AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const settings = InitializationSettings(
       android: androidSettings,
     );
+
+    String? token = await messaging.getToken();
+    print("FCM Token: $token");
+
 
     await flutterLocalNotificationsPlugin.initialize(
       settings,

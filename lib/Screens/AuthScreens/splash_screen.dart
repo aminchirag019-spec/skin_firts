@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/image_class.dart';
+import 'package:skin_firts/main.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 
@@ -29,12 +32,26 @@ class _SplashScreenState extends State<SplashScreen> {
     startSplash();
   }
 
+  Future<void> saveFcmToken(String userId) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    print("MY TOKEN: $token"); // 👈 check this
+
+    if (token != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set({
+        "fcmToken": token,
+      }, SetOptions(merge: true));
+    }
+  }
+
+
   void startSplash() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    final user = await FirebaseAuth.instance
-        .authStateChanges()
-        .first;
+    final user = await FirebaseAuth.instance.authStateChanges().first;
 
     if (!mounted) return;
 
@@ -42,22 +59,19 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(RouterName.loginScreen.path);
       return;
     }
+
+    // 🔥 SAVE TOKEN HERE (AFTER USER CONFIRMED)
+    await saveFcmToken(user.uid);
+
     String? userId = await SharedPrefsHelper.getUserId();
     bool biometricEnabled =
         await SharedPrefsHelper.getBiometricEnabled(user.uid) ?? false;
+
     if (userId != null && biometricEnabled) {
       context.read<AuthBloc>().add(BiometricLoginEvent());
     } else {
       context.go(RouterName.loginScreen.path);
     }
-
-
-    // if (biometricEnabled) {
-    //   context.go(RouterName.fingerAuthenticationScreen.path);
-    // } else {
-    //   context.go(RouterName.loginScreen.path);
-    // }
-
   }
 
   @override

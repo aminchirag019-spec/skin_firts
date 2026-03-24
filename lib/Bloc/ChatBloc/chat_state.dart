@@ -8,21 +8,25 @@ class ChatState extends Equatable {
   final ChatStatus? status;
   final List<ChatModel>? chats;
   final ChatType? chatType;
+  final MessageStatus? messageStatus;
 
-  const ChatState({this.chatType, this.status, this.chats});
+  const ChatState({this.chatType, this.status, this.chats,this.messageStatus = MessageStatus.initial
+  });
 
   ChatState copyWith({
     ChatStatus? status,
     ChatType? chatType,
     List<ChatModel>? chats,
+    MessageStatus? messageStatus,
   }) {
     return ChatState(
       status: status ?? this.status,
       chats: chats ?? this.chats,
       chatType: chatType ?? this.chatType,
+      messageStatus: messageStatus ?? this.messageStatus,
     );
   }
 
   @override
-  List<Object> get props => [?status, ?chats, ?chatType];
+  List<Object> get props => [?status, ?chats, ?chatType, ?messageStatus];
 }

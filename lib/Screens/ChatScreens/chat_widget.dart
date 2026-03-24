@@ -130,40 +130,82 @@ Widget chatView() {
           final chat = chats[index];
           final isMe = chat.senderId == user!.uid;
 
-          return Align(
-            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-            child: chat.chatType == ChatType.image
-                ? _imageMessage(chat, isMe)
-                : chat.chatType == ChatType.file
-                ? _fileMessage(chat, isMe)
-                : _textMessage(chat, isMe),
+          return GestureDetector(
+            onLongPress: () {
+
+            },
+            child: Align(
+              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+              child: chat.chatType == ChatType.image
+                  ? _imageMessage(chat, isMe)
+                  : chat.chatType == ChatType.file
+                  ? _fileMessage(chat, isMe)
+                  : _textMessage(chat, isMe),
+            ),
           );
         },
       );
     },
   );
 }
-
 Widget _textMessage(ChatModel chat, bool isMe) {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-    constraints: BoxConstraints(maxWidth: 250),
-    decoration: BoxDecoration(
-      color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+    child: Row(
+      mainAxisAlignment:
+      isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(chat.message ?? ''),
-        SizedBox(height: 4),
-        Text(formatTime(chat.timestamp), style: TextStyle(fontSize: 10)),
+        if (!isMe) ...[
+          CircleAvatar(
+            radius: 14,
+            backgroundColor: AppColors.blue,
+            backgroundImage: AssetImage("assets/images/user_icon.png"),
+          ),
+          const SizedBox(width: 6),
+        ],
+        Container(
+          constraints:  BoxConstraints(maxWidth: 250),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(14),
+              topRight: const Radius.circular(14),
+              bottomLeft:
+              Radius.circular(isMe ? 14 : 0), // tail effect
+              bottomRight:
+              Radius.circular(isMe ? 0 : 14), // tail effect
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                chat.message ?? '',
+                style:  TextStyle(fontSize: 14),
+              ),
+               SizedBox(height: 4),
+              Text(
+                formatTime(chat.timestamp),
+                style:  TextStyle(fontSize: 10, color: Colors.black54),
+              ),
+            ],
+          ),
+        ),
+
+        if (isMe) ...[
+           SizedBox(width: 6),
+          CircleAvatar(
+            radius: 14,
+            backgroundColor: AppColors.blue,
+            backgroundImage: AssetImage("assets/images/heart.png"),
+          ),
+        ],
       ],
     ),
   );
 }
-
 Widget _fileMessage(ChatModel chat, bool isMe) {
   return Container(
     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

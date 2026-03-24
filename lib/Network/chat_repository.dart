@@ -1,30 +1,30 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../Data/chat_model.dart';
-import '../Screens/ChatScreens/chat_widget.dart';
 
 class ChatRepository {
-  final FirebaseFirestore firestore;
-
-  ChatRepository(this.firestore);
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> sendMessage(ChatModel message) async {
-    final chatId = generateChatId(message.senderId, message.receiverId);
+    final chatId = getChatId(message.senderId, message.receiverId);
 
-    final chatRef = firestore.collection('chats').doc(chatId);
-    await chatRef.collection('messages').add(message.toJson());
-    await chatRef.set({
-      'participants': [message.senderId, message.receiverId],
-      'lastMessage': message.message ?? '',
-      'lastTimestamp': Timestamp.fromDate(message.timestamp),
-    }, SetOptions(merge: true));
+    await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .add(message.toJson());
   }
 
+  String getChatId(String u1, String u2) {
+    return u1.hashCode <= u2.hashCode ? "$u1-$u2" : "$u2-$u1";
+  }
 
-  Stream<List<ChatModel>> getMessages(String currentUserId, String receiverId) {
-    final chatId = generateChatId(currentUserId, receiverId);
+  Stream<List<ChatModel>> getMessages(
+      String currentUserId, String receiverId) {
+    final chatId = getChatId(currentUserId, receiverId);
 
-    return firestore
+    return _firestore
         .collection('chats')
         .doc(chatId)
         .collection('messages')
@@ -32,8 +32,20 @@ class ChatRepository {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => ChatModel.fromJson(doc.data(), doc.id))
-              .toList(),
-        );
+          .map((doc) => ChatModel.fromJson(doc.data(), doc.id))
+          .toList(),
+    );
+  }
+
+  Future<void> saveFcmToken(String userId) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    print("MY TOKEN: $token");
+
+    if (token != null) {
+      await _firestore.collection('users').doc(userId).set({
+        "fcmToken": token,
+      }, SetOptions(merge: true));
+    }
   }
 }

@@ -15,6 +15,17 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationBloc(this.notificationRepository) : super(NotificationState()) {
     on<SendNotificationEvent>(_onSendNotificationEvent);
     on<GetNotificationEvent>(_onGetNotificationEvent);
+    on<ChatNotificationEvent>(_onChatNotificationEvent);
+  }
+
+  void _onChatNotificationEvent(
+      ChatNotificationEvent event,
+      Emitter<NotificationState> emit,
+      ) async {
+    NotificationService.showNotification(
+        "New Message",
+        "You have a new message from ${event.message}");
+    emit(state.copyWith(messageStatus: MessageStatus.sent));
   }
 
   void _onGetNotificationEvent(

@@ -10,3 +10,7 @@ class SendNotificationEvent extends NotificationEvent {
 }
 
 class GetNotificationEvent extends NotificationEvent {}
+class ChatNotificationEvent extends NotificationEvent{
+  final String message;
+  ChatNotificationEvent(this.message);
+}

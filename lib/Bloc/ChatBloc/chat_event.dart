@@ -1,8 +1,6 @@
 import '../../Data/chat_model.dart';
 
 abstract class ChatEvent {}
-
-/// TEXT MESSAGE
 class SendTextMessage extends ChatEvent {
   final String message;
   final String receiverId;
@@ -10,7 +8,6 @@ class SendTextMessage extends ChatEvent {
   SendTextMessage({required this.message, required this.receiverId});
 }
 
-/// IMAGE MESSAGE
 class SendImageMessage extends ChatEvent {
   final String imagePath;
   final String receiverId;
@@ -18,7 +15,6 @@ class SendImageMessage extends ChatEvent {
   SendImageMessage({required this.imagePath, required this.receiverId});
 }
 
-/// FILE MESSAGE
 class SendFileMessage extends ChatEvent {
   final String filePath;
   final String receiverId;
@@ -26,7 +22,7 @@ class SendFileMessage extends ChatEvent {
   SendFileMessage({required this.filePath, required this.receiverId});
 }
 
-/// LOAD CHAT
+
 class LoadMessageEvent extends ChatEvent {
   final String receiverId;
 
@@ -37,4 +33,8 @@ class MessagesUpdated extends ChatEvent {
   final List<ChatModel> messages;
 
   MessagesUpdated(this.messages);
+}
+class ChatNotificationEvent extends ChatEvent{
+  final ChatModel chatModel;
+ChatNotificationEvent(this.chatModel);
 }

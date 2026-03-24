@@ -21,17 +21,16 @@ final user = FirebaseAuth.instance.currentUser;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService.init();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
+      options: DefaultFirebaseOptions.currentPlatform
   );
+  await NotificationService.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Color(0xff2260FF)));
-
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (context) => DoctorScreenBloc(AuthRepository(),NotificationService())),
     BlocProvider(create: (context) => AuthBloc(AuthRepository(),BiometricAuthService(),SharedPrefsHelper())),
     BlocProvider(create: (context) => NotificationBloc(NotificationRepository()),),
-    BlocProvider(create: (context) => ChatBloc(ChatRepository(FirebaseFirestore.instance)),)
+    BlocProvider(create: (context) => ChatBloc(ChatRepository()),)
   ], child: MyApp()));
 }
 

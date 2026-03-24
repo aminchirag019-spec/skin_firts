@@ -142,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         builder: (context, state) {
                           return GestureDetector(
                             onTap: () {
-                              if (chatController.text.trim().isEmpty) return;
+                             if (chatController.text.trim().isEmpty) return;
                               final text = chatController.text.trim();
                               context.read<ChatBloc>().add(
                                 SendTextMessage(

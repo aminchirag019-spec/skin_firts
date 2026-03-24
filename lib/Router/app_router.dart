@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Screens/AppointmentScreen/appointment_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/HelpCentreScreen/help_centre_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
@@ -20,7 +21,6 @@ import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 import '../Data/doctor_model.dart';
 import '../Screens/ChatScreens/chat_list_screen.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
-import '../Screens/CalenderScreen/calender_screen.dart';
 import '../Screens/ChatScreens/chat_screen.dart';
 import '../Screens/PrivacyPolicyScreen/privacy_policy_screen.dart';
 import '../Screens/ProfileScreen/notification_setting.dart';
@@ -95,8 +95,8 @@ final GoRouter app_router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouterName.calenderScreen.path,
-              builder: (context, state) => CalenderScreen(),
+              path: RouterName.appointmentScreen.path,
+              builder: (context, state) => AppointmentScreen(),
             ),
           ],
         ),

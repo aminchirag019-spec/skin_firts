@@ -7,3 +7,4 @@ enum NotificationStatus {initial, loading, success, failure}
 enum ChatStatus{initial, loading, success, failure}
 enum ChatType{ file , image , text , audio}
  enum ChatListStatus {initial, loading, success, failure}
+enum MessageStatus { initial ,sent, delivered, read}

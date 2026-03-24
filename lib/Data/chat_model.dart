@@ -9,6 +9,8 @@ class ChatModel {
   final String filePath;
   final DateTime timestamp;
   final ChatType? chatType;
+  final String? receiverToken;
+
 
   ChatModel({
     required this.id,
@@ -18,6 +20,7 @@ class ChatModel {
     required this.timestamp,
     this.filePath = '',
     required this.chatType,
+    this.receiverToken,
   });
 
   /// copyWith (BLoC friendly)
@@ -29,6 +32,7 @@ class ChatModel {
     DateTime? timestamp,
     String? filePath,
     ChatType? chatType,
+    String? receiverToken,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -38,6 +42,7 @@ class ChatModel {
       timestamp: timestamp ?? this.timestamp,
       filePath: filePath ?? this.filePath,
       chatType: chatType ?? this.chatType,
+      receiverToken: receiverToken ?? this.receiverToken,
     );
   }
 
@@ -54,6 +59,7 @@ class ChatModel {
         orElse: () => ChatType.text,
       ),
       timestamp: (json['timestamp'] as Timestamp).toDate(),
+      receiverToken: json['receiverToken'] ?? '',
     );
   }
 
@@ -66,6 +72,7 @@ class ChatModel {
       'filePath': filePath,
       'chatType': chatType?.name,
       'timestamp': Timestamp.fromDate(timestamp),
+      'receiverToken': receiverToken,
     };
   }
 }
