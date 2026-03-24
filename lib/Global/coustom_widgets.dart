@@ -19,12 +19,13 @@ import '../Utilities/media_query.dart';
 Widget topRow(BuildContext context, {
   required VoidCallback onPressed,
   required String text,
+  Color ? color
 }) {
   return Row(
     children: [
       GestureDetector(
         onTap: onPressed,
-        child: Icon(Icons.arrow_back_ios, color:AppColors.darkPurple),
+        child: Icon(Icons.arrow_back_ios, color:color ?? AppColors.darkPurple),
       ),
       Expanded(
         child: Center(
@@ -33,7 +34,7 @@ Widget topRow(BuildContext context, {
             style: GoogleFonts.leagueSpartan(
               fontSize: AppSize.width(context) * 0.064, // 25
               fontWeight: FontWeight.w600,
-              color: AppColors.darkPurple,
+              color: color ?? AppColors.darkPurple,
             ),
           ),
         ),

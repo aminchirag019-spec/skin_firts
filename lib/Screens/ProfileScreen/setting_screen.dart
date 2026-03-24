@@ -53,3 +53,40 @@ class SettingScreen extends StatelessWidget {
     );
   }
 }
+
+Widget settingOptionTile(
+    BuildContext context, {
+      required ImageProvider image,
+      required String title,
+      required VoidCallback onTap,
+    }) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Row(
+      children: [
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(image: DecorationImage(image: image)),
+        ),
+        SizedBox(width: AppSize.width(context) * 0.037), // 14
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: AppSize.width(context) * 0.046,
+              fontWeight: FontWeight.w500,
+            ), // 16
+          ),
+        ),
+
+        Icon(
+            Icons.arrow_forward_ios,
+            size: AppSize.width(context) * 0.05,
+            color: AppColors.darkPurple
+        ), // 16
+      ],
+    ),
+  );
+}
+

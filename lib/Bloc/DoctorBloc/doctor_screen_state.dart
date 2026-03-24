@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:skin_firts/Data/dotor_model.dart';
+import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import '../../Global/dummy_data.dart';
 

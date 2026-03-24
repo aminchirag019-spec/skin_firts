@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 
 import '../Data/auth_model.dart';
-import '../Data/dotor_model.dart';
+import '../Data/doctor_model.dart';
 import '../main.dart';
 
 class AuthRepository {

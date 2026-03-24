@@ -18,7 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final BiometricAuthService biometricAuthService;
   final SharedPrefsHelper prefsHelper;
   AuthBloc(this.repository, this.biometricAuthService, this.prefsHelper)
-    : super(const AuthState()) {
+    : super( AuthState()) {
     on<SignUpEvent>(_onSignUpEvent);
     on<LoginEvent>(_onLoginEvent);
     on<BiometricLoginEvent>(_onBiometricLoginEvent);

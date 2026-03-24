@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 
 import '../../Data/auth_model.dart';
-import '../../Data/dotor_model.dart';
+import '../../Data/doctor_model.dart';
 import '../../Network/auth_repository.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';

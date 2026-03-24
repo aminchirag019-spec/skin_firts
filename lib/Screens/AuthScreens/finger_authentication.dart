@@ -7,7 +7,6 @@ import 'package:skin_firts/router/router_class.dart';
 
 import '../../Global/enums.dart';
 import '../../Utilities/sharedpref_helper.dart';
-
 class FingerAuthentication extends StatefulWidget {
   const FingerAuthentication({super.key});
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Data/dotor_model.dart';
+import '../Data/doctor_model.dart';
 import '../main.dart';
 
 class NotificationRepository {

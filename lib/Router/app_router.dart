@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skin_firts/Data/chat_model.dart';
-import 'package:skin_firts/Data/dotor_model.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
+import 'package:skin_firts/Screens/HelpCentreScreen/help_centre_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/edit_user.dart';
@@ -19,12 +17,12 @@ import 'package:skin_firts/screens/authScreens/signup_screen.dart';
 import 'package:skin_firts/screens/authScreens/splash_screen.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 import 'package:skin_firts/screens/homeScreen/home_screen.dart';
-
-import '../Global/dummy_data.dart';
+import '../Data/doctor_model.dart';
 import '../Screens/ChatScreens/chat_list_screen.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/CalenderScreen/calender_screen.dart';
 import '../Screens/ChatScreens/chat_screen.dart';
+import '../Screens/PrivacyPolicyScreen/privacy_policy_screen.dart';
 import '../Screens/ProfileScreen/notification_setting.dart';
 
 final GoRouter app_router = GoRouter(
@@ -141,6 +139,14 @@ final GoRouter app_router = GoRouter(
     GoRoute(
       path: RouterName.chatListScreen.path,
       builder: (context, state) => ChatListScreen(),
+    ),
+    GoRoute(
+      path: RouterName.privacyPolicyScreen.path,
+      builder: (context, state) => PrivacyPolicyScreen(),
+    ),
+    GoRoute(
+      path: RouterName.helpCentreScreen.path,
+      builder: (context, state) => HelpCentreScreen(),
     ),
   ],
 );

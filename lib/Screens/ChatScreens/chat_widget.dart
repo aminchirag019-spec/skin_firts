@@ -25,9 +25,11 @@ Future<void> sendMedia({
   required ChatType type,
 }) async {
   if (type == ChatType.image) {
-    context.read<ChatBloc>().add(SendImageMessage(imagePath: '', receiverId: ''));
+    context.read<ChatBloc>().add(
+      SendImageMessage(imagePath: '', receiverId: ''),
+    );
   } else if (type == ChatType.file) {
-    context.read<ChatBloc>().add(SendFileMessage(filePath: '',receiverId: ''));
+    context.read<ChatBloc>().add(SendFileMessage(filePath: '', receiverId: ''));
   }
 }
 
@@ -110,6 +112,7 @@ Widget chatBarIcons(
     child: Image(image: image, height: imgHeight, width: imgWidth),
   );
 }
+
 Widget chatView() {
   return BlocBuilder<ChatBloc, ChatState>(
     builder: (context, state) {
@@ -128,8 +131,7 @@ Widget chatView() {
           final isMe = chat.senderId == user!.uid;
 
           return Align(
-            alignment:
-            isMe ? Alignment.centerRight : Alignment.centerLeft,
+            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
             child: chat.chatType == ChatType.image
                 ? _imageMessage(chat, isMe)
                 : chat.chatType == ChatType.file
@@ -156,15 +158,11 @@ Widget _textMessage(ChatModel chat, bool isMe) {
       children: [
         Text(chat.message ?? ''),
         SizedBox(height: 4),
-        Text(
-          formatTime(chat.timestamp),
-          style: TextStyle(fontSize: 10),
-        ),
+        Text(formatTime(chat.timestamp), style: TextStyle(fontSize: 10)),
       ],
     ),
   );
 }
-
 
 Widget _fileMessage(ChatModel chat, bool isMe) {
   return Container(
@@ -212,12 +210,11 @@ Widget _imageMessage(ChatModel chat, bool isMe) {
             child: Center(child: CircularProgressIndicator()),
           );
         },
-      )
+      ),
     ),
   );
 }
+
 String generateChatId(String user1, String user2) {
-  return user1.compareTo(user2) > 0
-      ? "${user1}_$user2"
-      : "${user2}_$user1";
+  return user1.compareTo(user2) > 0 ? "${user1}_$user2" : "${user2}_$user1";
 }

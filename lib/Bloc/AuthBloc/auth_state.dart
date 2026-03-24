@@ -23,7 +23,7 @@ class AuthState extends Equatable {
     this.chatListStatus = ChatListStatus.initial,
     this.signupModel,
     this.loginModel,
-     this.currentUser,
+    this.currentUser,
     this.selectedRole="user",
     this.role,
     this.doctors=const[],

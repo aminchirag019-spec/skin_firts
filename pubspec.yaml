@@ -66,6 +66,8 @@ dependencies:
   file_picker: ^10.3.10
   # for image sending
   image_picker: ^1.2.1
+  # for shimmers
+  shimmer: ^3.0.0
 
 
 

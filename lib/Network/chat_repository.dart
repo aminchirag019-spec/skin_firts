@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../Data/chat_model.dart';
 import '../Screens/ChatScreens/chat_widget.dart';
 
@@ -8,7 +7,7 @@ class ChatRepository {
 
   ChatRepository(this.firestore);
 
-  /// SEND MESSAGE
+
   Future<void> sendMessage(ChatModel message) async {
     final chatId = generateChatId(message.senderId, message.receiverId);
 
@@ -21,7 +20,7 @@ class ChatRepository {
     }, SetOptions(merge: true));
   }
 
-  /// GET MESSAGES (STREAM)
+
   Stream<List<ChatModel>> getMessages(String currentUserId, String receiverId) {
     final chatId = generateChatId(currentUserId, receiverId);
 

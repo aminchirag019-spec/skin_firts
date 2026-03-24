@@ -1,4 +1,4 @@
-import 'package:skin_firts/Data/dotor_model.dart';
+import 'package:skin_firts/Data/doctor_model.dart';
 
 class NotificationEvent {}
 

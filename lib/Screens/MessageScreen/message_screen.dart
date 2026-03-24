@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
-import 'package:skin_firts/Data/dotor_model.dart';
+import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Utilities/time_zones.dart';
 
 import '../../Bloc/NotificationBloc/notification_bloc.dart';

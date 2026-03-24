@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../Data/dotor_model.dart';
+import '../../Data/doctor_model.dart';
 import '../../Global/enums.dart';
 
 class NotificationState extends Equatable {

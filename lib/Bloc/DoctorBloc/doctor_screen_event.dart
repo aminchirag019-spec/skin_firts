@@ -1,4 +1,4 @@
-import '../../Data/dotor_model.dart';
+import '../../Data/doctor_model.dart';
 import '../../Global/dummy_data.dart';
 
 class DoctorScreenEvent {}

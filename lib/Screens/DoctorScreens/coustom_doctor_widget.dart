@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +14,7 @@ import '../../Utilities/media_query.dart';
 import '../HomeScreen/coustom_home_widget.dart';
 import 'doctor_info_screen.dart';
 
-Widget likedBar() {
+Widget likedBar({String? text, String? title}) {
   return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
     builder: (context, state) {
       return Row(
@@ -40,7 +38,7 @@ Widget likedBar() {
                 ),
                 child: Center(
                   child: Text(
-                    "Doctors",
+                    text ?? "Doctors",
                     style: GoogleFonts.leagueSpartan(
                       color: state.isTab
                           ? AppColors.white
@@ -75,7 +73,7 @@ Widget likedBar() {
                 ),
                 child: Center(
                   child: Text(
-                    "Services",
+                    title ?? "Services",
                     style: GoogleFonts.leagueSpartan(
                       color: !state.isTab
                           ? AppColors.white
@@ -144,11 +142,11 @@ Widget doctorDetailsCard() {
                                           AppSize.width(context) * 0.046, // 18
                                       width:
                                           AppSize.width(context) * 0.046, // 18
-                                      decoration:  BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: AppColors.darkPurple
+                                        color: AppColors.darkPurple,
                                       ),
-                                      child:  Image(
+                                      child: Image(
                                         image: AssetImage(
                                           "assets/images/qualification_badge_white.png",
                                         ),
@@ -218,26 +216,34 @@ Widget doctorDetailsCard() {
                                         ),
                                       ),
                                     ),
-                                    state.selectedFilter == DoctorFilter.liked ?
-                                    BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-                                      builder: (context, state) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            context.read<DoctorScreenBloc>().add(
-                                              LikedEvent(doctor.id,
-                                                  !doctor.isLiked),
-                                            );
-                                          },
-                                          child: circleIcon(
-                                            context,
-                                            doctor.isLiked
-                                                ? Icons.favorite
-                                                : Icons.favorite_border,
-                                            isBlue: true,
-                                          ),
-                                        );
-                                      },
-                                    ) : Container()
+                                    state.selectedFilter == DoctorFilter.liked
+                                        ? BlocBuilder<
+                                            DoctorScreenBloc,
+                                            DoctorScreenState
+                                          >(
+                                            builder: (context, state) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  context
+                                                      .read<DoctorScreenBloc>()
+                                                      .add(
+                                                        LikedEvent(
+                                                          doctor.id,
+                                                          !doctor.isLiked,
+                                                        ),
+                                                      );
+                                                },
+                                                child: circleIcon(
+                                                  context,
+                                                  doctor.isLiked
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  isBlue: true,
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Container(),
                                   ],
                                 ),
                                 SizedBox(
@@ -267,7 +273,7 @@ Widget doctorDetailsCard() {
                                   height: AppSize.height(context) * 0.029, // 25
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color:AppColors.darkPurple,
+                                    color: AppColors.darkPurple,
                                     borderRadius: BorderRadius.circular(
                                       AppSize.width(context) * 0.051,
                                     ), // 20
@@ -362,9 +368,12 @@ Widget doctorDetailsCard() {
                                           onTap: () {
                                             context
                                                 .read<DoctorScreenBloc>()
-                                                .add(LikedEvent(
+                                                .add(
+                                                  LikedEvent(
                                                     doctor.id,
-                                                    !doctor.isLiked));
+                                                    !doctor.isLiked,
+                                                  ),
+                                                );
                                           },
                                           child: servicesOptions(
                                             context,

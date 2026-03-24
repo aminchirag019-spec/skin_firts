@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:skin_firts/Data/dotor_model.dart';
+import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/app_string.dart';
 import '../../Global/dummy_data.dart';
 import '../../Utilities/colors.dart';
@@ -396,7 +396,6 @@ class DoctorInfoScreen extends StatelessWidget {
     );
   }
 }
-
 Widget doctorsTopRow(BuildContext context, {required String text, required VoidCallback onPressed}) {
   return Row(
     children: [
