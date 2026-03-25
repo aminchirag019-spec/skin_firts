@@ -70,7 +70,8 @@ dependencies:
   shimmer: ^3.0.0
   # for http:
   http: ^1.6.0
-
+  # for emoji
+  emoji_picker_flutter: ^4.4.0
 
 
 dev_dependencies:

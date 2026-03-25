@@ -16,6 +16,36 @@ class ChatRepository {
         .add(message.toJson());
   }
 
+  Future<void> editMessage(
+      String chatId,
+      String messageId,
+      String newMessage,
+      ) async {
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update({
+      'message': newMessage,
+      'isEdited': true,
+    });
+  }
+  Future<void> addReaction({
+    required String chatId,
+    required String messageId,
+    required Map<String, List<String>> reactions,
+  }) async {
+    final ref = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId);
+
+    await ref.update({
+      'reaction': reactions,
+    });
+  }
   String getChatId(String u1, String u2) {
     return u1.hashCode <= u2.hashCode ? "$u1-$u2" : "$u2-$u1";
   }

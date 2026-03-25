@@ -10,10 +10,14 @@ class ChatModel {
   final DateTime timestamp;
   final ChatType? chatType;
   final String? receiverToken;
-
+  final bool? isEdited;
+  final String? replyMessage;
+  final String? replySender;
+  final Map<String,List<String>>? reaction;
 
   ChatModel({
     required this.id,
+    this.isEdited,
     this.message,
     required this.senderId,
     required this.receiverId,
@@ -21,6 +25,9 @@ class ChatModel {
     this.filePath = '',
     required this.chatType,
     this.receiverToken,
+    this.replyMessage,
+    this.replySender,
+    this.reaction,
   });
 
   /// copyWith (BLoC friendly)
@@ -33,6 +40,10 @@ class ChatModel {
     String? filePath,
     ChatType? chatType,
     String? receiverToken,
+    bool? isEdited,
+    String? replyMessage,
+    String? replySender,
+    Map<String,List<String>>? reaction,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -43,6 +54,10 @@ class ChatModel {
       filePath: filePath ?? this.filePath,
       chatType: chatType ?? this.chatType,
       receiverToken: receiverToken ?? this.receiverToken,
+      isEdited: isEdited ?? this.isEdited,
+      replyMessage: replyMessage ?? this.replyMessage,
+      replySender: replySender ?? this.replySender,
+      reaction: reaction ?? this.reaction,
     );
   }
 
@@ -60,6 +75,17 @@ class ChatModel {
       ),
       timestamp: (json['timestamp'] as Timestamp).toDate(),
       receiverToken: json['receiverToken'] ?? '',
+      isEdited: json['isEdited'] ?? false,
+      replyMessage: json['replyMessage'] ?? '',
+      replySender: json['replySender'] ?? '',
+      reaction: json['reaction'] != null
+          ? (json['reaction'] as Map<String, dynamic>).map(
+            (key, value) => MapEntry(
+          key,
+          List<String>.from(value),
+        ),
+      )
+          : {},
     );
   }
 
@@ -73,6 +99,10 @@ class ChatModel {
       'chatType': chatType?.name,
       'timestamp': Timestamp.fromDate(timestamp),
       'receiverToken': receiverToken,
+      'isEdited': isEdited,
+      'replyMessage': replyMessage,
+      'replySender': replySender,
+      'reaction': reaction,
     };
   }
 }

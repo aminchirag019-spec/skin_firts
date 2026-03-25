@@ -23,6 +23,111 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<LoadMessageEvent>(_onLoadMessageEvent);
     on<MessagesUpdated>(_onMessagesUpdated);
     on<ChatNotificationEvent>(_onChatNotificationEvent);
+    on<EditChatEvent>(_onEditChatEvent);
+    on<StartEditingEvent>(_onStartEditingEvent);
+    on<CancelEditing>(_onCancelEditingEvent);
+    on<ReplyMessageEvent>(_onReplyMessageEvent);
+    on<CancelReply>(_onCancelReplyEvent);
+    on<AddReactionEvent>(_onAddReactionEvent);
+  }
+  void _onAddReactionEvent(
+      AddReactionEvent event,
+      Emitter<ChatState> emit,
+      ) async {
+
+    print("EVENT RECEIVED: ${event.message} ${event.reaction}");
+
+    final updatedChats = (state.chats ?? []).map((chat) {
+      if (chat.id == event.message) {
+
+        print("MATCH FOUND: ${chat.id}");
+
+        final updatedReaction =
+        Map<String, List<String>>.from(chat.reaction ?? {});
+
+        final userId = user!.uid;
+
+        // Get existing reactions for this user
+        final userReactions =
+        List<String>.from(updatedReaction[userId] ?? []);
+
+        // 🔁 Toggle logic
+        if (userReactions.contains(event.reaction)) {
+          userReactions.remove(event.reaction); // remove if already exists
+        } else {
+          userReactions.add(event.reaction); // add new one
+        }
+
+        // Clean empty list
+        if (userReactions.isEmpty) {
+          updatedReaction.remove(userId);
+        } else {
+          updatedReaction[userId] = userReactions;
+        }
+
+        print("UPDATED REACTION: $updatedReaction");
+
+        return chat.copyWith(reaction: updatedReaction);
+      }
+
+      return chat;
+    }).toList();
+
+    emit(state.copyWith(chats: updatedChats));
+
+    print("STATE EMITTED");
+
+    // 🔥 IMPORTANT: send full map instead of single emoji
+    final updatedChat =
+    updatedChats.firstWhere((c) => c.id == event.message);
+
+    await chatRepository.addReaction(
+      chatId: event.chatId,
+      messageId: event.message,
+      reactions: updatedChat.reaction ?? {},
+      // ✅ send full map
+    );
+  }
+  void _onCancelReplyEvent(
+    CancelReply event,
+    Emitter<ChatState> emit,) {
+    emit(state.copyWith(replyMessage: null,clearReply: true));
+  }
+  void _onReplyMessageEvent(
+    ReplyMessageEvent event,
+    Emitter<ChatState> emit,
+  ) {
+    emit(state.copyWith(replyMessage: event.message));
+  }
+
+
+  void _onCancelEditingEvent(
+    CancelEditing event,
+    Emitter<ChatState> emit,
+      ) {
+    emit(state.copyWith(editingMessage: null));
+  }
+  void _onStartEditingEvent(
+    StartEditingEvent event,
+    Emitter<ChatState> emit,
+  ) {
+    emit(state.copyWith(editingMessage: event.message));
+  }
+
+
+  void _onEditChatEvent(
+    EditChatEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    await chatRepository.editMessage(event.messageId, event.newMessage,event.chatId);
+
+    final messages = state.chats!.map((chat) {
+      if (chat.id == event.messageId) {
+        return chat.copyWith(message: event.newMessage, isEdited: true);
+      }
+      return chat;
+    }).toList();
+    emit(state.copyWith(chats: messages,editingMessage: null));
   }
 
   void _onChatNotificationEvent(
@@ -58,7 +163,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .collection('users')
         .doc(event.receiverId)
         .get();
-
+    final reply = state.replyMessage;
     String receiverToken = userDoc.data()?['fcmToken'] ?? "";
 
     final newMessage = ChatModel(
@@ -69,9 +174,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       receiverId: event.receiverId,
       receiverToken: receiverToken, // ✅ IMPORTANT
       id: '',
+      replyMessage: reply?.message,
+      replySender: reply?.senderId,
     );
+    final updatedChats = [newMessage, ...state.chats!];
+    emit(state.copyWith(chats: updatedChats, replyMessage: null));
 
     await chatRepository.sendMessage(newMessage);
+    emit(state.copyWith(replyMessage: null));
+    emit(state.copyWith(clearReply: true));
   }
   void _onSendImageMessage(
     SendImageMessage event,
