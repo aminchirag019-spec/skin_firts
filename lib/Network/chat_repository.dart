@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../Data/chat_model.dart';
+import '../main.dart';
 
 class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -34,7 +35,8 @@ class ChatRepository {
   Future<void> addReaction({
     required String chatId,
     required String messageId,
-    required Map<String, List<String>> reactions,
+    required String userId,
+    required String emoji,
   }) async {
     final ref = FirebaseFirestore.instance
         .collection('chats')
@@ -43,7 +45,22 @@ class ChatRepository {
         .doc(messageId);
 
     await ref.update({
-      'reaction': reactions,
+      'reaction.$userId': emoji, // ✅ correct
+    });
+  }
+  Future<void> removeReaction({
+    required String chatId,
+    required String messageId,
+    required String userId,
+  }) async {
+    final ref = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId);
+
+    await ref.update({
+      'reaction.$userId': FieldValue.delete(), // ✅ remove
     });
   }
   String getChatId(String u1, String u2) {

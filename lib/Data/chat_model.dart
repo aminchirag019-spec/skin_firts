@@ -13,7 +13,7 @@ class ChatModel {
   final bool? isEdited;
   final String? replyMessage;
   final String? replySender;
-  final Map<String,List<String>>? reaction;
+  final Map<String,String>? reaction;
 
   ChatModel({
     required this.id,
@@ -43,7 +43,7 @@ class ChatModel {
     bool? isEdited,
     String? replyMessage,
     String? replySender,
-    Map<String,List<String>>? reaction,
+    Map<String,String>? reaction,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -79,12 +79,7 @@ class ChatModel {
       replyMessage: json['replyMessage'] ?? '',
       replySender: json['replySender'] ?? '',
       reaction: json['reaction'] != null
-          ? (json['reaction'] as Map<String, dynamic>).map(
-            (key, value) => MapEntry(
-          key,
-          List<String>.from(value),
-        ),
-      )
+          ? Map<String, String>.from(json['reaction'])
           : {},
     );
   }

@@ -132,7 +132,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                                 return GestureDetector(
                                   onLongPress: () {
-                                    if (isMe) {
+                                    if (true) {
                                       HapticFeedback.mediumImpact();
                                       showModalBottomSheet(
                                         context: context,
@@ -167,16 +167,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 ),
 
                                                 Divider(),
-
-                                                /// 📝 OPTIONS
-                                                ListTile(
+                                                  isMe ? ListTile(
                                                   leading: Icon(Icons.edit),
                                                   title: Text("Edit"),
                                                   onTap: () {
                                                     Navigator.pop(context);
                                                     context.read<ChatBloc>().add(StartEditingEvent(chat));
                                                   },
-                                                ),
+                                                ): SizedBox(),
                                                 ListTile(
                                                   leading: Icon(Icons.copy),
                                                   title: Text("Copy"),
@@ -521,16 +519,14 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
-  List<Widget> _buildReactionWidgets(Map<String, List<String>>? reactions) {
+  List<Widget> _buildReactionWidgets(Map<String, String>? reactions) {
     if (reactions == null || reactions.isEmpty) return [];
 
     final Map<String, int> count = {};
 
-
-    for (var userReactions in reactions.values) {
-      for (var emoji in userReactions) {
-        count[emoji] = (count[emoji] ?? 0) + 1;
-      }
+    // ✅ Each user has only ONE emoji now
+    for (var emoji in reactions.values) {
+      count[emoji] = (count[emoji] ?? 0) + 1;
     }
 
     return count.entries.map((entry) {

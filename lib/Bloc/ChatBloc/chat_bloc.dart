@@ -37,32 +37,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     print("EVENT RECEIVED: ${event.message} ${event.reaction}");
 
+    final userId = user!.uid;
+
     final updatedChats = (state.chats ?? []).map((chat) {
       if (chat.id == event.message) {
 
         print("MATCH FOUND: ${chat.id}");
 
         final updatedReaction =
-        Map<String, List<String>>.from(chat.reaction ?? {});
+        Map<String, String>.from(chat.reaction ?? {});
 
-        final userId = user!.uid;
-
-        // Get existing reactions for this user
-        final userReactions =
-        List<String>.from(updatedReaction[userId] ?? []);
-
-        // 🔁 Toggle logic
-        if (userReactions.contains(event.reaction)) {
-          userReactions.remove(event.reaction); // remove if already exists
-        } else {
-          userReactions.add(event.reaction); // add new one
-        }
-
-        // Clean empty list
-        if (userReactions.isEmpty) {
+        // 🔁 TOGGLE LOGIC (single reaction)
+        if (updatedReaction[userId] == event.reaction) {
+          // ❌ remove if same reaction tapped again
           updatedReaction.remove(userId);
         } else {
-          updatedReaction[userId] = userReactions;
+          // ✅ replace or add new reaction
+          updatedReaction[userId] = event.reaction;
         }
 
         print("UPDATED REACTION: $updatedReaction");
@@ -77,15 +68,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     print("STATE EMITTED");
 
-    // 🔥 IMPORTANT: send full map instead of single emoji
-    final updatedChat =
+    final   updatedChat =
     updatedChats.firstWhere((c) => c.id == event.message);
 
+    // 🔥 SEND MAP DIRECTLY (NOT STRING)
     await chatRepository.addReaction(
       chatId: event.chatId,
       messageId: event.message,
-      reactions: updatedChat.reaction ?? {},
-      // ✅ send full map
+      emoji: event.reaction,
+      userId: userId, // ✅ correct
     );
   }
   void _onCancelReplyEvent(
