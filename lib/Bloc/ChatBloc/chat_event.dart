@@ -1,16 +1,19 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../../Data/chat_model.dart';
 
 abstract class ChatEvent {}
+
 class SendTextMessage extends ChatEvent {
   final String message;
   final String receiverId;
   final String? replyMessage;
   final String? replySender;
 
-
-  SendTextMessage({required this.message, required this.receiverId, this.replyMessage, this.replySender});
+  SendTextMessage({
+    required this.message,
+    required this.receiverId,
+    this.replyMessage,
+    this.replySender,
+  });
 }
 
 class SendImageMessage extends ChatEvent {
@@ -27,7 +30,6 @@ class SendFileMessage extends ChatEvent {
   SendFileMessage({required this.filePath, required this.receiverId});
 }
 
-
 class LoadMessageEvent extends ChatEvent {
   final String receiverId;
 
@@ -39,9 +41,10 @@ class MessagesUpdated extends ChatEvent {
 
   MessagesUpdated(this.messages);
 }
-class ChatNotificationEvent extends ChatEvent{
+
+class ChatNotificationEvent extends ChatEvent {
   final ChatModel chatModel;
-ChatNotificationEvent(this.chatModel);
+  ChatNotificationEvent(this.chatModel);
 }
 
 class EditChatEvent extends ChatEvent {
@@ -49,8 +52,9 @@ class EditChatEvent extends ChatEvent {
   final String newMessage;
   final String chatId;
 
-  EditChatEvent(this.messageId, this.newMessage,this.chatId);
+  EditChatEvent(this.messageId, this.newMessage, this.chatId);
 }
+
 class StartEditingEvent extends ChatEvent {
   final ChatModel message;
 
@@ -63,16 +67,26 @@ class ReplyMessageEvent extends ChatEvent {
   final ChatModel message;
   ReplyMessageEvent(this.message);
 }
+
 class CancelReply extends ChatEvent {}
 
-class AddReactionEvent extends ChatEvent{
+class AddReactionEvent extends ChatEvent {
   final String chatId;
   final String message;
   final String reaction;
-  AddReactionEvent(this.chatId,this.message,this.reaction);
+  AddReactionEvent(this.chatId, this.message, this.reaction);
 }
-class SelectMessageEvent extends ChatEvent{
+
+class ToggleMessageSelection extends ChatEvent {
   final ChatModel message;
-  SelectMessageEvent(this.message);
+  ToggleMessageSelection(this.message);
 }
+
 class UnSelectMessageEvent extends ChatEvent {}
+
+class DeleteMessagesEvent extends ChatEvent {
+  final List<String> messageIds;
+  final String receiverId;
+
+  DeleteMessagesEvent(this.messageIds, this.receiverId);
+}

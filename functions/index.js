@@ -3,17 +3,38 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-exports.sendNotification = functions.firestore
+exports.sendChatNotification = functions.firestore
   .document("chats/{chatId}/messages/{messageId}")
-  .onCreate(async (snapshot, context) => {
-    const data = snapshot.data();
+  .onCreate(async (snap, context) => {
+    const messageData = snap.data();
+
+    const receiverId = messageData.receiverId;
+
+    const userDoc = await admin.firestore()
+      .collection("users")
+      .doc(receiverId)
+      .get();
+
+    const fcmToken = userDoc.data().fcmToken;
+
+    if (!fcmToken) return;
 
     const payload = {
+      token: fcmToken,
       notification: {
-        title: data.senderId,
-        body: data.message,
+        title: "New Message",
+        body: messageData.message,
       },
+      data: {
+        senderId: messageData.senderId,
+        type: "chat",
+      }
     };
 
-    return admin.messaging().sendToDevice(data.receiverToken, payload);
+    try {
+      await admin.messaging().send(payload);
+      console.log("Notification sent");
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
   });

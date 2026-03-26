@@ -27,25 +27,45 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ReplyMessageEvent>(_onReplyMessageEvent);
     on<CancelReply>(_onCancelReplyEvent);
     on<AddReactionEvent>(_onAddReactionEvent);
-    on<SelectMessageEvent>(_onSelectMessageEvent);
+    on<ToggleMessageSelection>(_onToggleMessageSelection);
     on<UnSelectMessageEvent>(_onUnSelectMessageEvent);
+    on<DeleteMessagesEvent>(_onDeleteMessages);
   }
 
-  void _onSelectMessageEvent(
-    SelectMessageEvent event,
+  void _onToggleMessageSelection(
+    ToggleMessageSelection event,
     Emitter<ChatState> emit,
-  ) async {
+  ) {
+    final currentSelected = List<ChatModel>.from(state.selectedMessages);
+    if (currentSelected.any((m) => m.id == event.message.id)) {
+      currentSelected.removeWhere((m) => m.id == event.message.id);
+    } else {
+      currentSelected.add(event.message);
+    }
+
     emit(state.copyWith(
-      isSelectedMessage: true,
-      selectMessage: event.message,
+      isSelectedMessage: currentSelected.isNotEmpty,
+      selectedMessages: currentSelected,
     ));
   }
 
   void _onUnSelectMessageEvent(
     UnSelectMessageEvent event,
     Emitter<ChatState> emit,
+  ) {
+    emit(state.copyWith(
+      isSelectedMessage: false,
+      clearSelection: true,
+    ));
+  }
+
+  void _onDeleteMessages(
+    DeleteMessagesEvent event,
+    Emitter<ChatState> emit,
   ) async {
-    emit(state.copyWith(isSelectedMessage: false, clearSelection: true));
+    final chatId = chatRepository.getChatId(user!.uid, event.receiverId);
+    await chatRepository.deleteMessages(chatId, event.messageIds);
+    add(UnSelectMessageEvent());
   }
 
   void _onAddReactionEvent(
@@ -95,18 +115,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onEditChatEvent(EditChatEvent event, Emitter<ChatState> emit) async {
     await chatRepository.editMessage(
+      event.chatId,
       event.messageId,
       event.newMessage,
-      event.chatId,
     );
-
-    final messages = state.chats!.map((chat) {
-      if (chat.id == event.messageId) {
-        return chat.copyWith(message: event.newMessage, isEdited: true);
-      }
-      return chat;
-    }).toList();
-    emit(state.copyWith(chats: messages, editingMessage: null));
+    emit(state.copyWith(editingMessage: null));
   }
 
   void _onChatNotificationEvent(
@@ -158,10 +171,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       replyMessage: reply?.message ?? (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
       replySender: reply?.senderId,
     );
-    final updatedChats = [newMessage, ...state.chats!];
-    emit(state.copyWith(chats: updatedChats, replyMessage: null, clearReply: true));
-
+    
     await chatRepository.sendMessage(newMessage);
+    emit(state.copyWith(replyMessage: null, clearReply: true));
   }
 
   void _onSendImageMessage(
@@ -180,10 +192,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       replySender: reply?.senderId,
     );
     
-    final updatedChats = [sendImage, ...state.chats!];
-    emit(state.copyWith(chats: updatedChats, replyMessage: null, clearReply: true));
-    
     await chatRepository.sendMessage(sendImage);
+    emit(state.copyWith(replyMessage: null, clearReply: true));
   }
 
   void _onSendFileMessage(
@@ -202,9 +212,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       replySender: reply?.senderId,
     );
 
-    final updatedChats = [sendFile, ...state.chats!];
-    emit(state.copyWith(chats: updatedChats, replyMessage: null, clearReply: true));
-
     await chatRepository.sendMessage(sendFile);
+    emit(state.copyWith(replyMessage: null, clearReply: true));
   }
 }

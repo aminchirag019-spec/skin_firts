@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:skin_firts/Data/chat_model.dart';
-
 import '../../Global/enums.dart';
 
 class ChatState extends Equatable {
@@ -11,7 +9,7 @@ class ChatState extends Equatable {
   final MessageStatus? messageStatus;
   final ChatModel? editingMessage;
   final ChatModel? replyMessage;
-  final ChatModel? selectMessage;
+  final List<ChatModel> selectedMessages;
   final bool isSelectedMessage;
 
   const ChatState({
@@ -21,7 +19,7 @@ class ChatState extends Equatable {
     this.messageStatus = MessageStatus.initial,
     this.editingMessage,
     this.replyMessage,
-    this.selectMessage,
+    this.selectedMessages = const [],
     this.isSelectedMessage = false,
   });
 
@@ -31,12 +29,11 @@ class ChatState extends Equatable {
     List<ChatModel>? chats,
     MessageStatus? messageStatus,
     ChatModel? editingMessage,
+    bool clearEditing = false,
     ChatModel? replyMessage,
     bool clearReply = false,
-
-    ChatModel? selectMessage,
+    List<ChatModel>? selectedMessages,
     bool clearSelection = false,
-
     bool? isSelectedMessage,
   }) {
     return ChatState(
@@ -44,24 +41,22 @@ class ChatState extends Equatable {
       chats: chats ?? this.chats,
       chatType: chatType ?? this.chatType,
       messageStatus: messageStatus ?? this.messageStatus,
-      editingMessage: editingMessage ?? this.editingMessage,
+      editingMessage: clearEditing ? null : editingMessage ?? this.editingMessage,
       replyMessage: clearReply ? null : replyMessage ?? this.replyMessage,
-
-      /// 🔥 FIXED HERE
-      selectMessage: clearSelection ? null : selectMessage ?? this.selectMessage,
-
+      selectedMessages: clearSelection ? const [] : selectedMessages ?? this.selectedMessages,
       isSelectedMessage: isSelectedMessage ?? this.isSelectedMessage,
     );
   }
+
   @override
-  List<Object> get props => [
-    ?status,
-    ?chats,
-    ?chatType,
-    ?messageStatus,
-    ?editingMessage,
-    ?replyMessage,
-    ?selectMessage,
-    isSelectedMessage,
-  ];
+  List<Object?> get props => [
+        status,
+        chats,
+        chatType,
+        messageStatus,
+        editingMessage,
+        replyMessage,
+        selectedMessages,
+        isSelectedMessage,
+      ];
 }

@@ -32,6 +32,20 @@ class ChatRepository {
       'isEdited': true,
     });
   }
+
+  Future<void> deleteMessages(String chatId, List<String> messageIds) async {
+    final batch = _firestore.batch();
+    final collection = _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages');
+
+    for (var id in messageIds) {
+      batch.delete(collection.doc(id));
+    }
+    await batch.commit();
+  }
+
   Future<void> addReaction({
     required String chatId,
     required String messageId,
