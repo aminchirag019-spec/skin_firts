@@ -50,17 +50,16 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<ChatBloc, ChatState>(
       listenWhen: (previous, current) =>
-      previous.editingMessage != current.editingMessage ||
+          previous.editingMessage != current.editingMessage ||
           previous.isSelectedMessage != current.isSelectedMessage ||
           previous.selectedMessages.length != current.selectedMessages.length,
-
       buildWhen: (previous, current) {
-        // ✅ ONLY rebuild when really needed
+        // ✅ Rebuild when chats, selection mode, selected messages, or reply message changes
         return previous.chats != current.chats ||
             previous.isSelectedMessage != current.isSelectedMessage ||
-            previous.selectedMessages.length != current.selectedMessages.length;
+            previous.selectedMessages.length != current.selectedMessages.length ||
+            previous.replyMessage != current.replyMessage;
       },
-
       listener: (context, state) {
         if (!state.isSelectedMessage) {
           _closeReactionPopup();
@@ -77,9 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
         final chats = state.chats ?? [];
         final selectedMessages = state.selectedMessages;
         final isSelectionMode = state.isSelectedMessage;
-        final singleSelected = selectedMessages.length == 1
-            ? selectedMessages.first
-            : null;
+        final singleSelected = selectedMessages.length == 1 ? selectedMessages.first : null;
         final isMe = singleSelected?.senderId == user!.uid;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -107,19 +104,19 @@ class _ChatScreenState extends State<ChatScreen> {
                             ? AppSize.height(context) * 0.010
                             : AppSize.height(context) * 0.015,
                       ),
-                      color:  Color(0xff2260FF),
+                      color: const Color(0xff2260FF),
                       child: isSelectionMode
                           ? Row(
                               children: [
                                 IconButton(
-                                  icon:  Icon(
+                                  icon: const Icon(
                                     Icons.close,
                                     color: Colors.white,
                                     size: 22,
                                   ),
                                   onPressed: () => context.read<ChatBloc>().add(
-                                    UnSelectMessageEvent(),
-                                  ),
+                                        UnSelectMessageEvent(),
+                                      ),
                                 ),
                                 Text(
                                   "${selectedMessages.length}",
@@ -129,7 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                 Spacer(),
+                                const Spacer(),
                                 if (singleSelected != null) ...[
                                   IconButton(
                                     icon: const Icon(
@@ -138,11 +135,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                     onPressed: () {
                                       context.read<ChatBloc>().add(
-                                        ReplyMessageEvent(singleSelected),
-                                      );
+                                            ReplyMessageEvent(singleSelected),
+                                          );
                                       context.read<ChatBloc>().add(
-                                        UnSelectMessageEvent(),
-                                      );
+                                            UnSelectMessageEvent(),
+                                          );
                                     },
                                   ),
                                   if (singleSelected.chatType == ChatType.text)
@@ -158,8 +155,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                           ),
                                         );
                                         context.read<ChatBloc>().add(
-                                          UnSelectMessageEvent(),
-                                        );
+                                              UnSelectMessageEvent(),
+                                            );
                                       },
                                     ),
                                   if (singleSelected.senderId == user!.uid &&
@@ -171,11 +168,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                       ),
                                       onPressed: () {
                                         context.read<ChatBloc>().add(
-                                          StartEditingEvent(singleSelected),
-                                        );
+                                              StartEditingEvent(singleSelected),
+                                            );
                                         context.read<ChatBloc>().add(
-                                          UnSelectMessageEvent(),
-                                        );
+                                              UnSelectMessageEvent(),
+                                            );
                                       },
                                     ),
                                 ],
@@ -185,15 +182,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                     color: Colors.white,
                                   ),
                                   onPressed: () {
-                                    final ids = selectedMessages
-                                        .map((m) => m.id)
-                                        .toList();
+                                    final ids = selectedMessages.map((m) => m.id).toList();
                                     context.read<ChatBloc>().add(
-                                      DeleteMessagesEvent(
-                                        ids,
-                                        widget.receiverId!,
-                                      ),
-                                    );
+                                          DeleteMessagesEvent(
+                                            ids,
+                                            widget.receiverId!,
+                                          ),
+                                        );
                                   },
                                 ),
                                 if (singleSelected != null)
@@ -216,8 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         case "Copy":
                                           Clipboard.setData(
                                             ClipboardData(
-                                              text:
-                                                  singleSelected.message ?? "",
+                                              text: singleSelected.message ?? "",
                                             ),
                                           );
                                           break;
@@ -236,8 +230,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       _buildMenuItem("Verify security code"),
                                       _buildMenuItem("Info"),
                                       _buildMenuItem("Copy"),
-                                      if (isMe)
-                                      _buildMenuItem("Edit"),
+                                      if (isMe) _buildMenuItem("Edit"),
                                       _buildMenuItem("Pin"),
                                     ],
                                   ),
@@ -249,7 +242,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   onTap: () => context.go(
                                     RouterName.chatListScreen.path,
                                   ),
-                                  child:  Icon(
+                                  child: const Icon(
                                     Icons.arrow_back_ios,
                                     color: Colors.white,
                                   ),
@@ -263,10 +256,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                     fontSize: AppSize.width(context) * 0.06,
                                   ),
                                 ),
-                                 Spacer(),
+                                const Spacer(),
                                 chatBarIcons(
                                   context,
-                                  image:  AssetImage(
+                                  image: const AssetImage(
                                     "assets/images/chat_phone.png",
                                   ),
                                   height: AppSize.height(context) * 0.015,
@@ -276,7 +269,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 SizedBox(width: AppSize.width(context) * 0.025),
                                 chatBarIcons(
                                   context,
-                                  image:  AssetImage(
+                                  image: const AssetImage(
                                     "assets/images/video_call.png",
                                   ),
                                   height: AppSize.height(context) * 0.012,
@@ -290,15 +283,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
-                          if (isSelectionMode)
+                          if (isSelectionMode) {
                             context.read<ChatBloc>().add(
-                              UnSelectMessageEvent(),
-                            );
+                                  UnSelectMessageEvent(),
+                                );
+                          }
                           FocusScope.of(context).unfocus();
                         },
                         child: ListView.builder(
                           reverse: true,
-                          physics:  BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemCount: chats.length,
                           itemBuilder: (context, index) {
                             final key = GlobalKey();
@@ -309,10 +303,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             );
                             return GestureDetector(
                               onTap: () {
-                                if (isSelectionMode)
+                                if (isSelectionMode) {
                                   context.read<ChatBloc>().add(
-                                    ToggleMessageSelection(chat),
-                                  );
+                                        ToggleMessageSelection(chat),
+                                      );
+                                }
                               },
                               onLongPress: () {
                                 HapticFeedback.mediumImpact();
@@ -320,11 +315,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 FocusScope.of(context).unfocus();
                                 if (!isSelectionMode) {
                                   context.read<ChatBloc>().add(
-                                    ToggleMessageSelection(chat),
-                                  );
-                                  final renderBox =
-                                      key.currentContext!.findRenderObject()
-                                          as RenderBox;
+                                        ToggleMessageSelection(chat),
+                                      );
+                                  final renderBox = key.currentContext!.findRenderObject() as RenderBox;
                                   final position = renderBox.localToGlobal(
                                     Offset.zero,
                                   );
@@ -340,25 +333,21 @@ class _ChatScreenState extends State<ChatScreen> {
                               },
                               child: Dismissible(
                                 key: ValueKey(chat.id),
-                                direction: isMe
-                                    ? DismissDirection.endToStart
-                                    : DismissDirection.startToEnd,
+                                direction: isMe ? DismissDirection.endToStart : DismissDirection.startToEnd,
                                 confirmDismiss: (_) async {
                                   if (isSelectionMode) return false;
                                   HapticFeedback.mediumImpact();
                                   context.read<ChatBloc>().add(
-                                    ReplyMessageEvent(chat),
-                                  );
+                                        ReplyMessageEvent(chat),
+                                      );
                                   return false;
                                 },
                                 background: Container(
-                                  alignment: isMe
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                                  padding:  EdgeInsets.symmetric(
+                                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 20,
                                   ),
-                                  child:  Icon(
+                                  child: const Icon(
                                     Icons.reply,
                                     color: Colors.grey,
                                   ),
@@ -366,13 +355,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 child: Container(
                                   key: key,
                                   width: double.infinity,
-                                  color: isSelected
-                                      ? Colors.blue.withOpacity(0.15)
-                                      : Colors.transparent,
+                                  color: isSelected ? Colors.blue.withOpacity(0.15) : Colors.transparent,
                                   child: Align(
-                                    alignment: isMe
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
+                                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                                     child: messageBubble(chat, isMe),
                                   ),
                                 ),
@@ -382,8 +367,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                     ),
-                    if (state.replyMessage != null)
-                      _buildReplyPreview(context, state.replyMessage!),
+                    if (state.replyMessage != null) _buildReplyPreview(context, state.replyMessage!),
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: AppSize.width(context) * 0.054,
@@ -414,9 +398,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                hintText: state.editingMessage != null
-                                    ? "Edit message..."
-                                    : "Type a message",
+                                hintText: state.editingMessage != null ? "Edit message..." : "Type a message",
                                 hintStyle: GoogleFonts.leagueSpartan(
                                   color: const Color(0xff2260FF),
                                 ),
@@ -433,47 +415,40 @@ class _ChatScreenState extends State<ChatScreen> {
                               final text = chatController.text.trim();
                               if (text.isEmpty) return;
                               if (state.editingMessage != null) {
-                                final chatId = context
-                                    .read<ChatBloc>()
-                                    .chatRepository
-                                    .getChatId(user!.uid, widget.receiverId!);
+                                final chatId = context.read<ChatBloc>().chatRepository.getChatId(user!.uid, widget.receiverId!);
                                 context.read<ChatBloc>().add(
-                                  EditChatEvent(
-                                    state.editingMessage!.id,
-                                    text,
-                                    chatId,
-                                  ),
-                                );
+                                      EditChatEvent(
+                                        state.editingMessage!.id,
+                                        text,
+                                        chatId,
+                                      ),
+                                    );
                                 chatController.clear();
                               } else {
                                 context.read<ChatBloc>().add(
-                                  SendTextMessage(
-                                    message: text,
-                                    receiverId: widget.receiverId!,
-                                    replyMessage:
-                                        state.replyMessage?.chatType ==
-                                            ChatType.text
-                                        ? state.replyMessage?.message
-                                        : (state.replyMessage?.chatType ==
-                                                  ChatType.image
-                                              ? "Photo"
-                                              : state.replyMessage?.chatType ==
-                                                    ChatType.file
-                                              ? "File"
-                                              : null),
-                                    replySender: state.replyMessage?.senderId,
-                                  ),
-                                );
+                                      SendTextMessage(
+                                        message: text,
+                                        receiverId: widget.receiverId!,
+                                        replyMessage: state.replyMessage?.chatType == ChatType.text
+                                            ? state.replyMessage?.message
+                                            : (state.replyMessage?.chatType == ChatType.image
+                                                ? "Photo"
+                                                : state.replyMessage?.chatType == ChatType.file
+                                                    ? "File"
+                                                    : null),
+                                        replySender: state.replyMessage?.senderId,
+                                      ),
+                                    );
                                 chatController.clear();
                               }
                             },
                             child: chatBarIcons(
                               context,
-                              image:  AssetImage(
+                              image: const AssetImage(
                                 "assets/images/send_icon.png",
                               ),
                               imgHeight: AppSize.height(context) * 0.023,
-                              color:  Color(0xff2260FF),
+                              color: const Color(0xff2260FF),
                               height: AppSize.height(context) * 0.018,
                             ),
                           ),
@@ -492,8 +467,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildReplyPreview(BuildContext context, ChatModel reply) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding:  EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(10),
@@ -507,10 +482,8 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  reply.senderId == user?.uid
-                      ? "You"
-                      : widget.receiverName ?? "",
-                  style:  TextStyle(
+                  reply.senderId == user?.uid ? "You" : widget.receiverName ?? "",
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xff2260FF),
                   ),
@@ -519,8 +492,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   reply.chatType == ChatType.image
                       ? "Photo"
                       : reply.chatType == ChatType.file
-                      ? "File"
-                      : (reply.message ?? ""),
+                          ? "File"
+                          : (reply.message ?? ""),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -529,7 +502,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           GestureDetector(
             onTap: () => context.read<ChatBloc>().add(CancelReply()),
-            child:  Icon(Icons.close),
+            child: const Icon(Icons.close),
           ),
         ],
       ),
@@ -538,72 +511,67 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageBubble(ChatModel chat, bool isMe) {
     return BlocBuilder<ChatBloc, ChatState>(
-  buildWhen:(previous, current) {
-    return previous.selectedMessages != current.selectedMessages;
-  } ,
+      buildWhen: (previous, current) {
+        return previous.selectedMessages != current.selectedMessages;
+      },
       builder: (context, state) {
-
-    return Column(
-      crossAxisAlignment: isMe
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 03),
-        Container(
-          constraints: BoxConstraints(maxWidth: AppSize.width(context) * 0.75),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(isMe ? 14 : 0),
-              topRight: Radius.circular(isMe ? 0 : 14),
-              bottomLeft: const Radius.circular(14),
-              bottomRight: const Radius.circular(16),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (chat.replyMessage != null &&
-                  chat.replyMessage!.trim().isNotEmpty)
-                _buildReplyBox(chat, isMe),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
+        return Column(
+          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 03),
+            Container(
+              constraints: BoxConstraints(maxWidth: AppSize.width(context) * 0.75),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(isMe ? 14 : 0),
+                  topRight: Radius.circular(isMe ? 0 : 14),
+                  bottomLeft: const Radius.circular(14),
+                  bottomRight: const Radius.circular(16),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: chat.chatType == ChatType.image
-                        ? imageContent(chat, context)
-                        : chat.chatType == ChatType.file
-                        ? fileContent(chat, context)
-                        : Text(
-                            chat.message ?? '',
-                            style:  TextStyle(fontSize: 14),
-                          ),
-                  ),
-                   SizedBox(width: 8),
-                  Text(
-                    formatTime(chat.timestamp),
-                    style:  TextStyle(fontSize: 10, color: Colors.black54),
+                  if (chat.replyMessage != null && chat.replyMessage!.trim().isNotEmpty) _buildReplyBox(chat, isMe),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: chat.chatType == ChatType.image
+                            ? imageContent(chat, context)
+                            : chat.chatType == ChatType.file
+                                ? fileContent(chat, context)
+                                : Text(
+                                    chat.message ?? '',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        formatTime(chat.timestamp),
+                        style: const TextStyle(fontSize: 10, color: Colors.black54),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        if (chat.reaction != null && chat.reaction!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: Wrap(
-              spacing: 4,
-              children: _buildReactionWidgets(chat.reaction),
             ),
-          ),
-        SizedBox(height: 03),
-      ],
+            if (chat.reaction != null && chat.reaction!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Wrap(
+                  spacing: 4,
+                  children: _buildReactionWidgets(chat.reaction),
+                ),
+              ),
+            const SizedBox(height: 03),
+          ],
+        );
+      },
     );
-  },
-);
   }
 
   Widget _buildReplyBox(ChatModel chat, bool isMe) {
@@ -629,12 +597,12 @@ class _ChatScreenState extends State<ChatScreen> {
               color: isMe ? Colors.blue : Colors.green,
             ),
           ),
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
           Text(
             chat.replyMessage!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(fontSize: 11),
+            style: const TextStyle(fontSize: 11),
           ),
         ],
       ),
@@ -680,8 +648,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: TweenAnimationBuilder(
                 duration: const Duration(milliseconds: 150),
                 tween: Tween(begin: 0.8, end: 1.0),
-                builder: (context, value, child) =>
-                    Transform.scale(scale: value as double, child: child),
+                builder: (context, value, child) => Transform.scale(scale: value as double, child: child),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,

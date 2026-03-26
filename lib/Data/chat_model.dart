@@ -13,7 +13,7 @@ class ChatModel {
   final bool? isEdited;
   final String? replyMessage;
   final String? replySender;
-  final Map<String,String>? reaction;
+  final Map<String, String>? reaction;
 
   ChatModel({
     required this.id,
@@ -43,7 +43,7 @@ class ChatModel {
     bool? isEdited,
     String? replyMessage,
     String? replySender,
-    Map<String,String>? reaction,
+    Map<String, String>? reaction,
   }) {
     return ChatModel(
       id: id ?? this.id,
@@ -76,8 +76,8 @@ class ChatModel {
       timestamp: (json['timestamp'] as Timestamp).toDate(),
       receiverToken: json['receiverToken'] ?? '',
       isEdited: json['isEdited'] ?? false,
-      replyMessage: json['replyMessage'] ?? '',
-      replySender: json['replySender'] ?? '',
+      replyMessage: json['replyMessage'],
+      replySender: json['replySender'],
       reaction: json['reaction'] != null
           ? Map<String, String>.from(json['reaction'])
           : {},

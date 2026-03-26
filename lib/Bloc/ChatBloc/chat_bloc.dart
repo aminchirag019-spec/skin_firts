@@ -102,6 +102,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onReplyMessageEvent(ReplyMessageEvent event, Emitter<ChatState> emit) {
+    print("event Triggered");
     emit(state.copyWith(replyMessage: event.message));
   }
 
