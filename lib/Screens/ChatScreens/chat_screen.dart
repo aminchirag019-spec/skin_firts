@@ -32,6 +32,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController chatController = TextEditingController();
+  OverlayEntry? _reactionOverlay;
+
+  @override
+  void dispose() {
+    _reactionOverlay?.remove();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -43,8 +50,12 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return BlocListener<ChatBloc, ChatState>(
       listenWhen: (previous, current) =>
-          previous.editingMessage != current.editingMessage,
+          previous.editingMessage != current.editingMessage ||
+          previous.isSelectedMessage != current.isSelectedMessage,
       listener: (context, state) {
+        if (!state.isSelectedMessage) {
+          _closeReactionPopup();
+        }
         if (state.editingMessage != null) {
           chatController.text = state.editingMessage!.message ?? "";
           chatController.selection = TextSelection.fromPosition(
@@ -70,48 +81,209 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.width(context) * 0.064,
-                          vertical: AppSize.height(context) * 0.025,
+                          horizontal: state.isSelectedMessage == true
+                              ? AppSize.width(context) * 0.01
+                              : AppSize.width(context) * 0.064,
+                          vertical: state.isSelectedMessage == true
+                              ? AppSize.height(context) * 0.010
+                              : AppSize.height(context) * 0.015,
                         ),
                         color: Color(0xff2260FF),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context.go(RouterName.chatListScreen.path);
-                              },
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
+                        child: state.isSelectedMessage == true
+                            ? Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                      size: 22,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<ChatBloc>()
+                                          .add(UnSelectMessageEvent());
+                                    },
+                                  ),
+                                  Text(
+                                    "1",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      context.read<ChatBloc>().add(
+                                            ReplyMessageEvent(
+                                                state.selectMessage!),
+                                          );
+                                    },
+                                  ),
+
+                                  /// Copy
+                                  IconButton(
+                                    icon: Icon(Icons.copy, color: Colors.white),
+                                    onPressed: () {
+                                      if (state.selectMessage?.message != null) {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: state.selectMessage!.message!,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  if (state.selectMessage?.senderId ==
+                                      user!.uid && state.selectMessage?.chatType == ChatType.text)
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        context.read<ChatBloc>().add(
+                                              StartEditingEvent(
+                                                state.selectMessage!,
+                                              ),
+                                            );
+                                        context.read<ChatBloc>().add(
+                                              UnSelectMessageEvent(),
+                                            );
+                                      },
+                                    ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      context.read<ChatBloc>().add(
+                                            UnSelectMessageEvent(),
+                                          );
+                                    },
+                                  ),
+
+                                  /// Menu
+                                  PopupMenuButton<String>(
+                                    onOpened: () {
+                                      _closeReactionPopup();
+                                    },
+                                    offset: const Offset(-10, 45),
+                                    icon: const Icon(
+                                      Icons.more_vert,
+                                      color: Colors.white,
+                                    ),
+                                    color: AppColors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    onSelected: (value) {
+                                      final bloc = context.read<ChatBloc>();
+
+                                      switch (value) {
+                                        case "Info":
+                                          print("Info clicked");
+                                          break;
+
+                                        case "Copy":
+                                          if (state.selectMessage?.message != null) {
+                                            Clipboard.setData(
+                                              ClipboardData(
+                                                text: state.selectMessage!.message!,
+                                              ),
+                                            );
+                                          }
+                                          break;
+
+                                        case "Edit":
+                                          bloc.add(
+                                            StartEditingEvent(
+                                              state.selectMessage!,
+                                            ),
+                                          );
+                                          FocusScope.of(context).requestFocus();
+                                          break;
+
+                                        case "Pin":
+                                          print("Pin clicked");
+                                          break;
+                                      }
+                                      bloc.add(UnSelectMessageEvent());
+                                    },
+                                    itemBuilder: (context) => [
+                                      _buildMenuItem(
+                                        "Verify security code",
+                                      ),
+                                      _buildMenuItem(
+                                        "Info",
+                                      ),
+                                      _buildMenuItem(
+                                        "Copy",
+                                      ),
+                                      _buildMenuItem(
+                                        "Edit",
+                                      ),
+                                      _buildMenuItem(
+                                        "Pin",
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.go(
+                                        RouterName.chatListScreen.path,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: AppSize.width(context) * 0.025,
+                                  ),
+                                  Text(
+                                    widget.receiverName ?? "",
+                                    style: GoogleFonts.leagueSpartan(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: AppSize.width(context) * 0.06,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  chatBarIcons(
+                                    context,
+                                    image: AssetImage(
+                                      "assets/images/chat_phone.png",
+                                    ),
+                                    height: AppSize.height(context) * 0.015,
+                                    width: AppSize.width(context) * 0.015,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: AppSize.width(context) * 0.025,
+                                  ),
+                                  chatBarIcons(
+                                    context,
+                                    image: AssetImage(
+                                      "assets/images/video_call.png",
+                                    ),
+                                    height: AppSize.height(context) * 0.012,
+                                    width: AppSize.width(context) * 0.012,
+                                    color: Colors.white,
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(width: AppSize.width(context) * 0.025),
-                            Text(
-                              widget.receiverName ?? "",
-                              style: GoogleFonts.leagueSpartan(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: AppSize.width(context) * 0.06,
-                              ),
-                            ),
-                            Spacer(),
-                            chatBarIcons(
-                              context,
-                              image: AssetImage("assets/images/chat_phone.png"),
-                              height: AppSize.height(context) * 0.015,
-                              width: AppSize.width(context) * 0.015,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: AppSize.width(context) * 0.025),
-                            chatBarIcons(
-                              context,
-                              image: AssetImage("assets/images/video_call.png"),
-                              height: AppSize.height(context) * 0.012,
-                              width: AppSize.width(context) * 0.012,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
                       ),
                       Expanded(
                         child: BlocBuilder<ChatBloc, ChatState>(
@@ -121,131 +293,114 @@ class _ChatScreenState extends State<ChatScreen> {
                             if (chats.isEmpty) {
                               return Center(child: Text("No messages yet"));
                             }
-
-                            return ListView.builder(
-                              reverse: true,
-                              physics: BouncingScrollPhysics(),
-                              itemCount: chats.length,
-                              itemBuilder: (context, index) {
-                                final chat = chats[index];
-                                final isMe = chat.senderId == user!.uid;
-
-                                return GestureDetector(
-                                  onLongPress: () {
-                                    if (true) {
-                                      HapticFeedback.mediumImpact();
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) {
-                                          return SafeArea(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-
-                                                /// 🔥 QUICK REACTIONS
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      reactionItem("👍", chat),
-                                                      reactionItem("❤️", chat),
-                                                      reactionItem("😂", chat),
-                                                      reactionItem("😮", chat),
-                                                      reactionItem("😢", chat),
-
-                                                      /// ➕ OPEN FULL PICKER
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pop(context);
-                                                          showEmojiPicker(context, chat);
-                                                        },
-                                                        child: Text("+", style: TextStyle(fontSize: 22)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                Divider(),
-                                                  isMe ? ListTile(
-                                                  leading: Icon(Icons.edit),
-                                                  title: Text("Edit"),
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    context.read<ChatBloc>().add(StartEditingEvent(chat));
-                                                  },
-                                                ): SizedBox(),
-                                                ListTile(
-                                                  leading: Icon(Icons.copy),
-                                                  title: Text("Copy"),
-                                                  onTap: () {
-                                                    Clipboard.setData(
-                                                      ClipboardData(text: chat.message ?? ""),
-                                                    );
-                                                    Navigator.pop(context);
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  child: Dismissible(
-                                    key: ValueKey(chat.id),
-                                    direction: isMe
-                                        ? DismissDirection.endToStart
-                                        : DismissDirection.startToEnd,
-                                    confirmDismiss: (direction) async {
-                                      HapticFeedback.mediumImpact();
-                                      context.read<ChatBloc>().add(
-                                        ReplyMessageEvent(chat),
-                                      );
-                                      return false;
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                if (state.isSelectedMessage) {
+                                  context
+                                      .read<ChatBloc>()
+                                      .add(UnSelectMessageEvent());
+                                }
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: ListView.builder(
+                                reverse: true,
+                                physics: BouncingScrollPhysics(),
+                                itemCount: chats.length,
+                                itemBuilder: (context, index) {
+                                  final key = GlobalKey();
+                                  final chat = chats[index];
+                                  final isMe = chat.senderId == user!.uid;
+                                  final isSelected =
+                                      state.selectMessage?.id == chat.id;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (state.isSelectedMessage) {
+                                        context
+                                            .read<ChatBloc>()
+                                            .add(UnSelectMessageEvent());
+                                      }
                                     },
-                                    background: Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                      ),
-                                      color: Colors.green,
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.reply,
-                                            color: Colors.white,
-                                          ),
-                                          SizedBox(width: 8),
-                                          Text(
-                                            "Reply",
-                                            style: TextStyle(
+                                    onLongPress: () {
+                                      HapticFeedback.mediumImpact();
+                                      _closeReactionPopup();
+                                      FocusScope.of(context).unfocus();
+
+                                      context.read<ChatBloc>().add(
+                                            SelectMessageEvent(chat),
+                                          );
+
+                                      final renderBox = key.currentContext!
+                                          .findRenderObject() as RenderBox;
+                                      final position = renderBox
+                                          .localToGlobal(Offset.zero);
+                                      final size = renderBox.size;
+
+                                      showReactionPopup(
+                                        context,
+                                        Offset(
+                                          position.dx + size.width / 2,
+                                          position.dy + 50,
+                                        ),
+                                        chat,
+                                      );
+                                    },
+                                    child: Dismissible(
+                                      key: ValueKey(chat.id),
+                                      direction: isMe
+                                          ? DismissDirection.endToStart
+                                          : DismissDirection.startToEnd,
+                                      confirmDismiss: (direction) async {
+                                        HapticFeedback.mediumImpact();
+                                        context.read<ChatBloc>().add(
+                                              ReplyMessageEvent(chat),
+                                            );
+                                        return false;
+                                      },
+                                      background: Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        color: Colors.green,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.reply,
                                               color: Colors.white,
                                             ),
-                                          ),
-                                        ],
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "Reply",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      child: Container(
+                                        key: key,
+                                        width: double.infinity,
+                                        color: isSelected
+                                            ? Colors.blue.withOpacity(0.15)
+                                            : Colors.transparent,
+                                        child: Align(
+                                          alignment: isMe
+                                              ? Alignment.centerRight
+                                              : Alignment.centerLeft,
+                                          child: messageBubble(chat, isMe),
+                                        ),
                                       ),
                                     ),
-                                    child: Align(
-                                      alignment: isMe
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      child: chat.chatType == ChatType.image
-                                          ? imageMessage(chat, isMe)
-                                          : chat.chatType == ChatType.file
-                                          ? fileMessage(chat, isMe)
-                                          : textMessage(chat, isMe)
-                                    ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             );
                           },
                         ),
                       ),
-                      if (state.replyMessage != null &&
-                          (state.replyMessage!.message?.trim().isNotEmpty ??
-                              false))
+                      if (state.replyMessage != null)
                         BlocBuilder<ChatBloc, ChatState>(
                           builder: (context, state) {
                             final reply = state.replyMessage!;
@@ -282,19 +437,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                           ),
                                         ),
                                         Text(
-                                          reply.message ?? "",
-                                          maxLines: 1,
+                                          reply.chatType == ChatType.image 
+                                              ? "Photo" 
+                                              : reply.chatType == ChatType.file 
+                                                  ? "File" 
+                                                  : (reply.message ?? ""),
+                                          maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
                                   ),
-
                                   GestureDetector(
                                     onTap: () {
                                       context.read<ChatBloc>().add(
-                                        CancelReply(),
-                                      );
+                                            CancelReply(),
+                                          );
                                       FocusScope.of(context).unfocus();
                                     },
                                     child: Icon(Icons.close),
@@ -314,7 +472,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                showAttachmentOptions(context);
+                                showAttachmentOptions(context, widget.receiverId!);
                               },
                               child: chatBarIcons(
                                 context,
@@ -333,8 +491,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  hintText:
-                                      context
+                                  hintText: context
                                               .watch<ChatBloc>()
                                               .state
                                               .editingMessage !=
@@ -351,9 +508,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                               ),
                             ),
-
                             SizedBox(width: AppSize.width(context) * 0.013),
-
                             BlocBuilder<ChatBloc, ChatState>(
                               builder: (context, state) {
                                 return GestureDetector(
@@ -374,17 +529,18 @@ class _ChatScreenState extends State<ChatScreen> {
                                           );
 
                                       context.read<ChatBloc>().add(
-                                        EditChatEvent(chatId, editing.id, text),
-                                      );
+                                            EditChatEvent(
+                                                chatId, editing.id, text),
+                                          );
                                     } else {
                                       context.read<ChatBloc>().add(
-                                        SendTextMessage(
-                                          message: text,
-                                          receiverId: widget.receiverId!,
-                                          replyMessage: reply?.message,
-                                          replySender: reply?.senderId,
-                                        ),
-                                      );
+                                            SendTextMessage(
+                                              message: text,
+                                              receiverId: widget.receiverId!,
+                                              replyMessage: reply?.chatType == ChatType.text ? reply?.message : (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
+                                              replySender: reply?.senderId,
+                                            ),
+                                          );
                                     }
                                     chatController.clear();
                                   },
@@ -414,159 +570,250 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget textMessage(ChatModel chat, bool isMe) {
+  PopupMenuItem<String> _buildMenuItem(String title) {
+    return PopupMenuItem<String>(
+      value: title,
+      padding: EdgeInsets.zero,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          title,
+          style: GoogleFonts.leagueSpartan(
+            color: AppColors.black,
+            fontWeight: FontWeight.w400,
+            fontSize: 18,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget messageBubble(ChatModel chat, bool isMe) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        print("UI REACTION: ${chat.reaction}");
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
           child: Row(
             mainAxisAlignment:
-            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
+                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              if (!isMe) ...[
-                CircleAvatar(
-                  radius: 14,
-                  backgroundColor: AppColors.blue,
-                  backgroundImage: AssetImage("assets/images/user_icon.png"),
-                ),
-                const SizedBox(width: 6),
-              ],
-              if (chat.replyMessage != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(14),
-                      topRight: const Radius.circular(14),
-                      bottomLeft: Radius.circular(isMe ? 14 : 0),
-                      bottomRight: Radius.circular(isMe ? 0 : 14),
+              Column(
+                crossAxisAlignment:
+                    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: AppSize.width(context) * 0.75,
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (chat.replyMessage != null &&
-                          (chat.replyMessage!.trim().isNotEmpty))
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 6),
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border(
-                              left: BorderSide(
-                                color: isMe ? Colors.blue : Colors.green,
-                                width: 3,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(isMe ? 14 : 0),
+                        topRight: Radius.circular(isMe ? 0 : 14),
+                        bottomLeft: Radius.circular(14),
+                        bottomRight: Radius.circular(16),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (chat.replyMessage != null &&
+                            chat.replyMessage!.trim().isNotEmpty)
+                          _buildReplyBox(chat, isMe),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: chat.chatType == ChatType.image 
+                                ? imageContent(chat,context)
+                                : chat.chatType == ChatType.file
+                                  ? fileContent(chat,context)
+                                  : Text(
+                                    chat.message ?? '',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              formatTime(chat.timestamp),
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.black54,
                               ),
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                chat.replySender == user!.uid ? "You" : "User",
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: isMe ? Colors.blue : Colors.green,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                chat.replyMessage ?? "",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 11),
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
-                      Text(
-                        chat.message ?? '',
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            formatTime(chat.timestamp),
-                            style: const TextStyle(fontSize: 10, color: Colors.black54),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        spacing: 6,
+                      ],
+                    ),
+                  ),
+                  if (chat.reaction != null && chat.reaction!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Wrap(
+                        spacing: 4,
                         children: _buildReactionWidgets(chat.reaction),
                       ),
-                    ],
-                  ),
-                ),
-
-              if (isMe) ...[
-                const SizedBox(width: 6),
-                CircleAvatar(
-                  radius: 14,
-                  backgroundColor: AppColors.blue,
-                  backgroundImage: AssetImage("assets/images/heart.png"),
-                ),
-              ],
+                    ),
+                ],
+              ),
             ],
           ),
         );
       },
     );
   }
+
+  Widget _buildReplyBox(ChatModel chat, bool isMe) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(6),
+        border: Border(
+          left: BorderSide(
+            color: isMe ? Colors.blue : Colors.green,
+            width: 3,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            chat.replySender == user!.uid ? "You" : "User",
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: isMe ? Colors.blue : Colors.green,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            chat.replyMessage!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Widget> _buildReactionWidgets(Map<String, String>? reactions) {
     if (reactions == null || reactions.isEmpty) return [];
 
     final Map<String, int> count = {};
-
-    // ✅ Each user has only ONE emoji now
     for (var emoji in reactions.values) {
       count[emoji] = (count[emoji] ?? 0) + 1;
     }
-
     return count.entries.map((entry) {
       return Container(
         margin: const EdgeInsets.only(right: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(entry.key),
-            const SizedBox(width: 3),
-            Text(entry.value.toString()),
-          ],
+          children: [Text(entry.key)],
         ),
       );
     }).toList();
   }
-  Widget reactionItem(String emoji, ChatModel chat) {
-    return GestureDetector(
-      onTap: () {
-        print("REACTION CLICKED: $emoji for ${chat.id}");
-        final chatId = context
-            .read<ChatBloc>()
-            .chatRepository
-            .getChatId(user?.uid ?? "", widget.receiverId!);
 
-        context.read<ChatBloc>().add(
-          AddReactionEvent(chatId, chat.id, emoji),
+  void showReactionPopup(
+    BuildContext context,
+    Offset position,
+    ChatModel chat,
+  ) {
+    _closeReactionPopup();
+    final bloc = context.read<ChatBloc>();
+    final overlay = Overlay.of(context);
+    final chatId = bloc.chatRepository.getChatId(
+          user!.uid,
+          widget.receiverId!,
         );
 
-        Navigator.pop(context);
-      },
-      child: Text(emoji, style: TextStyle(fontSize: 22)),
+    _reactionOverlay = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned(
+            left: position.dx - 140,
+            top: position.dy - 80,
+            child: Material(
+              color: Colors.transparent,
+              child: TweenAnimationBuilder(
+                duration: const Duration(milliseconds: 150),
+                tween: Tween(begin: 0.8, end: 1.0),
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value as double,
+                    child: child,
+                  );
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 12,
+                        color: Colors.black26,
+                      )
+                    ],
+                  ),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: ["👍", "❤️", "😂", "😮", "😢", "🙏"]
+                          .map((emoji) => GestureDetector(
+                                onTap: () {
+                                  bloc.add(
+                                        AddReactionEvent(
+                                          chatId,
+                                          chat.id,
+                                          emoji,
+                                        ),
+                                      );
+                                  bloc.add(UnSelectMessageEvent());
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6),
+                                  child: Text(
+                                    emoji,
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+    overlay.insert(_reactionOverlay!);
   }
+
+  void _closeReactionPopup() {
+    _reactionOverlay?.remove();
+    _reactionOverlay = null;
+  }
+
   void showEmojiPicker(BuildContext context, ChatModel chat) {
     showModalBottomSheet(
       context: context,
@@ -576,15 +823,13 @@ class _ChatScreenState extends State<ChatScreen> {
           height: 320,
           child: EmojiPicker(
             onEmojiSelected: (category, emoji) {
-              final chatId = context
-                  .read<ChatBloc>()
-                  .chatRepository
-                  .getChatId(user?.uid ?? "", widget.receiverId!);
-
+              final chatId = context.read<ChatBloc>().chatRepository.getChatId(
+                    user?.uid ?? "",
+                    widget.receiverId!,
+                  );
               context.read<ChatBloc>().add(
-                AddReactionEvent(chatId, chat.id, emoji.emoji),
-              );
-
+                    AddReactionEvent(chatId, chat.id, emoji.emoji),
+                  );
               Navigator.pop(context);
             },
           ),
@@ -593,5 +838,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
-void chatOptions() {}

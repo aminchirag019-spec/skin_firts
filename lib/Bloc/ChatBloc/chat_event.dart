@@ -71,3 +71,8 @@ class AddReactionEvent extends ChatEvent{
   final String reaction;
   AddReactionEvent(this.chatId,this.message,this.reaction);
 }
+class SelectMessageEvent extends ChatEvent{
+  final ChatModel message;
+  SelectMessageEvent(this.message);
+}
+class UnSelectMessageEvent extends ChatEvent {}

@@ -43,7 +43,7 @@ class NotificationRepository {
           .toList();
     } catch (e) {
       print("Error fetching notifications: $e");
-      return []; // ✅ IMPORTANT
+      return [];
     }
   }
 

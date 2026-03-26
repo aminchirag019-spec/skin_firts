@@ -1,16 +1,13 @@
 import 'dart:io';
-import 'dart:math' as MainAxisSize;
-
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/ChatBloc/chat_bloc.dart';
 import '../../Bloc/ChatBloc/chat_event.dart';
-import '../../Bloc/ChatBloc/chat_state.dart';
 import '../../Data/chat_model.dart';
 import '../../Global/enums.dart';
 import '../../Utilities/media_query.dart';
@@ -23,53 +20,58 @@ Future<void> sendMedia({
   required BuildContext context,
   required String path,
   required ChatType type,
+  required String receiverId,
 }) async {
   if (type == ChatType.image) {
     context.read<ChatBloc>().add(
-      SendImageMessage(imagePath: '', receiverId: ''),
+      SendImageMessage(imagePath: path, receiverId: receiverId),
     );
   } else if (type == ChatType.file) {
-    context.read<ChatBloc>().add(SendFileMessage(filePath: '', receiverId: ''));
+    context.read<ChatBloc>().add(
+      SendFileMessage(filePath: path, receiverId: receiverId),
+    );
   }
 }
 
-Future<void> pickFromGallery(BuildContext context) async {
-  final image = await picker.pickImage(source: ImageSource.gallery);
-
-  if (image != null) {
-    sendMedia(context: context, path: image.path, type: ChatType.image);
+Future<void> pickFromGallery(BuildContext context, String receiverId) async {
+  final List<XFile> images = await picker.pickMultiImage();
+  if (images.isNotEmpty) {
+    for (var image in images) {
+      sendMedia(context: context, path: image.path, type: ChatType.image, receiverId: receiverId);
+    }
   }
 }
 
-Future<void> pickFromCamera(BuildContext context) async {
+Future<void> pickFromCamera(BuildContext context, String receiverId) async {
   final image = await picker.pickImage(source: ImageSource.camera);
-
   if (image != null) {
-    sendMedia(context: context, path: image.path, type: ChatType.image);
+    sendMedia(context: context, path: image.path, type: ChatType.image, receiverId: receiverId);
   }
 }
 
-Future<void> pickFile(BuildContext context) async {
-  final result = await FilePicker.platform.pickFiles();
-
+Future<void> pickFile(BuildContext context, String receiverId) async {
+  final result = await FilePicker.platform.pickFiles(allowMultiple: true);
   if (result != null) {
-    final path = result.files.single.name;
-    sendMedia(context: context, path: path, type: ChatType.file);
+    for (var file in result.files) {
+      if (file.path != null) {
+        sendMedia(context: context, path: file.path!, type: ChatType.file, receiverId: receiverId);
+      }
+    }
   }
 }
 
-void showAttachmentOptions(BuildContext context) {
+void showAttachmentOptions(BuildContext context, String receiverId) {
   showModalBottomSheet(
     context: context,
     builder: (_) {
-      return Column(
+      return Wrap(
         children: [
           ListTile(
             leading: Icon(Icons.camera_alt),
             title: Text("Camera"),
             onTap: () {
               Navigator.pop(context);
-              pickFromCamera(context);
+              pickFromCamera(context, receiverId);
             },
           ),
           ListTile(
@@ -77,7 +79,7 @@ void showAttachmentOptions(BuildContext context) {
             title: Text("Gallery"),
             onTap: () {
               Navigator.pop(context);
-              pickFromGallery(context);
+              pickFromGallery(context, receiverId);
             },
           ),
           ListTile(
@@ -85,7 +87,7 @@ void showAttachmentOptions(BuildContext context) {
             title: Text("File"),
             onTap: () {
               Navigator.pop(context);
-              pickFile(context);
+              pickFile(context, receiverId);
             },
           ),
         ],
@@ -105,70 +107,52 @@ Widget chatBarIcons(
 }) {
   return Container(
     padding: EdgeInsets.symmetric(
-      horizontal: width ?? AppSize.width(context) * 0.030, // 12
-      vertical: height ?? AppSize.height(context) * 0.005, // 5
+      horizontal: width ?? AppSize.width(context) * 0.030,
+      vertical: height ?? AppSize.height(context) * 0.005,
     ),
     decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     child: Image(image: image, height: imgHeight, width: imgWidth),
   );
 }
 
-Widget fileMessage(ChatModel chat, bool isMe) {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-    padding: EdgeInsets.all(12),
-    constraints: BoxConstraints(maxWidth: 250),
-    decoration: BoxDecoration(
-      color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.insert_drive_file, size: 30),
-        SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(chat.filePath.split('/').last),
-              Text(formatTime(chat.timestamp), style: TextStyle(fontSize: 10)),
-            ],
+Widget fileContent(ChatModel chat, BuildContext context) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Icon(Icons.insert_drive_file, size: 30, color: Colors.blueGrey),
+      const SizedBox(width: 10),
+      Flexible(
+        child: Text(
+          chat.filePath.split('/').last,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.leagueSpartan(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 
-Widget imageMessage(ChatModel chat, bool isMe) {
-  return GestureDetector(
-    onLongPress: () {
-
-    },
-    child: Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: isMe ? AppColors.blue : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(12),
+Widget imageContent(ChatModel chat, BuildContext context) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(8),
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: AppSize.width(context) * 0.6,
+        maxHeight: AppSize.height(context) * 0.4,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(
+      child: Image.file(
+        File(chat.filePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Image.network(
           chat.filePath,
-          loadingBuilder: (context, child, progress) {
-            if (progress == null) return child;
-            return SizedBox(
-              height: 200,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          },
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => const Icon(Icons.image, size: 100),
         ),
       ),
     ),
   );
-}
-
-String generateChatId(String user1, String user2) {
-  return user1.compareTo(user2) > 0 ? "${user1}_$user2" : "${user2}_$user1";
 }
