@@ -54,14 +54,13 @@ class _ChatScreenState extends State<ChatScreen> {
           previous.isSelectedMessage != current.isSelectedMessage ||
           previous.selectedMessages.length != current.selectedMessages.length,
       buildWhen: (previous, current) {
-        // ✅ Rebuild when chats, selection mode, selected messages, or reply message changes
         return previous.chats != current.chats ||
             previous.isSelectedMessage != current.isSelectedMessage ||
             previous.selectedMessages.length != current.selectedMessages.length ||
             previous.replyMessage != current.replyMessage;
       },
       listener: (context, state) {
-        if (!state.isSelectedMessage) {
+        if (!state.isSelectedMessage || state.selectedMessages.length > 1) {
           _closeReactionPopup();
         }
 
@@ -104,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ? AppSize.height(context) * 0.010
                             : AppSize.height(context) * 0.015,
                       ),
-                      color: const Color(0xff2260FF),
+                      color:  Color(0xff2260FF),
                       child: isSelectionMode
                           ? Row(
                               children: [
@@ -144,7 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   if (singleSelected.chatType == ChatType.text)
                                     IconButton(
-                                      icon: const Icon(
+                                      icon:  Icon(
                                         Icons.copy,
                                         color: Colors.white,
                                       ),
@@ -162,7 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   if (singleSelected.senderId == user!.uid &&
                                       singleSelected.chatType == ChatType.text)
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit,
                                         color: Colors.white,
                                       ),
@@ -177,7 +176,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                 ],
                                 IconButton(
-                                  icon: const Icon(
+                                  icon:  Icon(
                                     Icons.delete,
                                     color: Colors.white,
                                   ),
@@ -194,8 +193,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 if (singleSelected != null)
                                   PopupMenuButton<String>(
                                     onOpened: () => _closeReactionPopup(),
-                                    offset: const Offset(-10, 45),
-                                    icon: const Icon(
+                                    offset: Offset(-10, 45),
+                                    icon:  Icon(
                                       Icons.more_vert,
                                       color: Colors.white,
                                     ),
@@ -256,10 +255,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                     fontSize: AppSize.width(context) * 0.06,
                                   ),
                                 ),
-                                const Spacer(),
+                                Spacer(),
                                 chatBarIcons(
                                   context,
-                                  image: const AssetImage(
+                                  image:  AssetImage(
                                     "assets/images/chat_phone.png",
                                   ),
                                   height: AppSize.height(context) * 0.015,
@@ -269,7 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 SizedBox(width: AppSize.width(context) * 0.025),
                                 chatBarIcons(
                                   context,
-                                  image: const AssetImage(
+                                  image:  AssetImage(
                                     "assets/images/video_call.png",
                                   ),
                                   height: AppSize.height(context) * 0.012,
@@ -347,7 +346,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 20,
                                   ),
-                                  child: const Icon(
+                                  child:  Icon(
                                     Icons.reply,
                                     color: Colors.grey,
                                   ),
@@ -373,7 +372,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         horizontal: AppSize.width(context) * 0.054,
                         vertical: AppSize.height(context) * 0.020,
                       ),
-                      color: const Color(0xffCAD6FF),
+                      color:  Color(0xffCAD6FF),
                       child: Row(
                         children: [
                           GestureDetector(
@@ -383,7 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             child: chatBarIcons(
                               context,
-                              image: const AssetImage(
+                              image:  AssetImage(
                                 "assets/images/chat_document.png",
                               ),
                               imgHeight: AppSize.height(context) * 0.047,
@@ -400,7 +399,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 fillColor: Colors.white,
                                 hintText: state.editingMessage != null ? "Edit message..." : "Type a message",
                                 hintStyle: GoogleFonts.leagueSpartan(
-                                  color: const Color(0xff2260FF),
+                                  color:  Color(0xff2260FF),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25),
@@ -444,11 +443,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             },
                             child: chatBarIcons(
                               context,
-                              image: const AssetImage(
+                              image:  AssetImage(
                                 "assets/images/send_icon.png",
                               ),
                               imgHeight: AppSize.height(context) * 0.023,
-                              color: const Color(0xff2260FF),
+                              color: Color(0xff2260FF),
                               height: AppSize.height(context) * 0.018,
                             ),
                           ),
@@ -475,15 +474,15 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       child: Row(
         children: [
-          Container(width: 4, height: 40, color: const Color(0xff2260FF)),
-          const SizedBox(width: 8),
+          Container(width: 4, height: 40, color:  Color(0xff2260FF)),
+           SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   reply.senderId == user?.uid ? "You" : widget.receiverName ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xff2260FF),
                   ),
@@ -502,7 +501,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           GestureDetector(
             onTap: () => context.read<ChatBloc>().add(CancelReply()),
-            child: const Icon(Icons.close),
+            child:  Icon(Icons.close),
           ),
         ],
       ),
@@ -518,17 +517,17 @@ class _ChatScreenState extends State<ChatScreen> {
         return Column(
           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 03),
+             SizedBox(height: 03),
             Container(
               constraints: BoxConstraints(maxWidth: AppSize.width(context) * 0.75),
-              padding: const EdgeInsets.all(8),
+              padding:  EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(isMe ? 14 : 0),
                   topRight: Radius.circular(isMe ? 0 : 14),
-                  bottomLeft: const Radius.circular(14),
-                  bottomRight: const Radius.circular(16),
+                  bottomLeft:  Radius.circular(14),
+                  bottomRight:  Radius.circular(16),
                 ),
               ),
               child: Column(
@@ -546,13 +545,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ? fileContent(chat, context)
                                 : Text(
                                     chat.message ?? '',
-                                    style: const TextStyle(fontSize: 14),
+                                    style:  TextStyle(fontSize: 14),
                                   ),
                       ),
-                      const SizedBox(width: 8),
+                       SizedBox(width: 8),
                       Text(
                         formatTime(chat.timestamp),
-                        style: const TextStyle(fontSize: 10, color: Colors.black54),
+                        style:  TextStyle(fontSize: 10, color: Colors.black54),
                       ),
                     ],
                   ),
@@ -567,7 +566,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: _buildReactionWidgets(chat.reaction),
                 ),
               ),
-            const SizedBox(height: 03),
+             SizedBox(height: 03),
           ],
         );
       },
@@ -597,12 +596,12 @@ class _ChatScreenState extends State<ChatScreen> {
               color: isMe ? Colors.blue : Colors.green,
             ),
           ),
-          const SizedBox(height: 2),
+           SizedBox(height: 2),
           Text(
             chat.replyMessage!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 11),
+            style:  TextStyle(fontSize: 11),
           ),
         ],
       ),
