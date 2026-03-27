@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../Global/enums.dart';
-import '../../Utilities/sharedpref_helper.dart';
+import '../../Helper/app_localizations.dart';
+import '../../Helper/sharedpref_helper.dart';
 
 class FingerAuthentication extends StatefulWidget {
   const FingerAuthentication({super.key});

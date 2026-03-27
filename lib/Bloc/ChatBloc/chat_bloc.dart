@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Data/chat_model.dart';
 import 'package:skin_firts/Network/chat_repository.dart';
-import 'package:skin_firts/Utilities/firebase_message.dart';
+import 'package:skin_firts/Helper/firebase_message.dart';
 import 'package:skin_firts/main.dart';
 
 import '../../Global/enums.dart';

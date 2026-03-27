@@ -33,5 +33,20 @@
   "Password Manager": "પાસવર્ડ મેનેજર",
   "Notification Setting": "સૂચના સેટિંગ",
   "Delete Account": "એકાઉન્ટ ડિલીટ કરો",
-  "Language": "ભાષા"
+  "Language": "ભાષા",
+  "user": "વપરાશકર્તા",
+  "New Account": "નવું એકાઉન્ટ",
+  "Add Doctor":"ડોક્ટર ઉમેરો",
+  "help": "મદદ",
+  "chatList": "ચેટ લિસ્ટ",
+  "Payment Method": "ચુકવણી પદ્ધતિ",
+  "profile": "પ્રોફાઇલ",
+  "mon": "સોમ",
+  "tue": "મંગળ",
+  "wed": "બુધ",
+  "thu": "ગુરુ",
+  "fri": "શુક્ર",
+  "sat": "શનિ",
+  "sun": "રવિ"
+
 }

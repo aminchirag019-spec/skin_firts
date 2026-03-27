@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/coustom_widgets.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
 import 'coustom_home_widget.dart';
@@ -231,7 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+
+
+                                           mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 item.date.toString(),

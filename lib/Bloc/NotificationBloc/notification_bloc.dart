@@ -5,7 +5,7 @@ import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_state.dart';
 import 'package:skin_firts/Global/dummy_data.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
-import 'package:skin_firts/Utilities/firebase_message.dart';
+import 'package:skin_firts/Helper/firebase_message.dart';
 
 import '../../Global/enums.dart';
 import '../../Network/notification_repository.dart';

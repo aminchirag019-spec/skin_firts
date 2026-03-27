@@ -5,13 +5,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Global/enums.dart';
-import '../../Utilities/sharedpref_helper.dart';
+import '../../Helper/app_localizations.dart';
+import '../../Helper/sharedpref_helper.dart';
 import '../../Utilities/media_query.dart';
 
 class SplashScreen extends StatefulWidget {

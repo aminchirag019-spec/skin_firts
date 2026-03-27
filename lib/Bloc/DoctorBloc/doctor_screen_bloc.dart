@@ -5,7 +5,7 @@ import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 
 import '../../Data/doctor_model.dart';
-import '../../Utilities/firebase_message.dart';
+import '../../Helper/firebase_message.dart';
 import 'doctor_screen_event.dart';
 import 'doctor_screen_state.dart';
 

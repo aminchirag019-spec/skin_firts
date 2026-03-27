@@ -159,7 +159,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                             Text(
                                               item.name,
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 17,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -167,7 +167,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                             Text(
                                               item.email,
                                               style: TextStyle(
-                                                fontSize: 13,
+                                                fontSize: 15,
                                                 color: AppColors.grey,
                                               ),
                                             ),

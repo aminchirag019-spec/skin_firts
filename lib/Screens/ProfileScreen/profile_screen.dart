@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Router/router_class.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
 import '../../Global/enums.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Utilities/media_query.dart';
 import '../../Utilities/shimmer.dart';
 
@@ -90,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/user_icon.png"),
-                        title: localization?.translate('profile') ?? "Profile",
+                        title: localization?.translate('profile') ?? "profile",
                         onTap: () {},
                       ),
                       _space(context),
@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/heart_outlined.png",
                         ),
-                        title: localization?.translate('favourite') ?? "Favourite",
+                        title: localization?.translate('favorite') ?? "favorite",
                         onTap: () {},
                       ),
                       _space(context),
@@ -108,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/wallet_icon.png",
                         ),
-                        title: localization?.translate('paymentMethod') ?? "Payment Method",
+                        title: localization?.translate('Payment Method') ?? "Payment Method",
                         onTap: () {},
                       ),
                       _space(context),
@@ -175,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/plus_icon.png"),
-                        title: localization?.translate('addDoctor') ?? "Add Doctor",
+                        title: localization?.translate('Add Doctor') ?? "Add Doctor",
                         onTap: () {
                           context.go(RouterName.addDoctorScreen.path);
                         },
@@ -273,8 +273,10 @@ void onShowBottomSheet(BuildContext context) {
             ),
             SizedBox(height: AppSize.height(context) * 0.020),
             Text(
-              localization?.translate('logoutConfirmation') ?? "are you sure you want to log out?",
-              style: theme.textTheme.bodyLarge,
+              localization?.translate('Are you sure you want to log out?') ?? "Are you sure you want to log out?",
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontSize: 18
+              ),
             ),
             SizedBox(height: AppSize.height(context) * 0.035),
             Row(
@@ -282,7 +284,7 @@ void onShowBottomSheet(BuildContext context) {
                 Expanded(
                   child: customButton(
                     context,
-                    text: localization?.translate('cancel') ?? "Cancel",
+                    text: localization?.translate('Cancel') ?? "Cancel",
                     backgroundColor: colorScheme.secondary,
                     textColor: colorScheme.primary,
                     onPressed: () {
@@ -294,7 +296,7 @@ void onShowBottomSheet(BuildContext context) {
                 Expanded(
                   child: customButton(
                     context,
-                    text: localization?.translate('Yes,Logout') ?? "Yes, Logout",
+                    text: localization?.translate('logout') ?? "Logout",
                     backgroundColor: colorScheme.primary,
                     textColor: Colors.white,
                     onPressed: () {

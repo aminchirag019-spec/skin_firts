@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../Utilities/sharedpref_helper.dart';
+import '../../Helper/sharedpref_helper.dart';
 import 'locale_event.dart';
 import 'locale_state.dart';
 

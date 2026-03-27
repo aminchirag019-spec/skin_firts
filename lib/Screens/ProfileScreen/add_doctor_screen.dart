@@ -10,7 +10,7 @@ import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
-import 'package:skin_firts/Utilities/firebase_message.dart';
+import 'package:skin_firts/Helper/firebase_message.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';

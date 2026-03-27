@@ -14,15 +14,15 @@ import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Network/chat_repository.dart';
 import 'package:skin_firts/Network/notification_repository.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/firebase_options.dart';
 import 'package:skin_firts/router/app_router.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 
 import 'Bloc/LocaleBloc/locale_event.dart';
 import 'Bloc/LocaleBloc/locale_state.dart';
+import 'Helper/app_localizations.dart';
+import 'Helper/sharedpref_helper.dart';
 import 'Utilities/bio_metric.dart';
-import 'Utilities/firebase_message.dart';
+import 'Helper/firebase_message.dart';
 
 final user = FirebaseAuth.instance.currentUser;
 

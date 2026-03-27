@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Screens/DoctorScreens/coustom_doctor_widget.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
-
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';
 

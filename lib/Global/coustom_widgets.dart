@@ -73,10 +73,14 @@ Widget coustomTextField({
     initialValue: initialValue,
     obscureText: obscureText,
     onTap: onTap,
+    style: GoogleFonts.leagueSpartan(
+      fontSize: 18
+    ),
     decoration: InputDecoration(
       isCollapsed: true,
       alignLabelWithHint: true,
       isDense: true,
+
       contentPadding: EdgeInsets.symmetric(
         horizontal: h == 14
             ? AppSize.width(context) * 0.036
@@ -89,7 +93,7 @@ Widget coustomTextField({
       hintStyle: GoogleFonts.leagueSpartan(
         color: isBold ? AppColors.darkPurple : Color(0xff809CFF),
         fontSize: size == 20
-            ? AppSize.width(context) * 0.058
+            ? AppSize.width(context) * 0.06
             : AppSize.width(context) * ((size ?? 20) / 390.0),
         fontWeight: isBold ? FontWeight.w500 : FontWeight.w400,
       ),

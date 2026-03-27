@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Global/enums.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
+
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
@@ -11,6 +11,7 @@ import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
+import '../../Helper/app_localizations.dart';
 import '../../router/router_class.dart';
 import '../../Utilities/media_query.dart';
 
@@ -57,13 +58,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ChoiceChip(
-                            label: const Text("User"),
+                            label:  Text(localization?.translate("user") ?? "user"),
                             selected: state.selectedRole == "user",
                             onSelected: (_) {
                               context.read<AuthBloc>().add( SelectRoleEvent("user"));
                             },
                           ),
-                          const SizedBox(width: 10),
+                           SizedBox(width: 10),
                           ChoiceChip(
                             label: Text(localization?.translate('doctors') ?? "Doctor"),
                             selected: state.selectedRole == "doctor",
@@ -75,13 +76,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 15),
+                   SizedBox(height: 15),
                   topRow(
                     context,
                     onPressed: () {
                       context.go(RouterName.loginScreen.path);
                     },
-                    text: localization?.translate('newAccount') ?? "New Account",
+                    text: localization?.translate('New Account') ?? "New Account",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   Row(

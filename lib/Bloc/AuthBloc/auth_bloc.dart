@@ -5,9 +5,9 @@ import 'package:meta/meta.dart';
 import 'package:skin_firts/Data/auth_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
-import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/main.dart';
 
+import '../../Helper/sharedpref_helper.dart';
 import '../../Utilities/bio_metric.dart';
 
 part 'auth_event.dart';

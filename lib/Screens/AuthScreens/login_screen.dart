@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Global/enums.dart';
-import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Data/auth_model.dart';
+import '../../Helper/app_localizations.dart';
+import '../../Helper/sharedpref_helper.dart';
 import '../../global/coustom_widgets.dart';
 import '../../Utilities/media_query.dart';
 
@@ -85,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Text(
-                              localization?.translate('loginLabel') ?? "Email or Mobile Number",
+                              localization?.translate('loginLabel') ??
+                                  "Email or Mobile Number",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -96,7 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         coustomTextField(
                           context: context,
                           controller: emailController,
-                          hintText: localization?.translate('emailExample') ?? "example@example.com",
+                          hintText:
+                              localization?.translate('emailExample') ??
+                              "example@example.com",
                           h: 14,
                           w: 10,
                           validator: Validators().validateEmail,
@@ -105,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Text(
-                              localization?.translate('passwordLable') ?? "Password",
+                              localization?.translate('password') ?? "password",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -118,7 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: passwordController,
                           validator: Validators().validatePassword,
                           hintText: "••••••••",
-                          image: const AssetImage("assets/images/obsecure_image.png"),
+                          image: const AssetImage(
+                            "assets/images/obsecure_image.png",
+                          ),
                         ),
                         SizedBox(height: AppSize.height(context) * 0.005),
                         Row(
@@ -129,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context.go(RouterName.setPasswordScreen.path);
                               },
                               child: Text(
-                                localization?.translate('forgotPass') ?? "Forgot Password",
+                                localization?.translate('forgotPass') ??
+                                    "Forgot Password",
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: colorScheme.primary,
@@ -148,7 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (state.loginStatus == LoginStatus.success) {
                         String? userId = await SharedPrefsHelper.getUserId();
                         if (userId != null) {
-                          context.go(RouterName.fingerAuthenticationScreen.path);
+                          context.go(
+                            RouterName.fingerAuthenticationScreen.path,
+                          );
                         }
                       }
                     },
@@ -167,13 +175,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
                           context.read<AuthBloc>().add(
-                                LoginEvent(
-                                  loginModel: LoginModel(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  ),
-                                ),
-                              );
+                            LoginEvent(
+                              loginModel: LoginModel(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
@@ -184,7 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Center(
                         child: Text(
-                          localization?.translate('signupOptionTitle') ?? "or sign up with",
+                          localization?.translate('signupOptionTitle') ??
+                              "or sign up with",
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300,
                           ),
@@ -214,7 +223,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        localization?.translate('dontHaveAccount') ?? "Don’t have an account?",
+                        localization?.translate('dontHaveAccount') ??
+                            "Don’t have an account?",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w300,
                         ),

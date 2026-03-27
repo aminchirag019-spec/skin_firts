@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 
 import '../Data/auth_model.dart';
 import '../Data/doctor_model.dart';
+import '../Helper/sharedpref_helper.dart';
 import '../main.dart';
 
 class AuthRepository {
