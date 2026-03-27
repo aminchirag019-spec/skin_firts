@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FB),
@@ -105,14 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: menuItem(
                         "assets/images/doctor_image.svg",
-                        "Doctors",
+                        localization?.translate('doctors') ?? "Doctors",
                         context,
                       ),
                     ),
                     SizedBox(width: AppSize.width(context) * 0.025),
                     menuItem(
                       "assets/images/heart_image.svg",
-                      "Favorite",
+                      localization?.translate('favorite') ?? "Favorite",
                       context,
                     ),
                     SizedBox(width: AppSize.width(context) * 0.038),

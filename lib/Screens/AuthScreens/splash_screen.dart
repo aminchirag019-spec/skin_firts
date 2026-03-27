@@ -5,8 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
@@ -63,6 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -79,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Image.asset("assets/images/splash_image.png"),
               SizedBox(height: AppSize.height(context) * 0.017),
               Text(
-                AppString.skin,
+                localization?.translate('skin') ?? "Skin\nFirts",
                 textAlign: TextAlign.center,
                 style: theme.textTheme.displayMedium?.copyWith(
                   height: 0.8,
@@ -89,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               SizedBox(height: AppSize.height(context) * 0.020),
               Text(
-                AppString.dermetology,
+                localization?.translate('dermatology') ?? "Dermatology center",
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: AppColors.white,
                   fontWeight: FontWeight.w600,

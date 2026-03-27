@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Screens/DoctorScreens/coustom_doctor_widget.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';
-import '../DoctorScreens/doctor_screen.dart';
-import '../ProfileScreen/add_doctor_screen.dart';
 
 class HelpCentreScreen extends StatelessWidget {
   const HelpCentreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(statusBarColor: Colors.white),
+      value: const SystemUiOverlayStyle(statusBarColor: Colors.white),
       child: WillPopScope(
         onWillPop: () async {
           context.go(RouterName.profileScreen.path);
@@ -29,7 +30,6 @@ class HelpCentreScreen extends StatelessWidget {
         child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
           builder: (context, state) {
             return Scaffold(
-                backgroundColor: AppColors.white,
                 body: SafeArea(
                   child: Column(
                     children: [
@@ -37,7 +37,7 @@ class HelpCentreScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 200,
                         decoration: BoxDecoration(
-                            color: AppColors.darkPurple
+                            color: colorScheme.primary
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -46,28 +46,27 @@ class HelpCentreScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                               topRow(
                                   context,
                                   onPressed: () =>
                                       context.go(RouterName.profileScreen.path),
-                                  text: "Help Centre", color: AppColors.white
+                                  text: localization?.translate('help') ?? "Help Centre", color: Colors.white
                               ),
-                              SizedBox(height: 20,),
+                              const SizedBox(height: 20,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                       "How Can We Help You?",
-                                      style: GoogleFonts.leagueSpartan(
-                                        color: AppColors.lightPurple,
-                                        fontSize: 20,
+                                      style: theme.textTheme.titleLarge?.copyWith(
+                                        color: colorScheme.secondary,
                                         fontWeight: FontWeight.w400,
                                       )
                                   )
                                 ],
                               ),
-                              SizedBox(height: 10,),
+                              const SizedBox(height: 10,),
                               SizedBox(
                                 height: 50,
                                 child: TextFormField(
@@ -77,7 +76,7 @@ class HelpCentreScreen extends StatelessWidget {
                                       color: Colors.grey.shade500,
                                     ),
                                     filled: true,
-                                    fillColor: AppColors.white,
+                                    fillColor: Colors.white,
                                     prefixIcon: Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Image.asset(
@@ -97,9 +96,9 @@ class HelpCentreScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 25,
                           vertical: 10,
                         ),
@@ -120,4 +119,3 @@ class HelpCentreScreen extends StatelessWidget {
     );
   }
 }
-

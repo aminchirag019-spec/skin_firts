@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
-import 'package:skin_firts/Data/doctor_model.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/time_zones.dart';
 
 import '../../Bloc/NotificationBloc/notification_bloc.dart';
@@ -16,7 +15,7 @@ import '../../Utilities/media_query.dart';
 import '../../main.dart';
 
 class MessageScreen extends StatefulWidget {
-  MessageScreen({super.key});
+  const MessageScreen({super.key});
 
   @override
   State<MessageScreen> createState() => _MessageScreenState();
@@ -31,53 +30,47 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
+
     return WillPopScope(
       onWillPop: () async {
         context.go(RouterName.homeScreen.path);
         return false;
       },
       child: Scaffold(
-        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.064, // 25
-              vertical: AppSize.height(context) * 0.023, //
+              horizontal: AppSize.width(context) * 0.064,
+              vertical: AppSize.height(context) * 0.023,
             ),
             child: Column(
               children: [
                 topRow(
                   context,
                   onPressed: () => context.go(RouterName.homeScreen.path),
-                  text: "Notification",
+                  text: localization?.translate('notification') ?? "Notification",
                 ),
-                SizedBox(height: AppSize.height(context) * 0.023), // 10
+                SizedBox(height: AppSize.height(context) * 0.023),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        context.push(
-                          RouterName.chatScreen.path,
-                          extra: {
-                            "receiverId": user!.uid,
-                            "receiverName": user!.email,
-                          },
-                        );
-                      },
-                      child: customDayContainers(text: "Today", context),
+                    customDayContainers(
+                      context,
+                      text: localization?.translate('today') ?? "Today",
                     ),
                     Text(
-                      "Mark all",
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: AppSize.width(context) * 0.046, // 18
+                      localization?.translate('markAll') ?? "Mark all",
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: AppColors.darkPurple,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: AppSize.height(context) * 0.023), // 10
+                SizedBox(height: AppSize.height(context) * 0.023),
                 Expanded(
                   child: BlocConsumer<NotificationBloc, NotificationState>(
                     listener: (context, state) {},
@@ -86,7 +79,6 @@ class _MessageScreenState extends State<MessageScreen> {
                         itemCount: state.notifications.length,
                         itemBuilder: (context, index) {
                           final notification = state.notifications[index];
-
                           return GestureDetector(
                             onTap: () {
                               context.go(RouterName.chatScreen.path);
@@ -100,7 +92,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                 AppSize.width(context) * 0.01,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.white,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
@@ -112,12 +104,12 @@ class _MessageScreenState extends State<MessageScreen> {
                                       vertical: AppSize.height(context) * 0.02,
                                     ),
                                     decoration: BoxDecoration(
-                                      color:AppColors.darkPurple,
+                                      color: colorScheme.primary,
                                       shape: BoxShape.circle,
                                     ),
                                     child: SvgPicture.asset(
                                       "assets/images/bottom_calender.svg",
-                                      color: AppColors.white,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   SizedBox(width: AppSize.width(context) * 0.04),
@@ -129,26 +121,23 @@ class _MessageScreenState extends State<MessageScreen> {
                                           notification.title,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.leagueSpartan(
+                                          style: theme.textTheme.titleMedium?.copyWith(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: AppSize.width(context) * 0.045,
                                           ),
                                         ),
                                         Text(
                                           notification.body,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.leagueSpartan(
+                                          style: theme.textTheme.bodyMedium?.copyWith(
                                             fontWeight: FontWeight.w300,
-                                            fontSize: AppSize.width(context) * 0.045,
-                                            color: AppColors.black,
-                                            height: 1
+                                            height: 1,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  Text(notificationFormatTime(time))
+                                  // Text(notificationFormatTime(notification.timestamp))
                                 ],
                               ),
                             ),
@@ -168,22 +157,22 @@ class _MessageScreenState extends State<MessageScreen> {
 }
 
 Widget customDayContainers(BuildContext context, {required String text}) {
+  final colorScheme = Theme.of(context).colorScheme;
   return Container(
     padding: EdgeInsets.symmetric(
-      horizontal: AppSize.width(context) * 0.050, // 12
-      vertical: AppSize.height(context) * 0.005, // 5
+      horizontal: AppSize.width(context) * 0.050,
+      vertical: AppSize.height(context) * 0.005,
     ),
     decoration: BoxDecoration(
-      color: Color(0xffCAD6FF),
+      color: colorScheme.secondary,
       borderRadius: BorderRadius.circular(25),
     ),
     child: Text(
       text,
-      style: GoogleFonts.leagueSpartan(
-        fontSize: AppSize.width(context) * 0.058, // 18
-        fontWeight: FontWeight.w400,
-        color: Color(0xff2260FF),
-      ),
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w400,
+            color: colorScheme.primary,
+          ),
     ),
   );
 }

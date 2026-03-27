@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
-import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -51,14 +52,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   topRow(
                     context,
-                    text: AppString.logIn,
+                    text: localization?.translate('logIn') ?? "Log In",
                     onPressed: () => context.go(RouterName.welcomeScreen.path),
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
                     children: [
                       Text(
-                        AppString.welcome,
+                        localization?.translate('welcome') ?? "Welcome",
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         SizedBox(height: AppSize.height(context) * 0.004),
                         Text(
-                          AppString.loreum,
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                           style: theme.textTheme.bodyMedium?.copyWith(
                             letterSpacing: -0.7,
                             height: 0.9,
@@ -84,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Text(
-                              AppString.loginLabel,
+                              localization?.translate('loginLabel') ?? "Email or Mobile Number",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         coustomTextField(
                           context: context,
                           controller: emailController,
-                          hintText: AppString.emailExample,
+                          hintText: localization?.translate('emailExample') ?? "example@example.com",
                           h: 14,
                           w: 10,
                           validator: Validators().validateEmail,
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Text(
-                              AppString.passwordLable,
+                              localization?.translate('passwordLable') ?? "Password",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -128,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context.go(RouterName.setPasswordScreen.path);
                               },
                               child: Text(
-                                AppString.forgotPass,
+                                localization?.translate('forgotPass') ?? "Forgot Password",
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: colorScheme.primary,
@@ -159,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return customButton(
                         context,
-                        text: AppString.logIn,
+                        text: localization?.translate('logIn') ?? "Log In",
                         backgroundColor: colorScheme.primary,
                         textColor: Colors.white,
                         width: AppSize.width(context) * 0.512,
@@ -183,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Center(
                         child: Text(
-                          AppString.signupOptionTitle,
+                          localization?.translate('signupOptionTitle') ?? "or sign up with",
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300,
                           ),
@@ -213,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppString.dontHaveAccount,
+                        localization?.translate('dontHaveAccount') ?? "Don’t have an account?",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w300,
                         ),
@@ -224,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           context.go(RouterName.signupScreen.path);
                         },
                         child: Text(
-                          AppString.signUp,
+                          localization?.translate('signUp') ?? "Sign Up",
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: colorScheme.primary,

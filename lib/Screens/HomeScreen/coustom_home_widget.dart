@@ -82,9 +82,9 @@ Widget doctorInformationCard() {
                                     "${doctor.doctorName},${doctor.qualification}",
                                     style: GoogleFonts.leagueSpartan(
                                       fontSize:
-                                          AppSize.width(context) * 0.035, // 14
+                                          AppSize.width(context) * 0.038, // 14
                                       fontWeight: FontWeight.w600,
-                                      color: const Color(0xff2260FF),
+                                      color:  Color(0xff2260FF),
                                       height: 1,
                                     ),
                                   ),

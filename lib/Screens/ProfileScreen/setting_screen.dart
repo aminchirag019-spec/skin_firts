@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
+import 'package:skin_firts/Bloc/LocaleBloc/locale_bloc.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
+import '../../Bloc/LocaleBloc/locale_event.dart';
+import '../../Bloc/LocaleBloc/locale_state.dart';
 import '../../Utilities/colors.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
@@ -12,39 +16,59 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
+
     return WillPopScope(
-      onWillPop: ()  async{
+      onWillPop: () async {
         context.go(RouterName.profileScreen.path);
         return false;
       },
       child: Scaffold(
-        backgroundColor: AppColors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.054, // 25
-              vertical: AppSize.height(context) * 0.023,  // 20
+              horizontal: AppSize.width(context) * 0.054,
+              vertical: AppSize.height(context) * 0.023,
             ),
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:6),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: topRow(
                     context,
                     onPressed: () => context.go(RouterName.profileScreen.path),
-                    text: "Setting",
+                    text: localization?.translate('setting') ?? "Setting",
                   ),
                 ),
                 SizedBox(height: AppSize.height(context) * 0.04),
-                settingOptionTile(context, image:  AssetImage("assets/images/notification.png"),title: "Notification Setting", onTap: () {
-                  context.go(RouterName.notificationSetting.path);
-                },),
+                settingOptionTile(
+                  context,
+                  image: const AssetImage("assets/images/notification.png"),
+                  title: localization?.translate("Notification Setting") ?? "Notification Setting",
+                  onTap: () {
+                    context.go(RouterName.notificationSetting.path);
+                  },
+                ),
                 SizedBox(height: AppSize.height(context) * 0.029),
-                settingOptionTile(context, image:  AssetImage("assets/images/key.png"), title: "Password Manager", onTap: () {
-                  context.go(RouterName.passwordManagerScreen.path);
-                },),
+                settingOptionTile(
+                  context,
+                  image: const AssetImage("assets/images/key.png"),
+                  title: localization?.translate("Password Manager") ?? "Password Manager",
+                  onTap: () {
+                    context.go(RouterName.passwordManagerScreen.path);
+                  },
+                ),
                 SizedBox(height: AppSize.height(context) * 0.029),
-                settingOptionTile(context, image:  AssetImage("assets/images/user_icon.png"), title: "Delete Account", onTap: () {},)
+                _LanguageSelector(context),
+                SizedBox(height: AppSize.height(context) * 0.029),
+                settingOptionTile(
+                  context,
+                  image: const AssetImage("assets/images/user_icon.png"),
+                  title: localization?.translate("Delete Account") ?? "Delete Account",
+                  onTap: () {},
+                )
               ],
             ),
           ),
@@ -54,12 +78,88 @@ class SettingScreen extends StatelessWidget {
   }
 }
 
+class _LanguageSelector extends StatelessWidget {
+  final BuildContext context;
+  const _LanguageSelector(this.context);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
+
+    return BlocBuilder<LocaleBloc, LocaleState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.language, size: 25, color: AppColors.grey),
+                SizedBox(width: AppSize.width(context) * 0.037),
+                Expanded(
+                  child: Text(
+                    localization?.translate("Language") ?? "Language",
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _LangChip(context, "English", const Locale('en'), state.locale),
+                _LangChip(context, "हिंदी", const Locale('hi'), state.locale),
+                _LangChip(context, "ગુજરાતી", const Locale('gu'), state.locale),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _LangChip extends StatelessWidget {
+  final BuildContext context;
+  final String label;
+  final Locale locale;
+  final Locale currentLocale;
+
+  const _LangChip(this.context, this.label, this.locale, this.currentLocale);
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = currentLocale.languageCode == locale.languageCode;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ChoiceChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        if (selected) {
+          context.read<LocaleBloc>().add(ChangeLocale(locale));
+        }
+      },
+      selectedColor: colorScheme.primary,
+      labelStyle: TextStyle(
+        color: isSelected ? Colors.white : colorScheme.primary,
+      ),
+    );
+  }
+}
+
 Widget settingOptionTile(
-    BuildContext context, {
-      required ImageProvider image,
-      required String title,
-      required VoidCallback onTap,
-    }) {
+  BuildContext context, {
+  required ImageProvider image,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   return GestureDetector(
     onTap: onTap,
     child: Row(
@@ -69,24 +169,22 @@ Widget settingOptionTile(
           width: 25,
           decoration: BoxDecoration(image: DecorationImage(image: image)),
         ),
-        SizedBox(width: AppSize.width(context) * 0.037), // 14
+        SizedBox(width: AppSize.width(context) * 0.037),
         Expanded(
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: AppSize.width(context) * 0.046,
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
-            ), // 16
+              fontSize: 18
+            ),
           ),
         ),
-
         Icon(
-            Icons.arrow_forward_ios,
-            size: AppSize.width(context) * 0.05,
-            color: AppColors.darkPurple
-        ), // 16
+          Icons.arrow_forward_ios,
+          size: 20,
+          color: colorScheme.primary,
+        ),
       ],
     ),
   );
 }
-

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
-import '../../global/app_string.dart';
 import '../../router/router_class.dart';
 
 class SetPasswordScreen extends StatelessWidget {
@@ -13,6 +13,7 @@ class SetPasswordScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final formKey = GlobalKey<FormState>();
+    final localization = AppLocalizations.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -32,11 +33,11 @@ class SetPasswordScreen extends StatelessWidget {
                     onPressed: () {
                       context.go(RouterName.loginScreen.path);
                     },
-                    text: "Set Password",
+                    text: localization?.translate('setPassword') ?? "Set Password",
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    AppString.loreum,
+                    localization?.translate('loreum') ?? "",
                     style: theme.textTheme.bodyMedium?.copyWith(
                       letterSpacing: -1.0,
                       height: 0.9,
@@ -48,7 +49,7 @@ class SetPasswordScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        AppString.passwordLable,
+                        localization?.translate('passwordLable') ?? "Password",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -64,7 +65,7 @@ class SetPasswordScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        AppString.confirmPass,
+                        localization?.translate('confirmPass') ?? "Confirm Password",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -79,7 +80,7 @@ class SetPasswordScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   customButton(
                     context,
-                    text: "Create New Password",
+                    text: localization?.translate('createNewPass') ?? "Create New Password",
                     fontSize: 23,
                     backgroundColor: colorScheme.primary,
                     width: 280,

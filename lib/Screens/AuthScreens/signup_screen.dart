@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
-import 'package:skin_firts/global/app_string.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
-import '../../Utilities/colors.dart';
 import '../../router/router_class.dart';
 import '../../Utilities/media_query.dart';
 
@@ -34,6 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -65,7 +65,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           const SizedBox(width: 10),
                           ChoiceChip(
-                            label: const Text("Doctor"),
+                            label: Text(localization?.translate('doctors') ?? "Doctor"),
                             selected: state.selectedRole == "doctor",
                             onSelected: (_) {
                               context.read<AuthBloc>().add( SelectRoleEvent("doctor"));
@@ -81,13 +81,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     onPressed: () {
                       context.go(RouterName.loginScreen.path);
                     },
-                    text: "New Account",
+                    text: localization?.translate('newAccount') ?? "New Account",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
                     children: [
                       Text(
-                        AppString.fullname,
+                        localization?.translate('fullname') ?? "Full name",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -102,14 +102,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           context: context,
                           controller: nameController,
                           validator: Validators().validateEmail,
-                          hintText: AppString.nameExample,
+                          hintText: localization?.translate('nameExample') ?? "Enter Your Name",
                           size: 20,
                         ),
                         SizedBox(height: AppSize.height(context) * 0.014),
                         Row(
                           children: [
                             Text(
-                              AppString.passwordLable,
+                              localization?.translate('passwordLable') ?? "Password",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -131,7 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Row(
                           children: [
                             Text(
-                              AppString.email,
+                              localization?.translate('email') ?? "Email",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -140,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         coustomTextField(
                           context: context,
-                          hintText: AppString.emailExample,
+                          hintText: localization?.translate('emailExample') ?? "example@example.com",
                           controller: emailController,
                           size: 20,
                         ),
@@ -148,7 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Row(
                           children: [
                             Text(
-                              AppString.mobile,
+                              localization?.translate('mobile') ?? "Mobile Number",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -159,7 +159,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           context: context,
                           maxLength: 10,
                           textInputType: TextInputType.number,
-                          hintText: AppString.numberExample,
+                          hintText: localization?.translate('numberExample') ?? "+91 0000000000",
                           h: 16,
                           w: 13,
                           controller: phoneController,
@@ -169,7 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Row(
                           children: [
                             Text(
-                              AppString.dob,
+                              localization?.translate('dob') ?? "Date of birth",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
@@ -178,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         coustomTextField(
                           context: context,
-                          hintText: AppString.dobExample,
+                          hintText: localization?.translate('dobExample') ?? "DD / MM /YYY",
                           isBold: true,
                           controller: dobController,
                           size: 20,
@@ -199,7 +199,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              AppString.byContinuing,
+                              localization?.translate('byContinuing') ?? "By continuing, you agree to",
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.w300,
                                 letterSpacing: -0.3,
@@ -215,7 +215,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppString.terms,
+                        localization?.translate('terms') ?? "Terms of Use",
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: colorScheme.primary,
@@ -223,14 +223,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       SizedBox(width: AppSize.width(context) * 0.005),
                       Text(
-                        AppString.and,
+                        localization?.translate('and') ?? "and",
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w300,
                         ),
                       ),
                       SizedBox(width: AppSize.width(context) * 0.005),
                       Text(
-                        AppString.privacy,
+                        localization?.translate('privacy') ?? "Privacy Policy",
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: colorScheme.primary,
@@ -253,7 +253,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       }
                       return customButton(
                         context,
-                        text: AppString.signUp,
+                        text: localization?.translate('signUp') ?? "Sign Up",
                         backgroundColor: colorScheme.primary,
                         width: AppSize.width(context) * 0.538,
                         textColor: Colors.white,
@@ -282,7 +282,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       Center(
                         child: Text(
-                          AppString.signupOptionTitle,
+                          localization?.translate('signupOptionTitle') ?? "or sign up with",
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300,
                           ),
@@ -312,7 +312,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppString.already,
+                        localization?.translate('already') ?? "already have an account?",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w300,
                         ),
@@ -323,7 +323,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           context.go(RouterName.loginScreen.path);
                         },
                         child: Text(
-                          AppString.logIn,
+                          localization?.translate('logIn') ?? "Log In",
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: colorScheme.primary,

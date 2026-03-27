@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Router/router_class.dart';
+import 'package:skin_firts/Utilities/app_localizations.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
 import '../../Global/enums.dart';
-import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import '../../Utilities/shimmer.dart';
 
@@ -17,6 +17,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -42,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
                       topRow(
                         context,
                         onPressed: () => context.go(RouterName.homeScreen.path),
-                        text: "My Profile",
+                        text: localization?.translate('My Profile') ?? "My Profile",
                       ),
                       SizedBox(height: AppSize.height(context) * 0.011),
                       Stack(
@@ -89,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/user_icon.png"),
-                        title: "Profile",
+                        title: localization?.translate('profile') ?? "Profile",
                         onTap: () {},
                       ),
                       _space(context),
@@ -98,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/heart_outlined.png",
                         ),
-                        title: "Favourite",
+                        title: localization?.translate('favourite') ?? "Favourite",
                         onTap: () {},
                       ),
                       _space(context),
@@ -107,14 +108,14 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/wallet_icon.png",
                         ),
-                        title: "Payment Method",
+                        title: localization?.translate('paymentMethod') ?? "Payment Method",
                         onTap: () {},
                       ),
                       _space(context),
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/lock_icon.png"),
-                        title: "Privacy Policy",
+                        title: localization?.translate('privacy') ?? "Privacy Policy",
                         onTap: () {
                           context.go(RouterName.privacyPolicyScreen.path);
                         },
@@ -125,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/profile_setting.png",
                         ),
-                        title: "Setting",
+                        title: localization?.translate('setting') ?? "Setting",
                         onTap: () {
                           context.go(RouterName.settingScreen.path);
                         },
@@ -134,7 +135,7 @@ class ProfileScreen extends StatelessWidget {
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/img.png"),
-                        title: "Chat List",
+                        title: localization?.translate('chatList') ?? "Chat List",
                         onTap: () {
                           context.push(RouterName.chatListScreen.path);
                         },
@@ -145,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                         image: const AssetImage(
                           "assets/images/question_icon.png",
                         ),
-                        title: "Help",
+                        title: localization?.translate('help') ?? "Help",
                         onTap: () {
                           context.go(RouterName.helpCentreScreen.path);
                         },
@@ -163,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
                             image: const AssetImage(
                               "assets/images/logout_icon.png",
                             ),
-                            title: "Logout",
+                            title: localization?.translate('logout') ?? "Logout",
                             onTap: () {
                               onShowBottomSheet(context);
                             },
@@ -174,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
                       _ProfileOptionTile(
                         context,
                         image: const AssetImage("assets/images/plus_icon.png"),
-                        title: "Add Doctor",
+                        title: localization?.translate('addDoctor') ?? "Add Doctor",
                         onTap: () {
                           context.go(RouterName.addDoctorScreen.path);
                         },
@@ -224,6 +225,7 @@ class _ProfileOptionTile extends StatelessWidget {
               title,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
+                fontSize: 18
               ),
             ),
           ),
@@ -243,6 +245,7 @@ SizedBox _space(BuildContext context) => SizedBox(height: AppSize.height(context
 void onShowBottomSheet(BuildContext context) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
+  final localization = AppLocalizations.of(context);
 
   showModalBottomSheet(
     useRootNavigator: true,
@@ -260,7 +263,7 @@ void onShowBottomSheet(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Logout",
+                  localization?.translate('logout') ?? "Logout",
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w500,
@@ -270,7 +273,7 @@ void onShowBottomSheet(BuildContext context) {
             ),
             SizedBox(height: AppSize.height(context) * 0.020),
             Text(
-              "are you sure you want to log out?",
+              localization?.translate('logoutConfirmation') ?? "are you sure you want to log out?",
               style: theme.textTheme.bodyLarge,
             ),
             SizedBox(height: AppSize.height(context) * 0.035),
@@ -279,7 +282,7 @@ void onShowBottomSheet(BuildContext context) {
                 Expanded(
                   child: customButton(
                     context,
-                    text: "Cancel",
+                    text: localization?.translate('cancel') ?? "Cancel",
                     backgroundColor: colorScheme.secondary,
                     textColor: colorScheme.primary,
                     onPressed: () {
@@ -291,7 +294,7 @@ void onShowBottomSheet(BuildContext context) {
                 Expanded(
                   child: customButton(
                     context,
-                    text: "Yes, Logout",
+                    text: localization?.translate('Yes,Logout') ?? "Yes, Logout",
                     backgroundColor: colorScheme.primary,
                     textColor: Colors.white,
                     onPressed: () {

@@ -46,20 +46,13 @@ class AuthRepository {
   }
 
   Future<List<ServiceModel>> getServices() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('services')
-        .get();
+    final snapshot = await FirebaseFirestore.instance.collection('services').get();
 
-    return snapshot.docs
-        .map((doc) => ServiceModel.fromJson(doc.data()))
-        .toList();
+    return snapshot.docs.map((doc) => ServiceModel.fromJson(doc.data())).toList();
   }
 
   Future<AddDoctor?> getDoctorByUid(String doctorUid) async {
-    final doc = await FirebaseFirestore.instance
-        .collection("doctors")
-        .doc(doctorUid)
-        .get();
+    final doc = await FirebaseFirestore.instance.collection("doctors").doc(doctorUid).get();
 
     if (doc.exists) {
       return AddDoctor.fromJson(doc.data() as Map<String, dynamic>, doc.id);
@@ -67,8 +60,6 @@ class AuthRepository {
 
     return null;
   }
-
-
 
   Future<void> updateUserPassword({
     required String currentPassword,
@@ -106,22 +97,12 @@ class AuthRepository {
   }
 
   Future<void> likedDoctor(String doctorUid, bool isLiked) async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) return;
-
-    final favRef = firestore
-        .collection("users")
-        .doc(user.uid)
-        .collection("favorites")
-        .doc(doctorUid);
-
-    if (isLiked) {
-      await favRef.set({
-        "doctorId": doctorUid,
-        "likedAt": FieldValue.serverTimestamp(),
+    try {
+      await firestore.collection("doctors").doc(doctorUid).update({
+        "isLiked": isLiked,
       });
-    } else {
+    } catch (e) {
+      print("Error liking doctor: $e");
     }
   }
 
@@ -130,33 +111,37 @@ class AuthRepository {
     bool? liked,
     String? gender,
   }) async {
-    Query query = firestore
-        .collection("doctors")
-        .where("userId", isEqualTo: user!.uid);
+    try {
+      // 🚀 FILTER BY USER ID FOR "PER USER DOCTOR"
+      Query query = firestore.collection("doctors").where("userId", isEqualTo: user!.uid);
 
-    if (gender != null) {
-      query = query.where("gender", isEqualTo: gender);
-    }
-
-    if (liked != null) {
-      query = query.where("isLiked", isEqualTo: liked);
-    }
-
-    if (sortBy != null) {
-      if (sortBy == "A->Z") {
-        query = query.orderBy("doctorName");
-      } else if (sortBy == "Z->A") {
-        query = query.orderBy("doctorName", descending: true);
-      } else if (sortBy == "Rating") {
-        query = query.orderBy("rating", descending: true);
+      if (gender != null) {
+        query = query.where("gender", isEqualTo: gender);
       }
+
+      if (liked != null) {
+        query = query.where("isLiked", isEqualTo: liked);
+      }
+
+      if (sortBy != null) {
+        if (sortBy == "A->Z") {
+          query = query.orderBy("doctorName");
+        } else if (sortBy == "Z->A") {
+          query = query.orderBy("doctorName", descending: true);
+        } else if (sortBy == "Rating") {
+          query = query.orderBy("rating", descending: true);
+        }
+      }
+
+      final snapshot = await query.get();
+
+      return snapshot.docs.map((doc) {
+        return AddDoctor.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print("Error fetching doctors: $e");
+      return [];
     }
-
-    final snapshot = await query.get();
-
-    return snapshot.docs.map((doc) {
-      return AddDoctor.fromJson(doc.data() as Map<String, dynamic>, doc.id);
-    }).toList();
   }
 
   Future<void> addDoctor({required AddDoctor addDoctorModel}) async {
@@ -191,29 +176,6 @@ class AuthRepository {
     }
   }
 
-  // Future<User?> login({required LoginModel loginModel}) async {
-  //   try {
-  //     final credential = await firebaseAuth.signInWithEmailAndPassword(
-  //       email: loginModel.email,
-  //       password: loginModel.password,
-  //     );
-  //
-  //     final user = credential.user;
-  //     final token = await user?.getIdToken();
-  //     if (user != null) {
-  //       await SharedPrefsHelper.setLogin(
-  //         userId: user.uid,
-  //         accessToken: token ?? "",
-  //         checkToken: token ?? "",
-  //       );
-  //       print("Login successful: ${user.uid}");
-  //       return user;
-  //     }
-  //   } catch (e) {
-  //     print("Error logging in: $e");
-  //   }
-  //   return null;
-  // }
   Future<Map<String, dynamic>?> login({required LoginModel loginModel}) async {
     try {
       final credential = await firebaseAuth.signInWithEmailAndPassword(
@@ -260,10 +222,7 @@ class AuthRepository {
 
   Future<List<SignupModel>> getAllDoctors() async {
     try {
-      final snapshot = await firestore
-          .collection("users")
-          .where("role", isEqualTo: "doctor")
-          .get();
+      final snapshot = await firestore.collection("users").where("role", isEqualTo: "doctor").get();
 
       return snapshot.docs.map((doc) {
         return SignupModel.fromJson(doc.data());
@@ -276,10 +235,7 @@ class AuthRepository {
 
   Future<List<SignupModel>> getAllUsers() async {
     try {
-      final snapshot = await firestore
-          .collection("users")
-          .where("role", isEqualTo: "user")
-          .get();
+      final snapshot = await firestore.collection("users").where("role", isEqualTo: "user").get();
 
       return snapshot.docs.map((doc) {
         return SignupModel.fromJson(doc.data());
@@ -289,6 +245,4 @@ class AuthRepository {
       return [];
     }
   }
-
-
 }

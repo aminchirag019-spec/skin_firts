@@ -33,6 +33,30 @@ class AppString {
   static const michael =  "Dr. Michael Davidson";
   static const olivia =  "Dr. Olivia Turner";
   static const martinez =  "Dr. Guru Martinez";
+  static const notificationSetting = "Notification Setting";
+  static const passWordManager = "Password Manager";
+  static const deleteAccount = "Delete Account";
+  static const profile = "Profile";
+  static const favourite = "Favourite";
+  static const paymentMethod = "Payment Method";
+  static const language = "Language";
+  static const chatList = "Chat List";
+  static const help = "Help";
+  static const logout = "Logout";
+  static const addDoctor = "Add Doctor";
+  static const doctor = "Doctor";
+  static const today = "Today";
+  static const markAll = "Mark all";
+  static const newAccount = "New Account";
+  static const setPassword = "Set Password";
+  static const createNewPass = "Create New Password";
+  static const securityFingerprint = "Security Fingerprint";
+  static const useFingerToAccess =  "Use Fingerprint To Access";
+  static const authenticateQuickly = "Authenticate quickly and securely using your fingerprint.";
+  static const useFingerId = "Use Touch ID";
+  static const skip = '';
+
+
 }
 
 
