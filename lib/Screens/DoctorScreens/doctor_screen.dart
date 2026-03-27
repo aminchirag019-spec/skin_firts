@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/DoctorScreens/coustom_doctor_widget.dart';
-import 'package:skin_firts/Screens/HomeScreen/home_screen.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/dummy_data.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import 'doctor_info_screen.dart';
-import 'doctor_screen.dart';
 
 class DoctorScreen extends StatefulWidget {
   const DoctorScreen({super.key});
@@ -33,6 +29,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return WillPopScope(
       onWillPop: () async {
         context.go(RouterName.homeScreen.path);
@@ -44,8 +43,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
             body: SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: AppSize.height(context) * 0.017, // 15
-                  horizontal: AppSize.width(context) * 0.064, // 25
+                  vertical: AppSize.height(context) * 0.017,
+                  horizontal: AppSize.width(context) * 0.064,
                 ),
                 child: Column(
                   children: [
@@ -54,109 +53,89 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       text: "Doctors",
                       onPressed: () => context.go(RouterName.homeScreen.path),
                     ),
-                    SizedBox(height: AppSize.height(context) * 0.023), // 20
-                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Sort By",
-                              style: GoogleFonts.leagueSpartan(
-                                fontSize: AppSize.width(context) * 0.035, // 14
-                                fontWeight: FontWeight.w300,
-                                height: 1,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              width: AppSize.width(context) * 0.012,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                context.read<DoctorScreenBloc>().add(
-                                  ApplyFilters(sortBy: "A->Z"),
-                                );
-                                context.read<DoctorScreenBloc>().add(
-                                  FilterChangedEvent(-1,DoctorFilter.sortBy),
-                                );
-                                context.read<DoctorScreenBloc>().add(
-                                  TabEvent(isTab: true),
-                                );
-                              },
-                              child: Container(
-                                width: AppSize.width(context) * 0.133, // 52
-                                height: AppSize.height(context) * 0.026, // 22
-                                decoration: BoxDecoration(
-                                  color: state.selectedIndex == -1
-                                      ?  AppColors.darkPurple
-                                      :  AppColors.lightPurple,
-                                  borderRadius: BorderRadius.circular(
-                                    AppSize.width(context) * 0.051,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "A→Z",
-                                    style: GoogleFonts.leagueSpartan(
-                                      fontSize:
-                                          AppSize.width(context) * 0.038,
-                                      fontWeight: FontWeight.w600,
-                                      color: state.selectedIndex == -1
-                                          ? AppColors.white
-                                          :  AppColors.darkPurple,
-                                      height: 1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: AppSize.width(context) * 0.015,
-                            ), // 6
-                            filterOptions(
-                              context,
-                              icon: Icons.star_outline,
-                              size: AppSize.width(context) * 0.046, // 18
-                              filter: DoctorFilter.rating,
-                              index: 0,
-                            ),
-                            SizedBox(
-                              width: AppSize.width(context) * 0.015,
-                            ), // 6
-                            filterOptions(
-                              context,
-                              icon: Icons.favorite_border,
-                              size: AppSize.width(context) * 0.041, // 16
-                              filter: DoctorFilter.liked,
-                              index: 1,
-                            ),
-                            SizedBox(
-                              width: AppSize.width(context) * 0.015,
-                            ), // 6
-                            filterOptions(
-                              context,
-                              icon: Icons.female,
-                              size: AppSize.width(context) * 0.046, // 18
-                              index: 2,
-                              filter: DoctorFilter.female,
-                            ),
-                            SizedBox(
-                              width: AppSize.width(context) * 0.015,
-                            ), // 6
-                            filterOptions(
-                              context,
-                              icon: Icons.male,
-                              size: AppSize.width(context) * 0.046, // 18
-                              index: 3,
-                              filter: DoctorFilter.male,
-                            ),
-                          ],
+                    SizedBox(height: AppSize.height(context) * 0.023),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Sort By",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w300,
+                            height: 1,
+                            color: AppColors.black,
+                          ),
                         ),
-                    SizedBox(height: AppSize.height(context) * 0.011), // 10
-                    if (state.selectedFilter == DoctorFilter.liked)
-                      likedBar()
-                    else
-                      Container(),
-                    SizedBox(height: AppSize.height(context) * 0.011), // 10
+                        SizedBox(width: AppSize.width(context) * 0.012),
+                        GestureDetector(
+                          onTap: () async {
+                            context.read<DoctorScreenBloc>().add(
+                                   ApplyFilters(sortBy: "A->Z"),
+                                );
+                            context.read<DoctorScreenBloc>().add(
+                                   FilterChangedEvent(-1, DoctorFilter.sortBy),
+                                );
+                            context.read<DoctorScreenBloc>().add(
+                                   TabEvent(isTab: true),
+                                );
+                          },
+                          child: Container(
+                            width: AppSize.width(context) * 0.133,
+                            height: AppSize.height(context) * 0.026,
+                            decoration: BoxDecoration(
+                              color: state.selectedIndex == -1 ? colorScheme.primary : colorScheme.secondary,
+                              borderRadius: BorderRadius.circular(
+                                AppSize.width(context) * 0.051,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "A→Z",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: state.selectedIndex == -1 ? Colors.white : colorScheme.primary,
+                                  height: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: AppSize.width(context) * 0.015),
+                        filterOptions(
+                          context,
+                          icon: Icons.star_outline,
+                          size: AppSize.width(context) * 0.046,
+                          filter: DoctorFilter.rating,
+                          index: 0,
+                        ),
+                        SizedBox(width: AppSize.width(context) * 0.015),
+                        filterOptions(
+                          context,
+                          icon: Icons.favorite_border,
+                          size: AppSize.width(context) * 0.041,
+                          filter: DoctorFilter.liked,
+                          index: 1,
+                        ),
+                        SizedBox(width: AppSize.width(context) * 0.015),
+                        filterOptions(
+                          context,
+                          icon: Icons.female,
+                          size: AppSize.width(context) * 0.046,
+                          index: 2,
+                          filter: DoctorFilter.female,
+                        ),
+                        SizedBox(width: AppSize.width(context) * 0.015),
+                        filterOptions(
+                          context,
+                          icon: Icons.male,
+                          size: AppSize.width(context) * 0.046,
+                          index: 3,
+                          filter: DoctorFilter.male,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppSize.height(context) * 0.011),
+                    if (state.selectedFilter == DoctorFilter.liked) likedBar() else Container(),
+                    SizedBox(height: AppSize.height(context) * 0.011),
                     state.isTab
                         ? Expanded(child: doctorDetailsCard())
                         : Expanded(
@@ -195,6 +174,9 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Column(
       children: [
         GestureDetector(
@@ -204,101 +186,89 @@ class _ServiceDropdownState extends State<ServiceDropdown> {
             });
           },
           child: Container(
-            height: AppSize.height(context) * 0.065, // 55
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.darkPurple,
-              borderRadius: BorderRadius.circular(
-                AppSize.width(context) * 0.076,
-              ), // 30
-            ),
-            child: Row(
-              children: [
-                SizedBox(width: AppSize.width(context) * 0.038),
-                Icon(Icons.favorite, color: AppColors.white),
-
-                SizedBox(width: AppSize.width(context) * 0.025),
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    maxLines: 2,
-                    style: GoogleFonts.leagueSpartan(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
-                      height: 1,
-                      letterSpacing: -0.1,
-                      fontSize: AppSize.width(context) * 0.048,
+              height: AppSize.height(context) * 0.065,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                borderRadius: BorderRadius.circular(
+                  AppSize.width(context) * 0.076,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 15),
+                  const Icon(Icons.favorite, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      maxLines: 2,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        height: 1,
+                        letterSpacing: -0.1,
+                      ),
                     ),
                   ),
-                ),
-
-                 Spacer(),
-
-                Container(
-                  decoration:  BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.white,
+                  const Spacer(),
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Icon(
+                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                      color: colorScheme.primary,
+                      size: AppSize.width(context) * 0.076,
+                    ),
                   ),
-                  child: Icon(
-                    isExpanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    color:  AppColors.darkPurple,
-                    size: AppSize.width(context) * 0.076,
-                  ),
-                ),
-
-                SizedBox(width: AppSize.width(context) * 0.025),
-              ],
-            )
-          ),
+                  const SizedBox(width: 10),
+                ],
+              )),
         ),
-        SizedBox(height: AppSize.height(context) * 0.011), // 10
+        SizedBox(height: AppSize.height(context) * 0.011),
         if (isExpanded) ...[
           Container(
             decoration: BoxDecoration(
-              color: AppColors.lightPurple,
+              color: colorScheme.secondary,
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.038,
-              ), // 15
+              ),
             ),
             padding: EdgeInsets.symmetric(
-              vertical: AppSize.height(context) * 0.017, // 15
-              horizontal: AppSize.width(context) * 0.033, // 13
+              vertical: AppSize.height(context) * 0.017,
+              horizontal: AppSize.width(context) * 0.033,
             ),
             child: Text(
               widget.discription,
-              style: GoogleFonts.leagueSpartan(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 height: 1,
-                fontSize: AppSize.width(context) * 0.035, // 14
                 letterSpacing: -0.3,
               ),
             ),
           ),
-
-          SizedBox(height: AppSize.height(context) * 0.011), // 10
-
+          SizedBox(height: AppSize.height(context) * 0.011),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: AppColors.lightPurple,
+              color: colorScheme.secondary,
               borderRadius: BorderRadius.circular(
                 AppSize.width(context) * 0.038,
-              ), // 15
+              ),
             ),
             padding: EdgeInsets.symmetric(
-              vertical: AppSize.height(context) * 0.017, // 15
-              horizontal: AppSize.width(context) * 0.033, // 13
+              vertical: AppSize.height(context) * 0.017,
+              horizontal: AppSize.width(context) * 0.033,
             ),
             child: Center(
               child: Text(
                 "Looking doctors",
-                style: GoogleFonts.leagueSpartan(
+                style: theme.textTheme.titleLarge?.copyWith(
                   height: 0.8,
-                  fontSize: AppSize.width(context) * 0.051, // 20
                   letterSpacing: -0.3,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.darkPurple
+                  color: colorScheme.primary,
                 ),
               ),
             ),

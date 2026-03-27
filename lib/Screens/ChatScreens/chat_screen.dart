@@ -48,16 +48,21 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return BlocConsumer<ChatBloc, ChatState>(
       listenWhen: (previous, current) =>
           previous.editingMessage != current.editingMessage ||
           previous.isSelectedMessage != current.isSelectedMessage ||
-          previous.selectedMessages.length != current.selectedMessages.length,
+          previous.selectedMessages.length != current.selectedMessages.length ||
+          previous.replyMessage != current.replyMessage,
       buildWhen: (previous, current) {
         return previous.chats != current.chats ||
             previous.isSelectedMessage != current.isSelectedMessage ||
             previous.selectedMessages.length != current.selectedMessages.length ||
-            previous.replyMessage != current.replyMessage;
+            previous.replyMessage != current.replyMessage ||
+            previous.editingMessage != current.editingMessage;
       },
       listener: (context, state) {
         if (!state.isSelectedMessage || state.selectedMessages.length > 1) {
@@ -76,10 +81,10 @@ class _ChatScreenState extends State<ChatScreen> {
         final selectedMessages = state.selectedMessages;
         final isSelectionMode = state.isSelectedMessage;
         final singleSelected = selectedMessages.length == 1 ? selectedMessages.first : null;
-        final isMe = singleSelected?.senderId == user!.uid;
+        final isMeSelected = singleSelected?.senderId == user!.uid;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(statusBarColor: Colors.white),
+          value: SystemUiOverlayStyle(statusBarColor: colorScheme.primary),
           child: WillPopScope(
             onWillPop: () async {
               if (isSelectionMode) {
@@ -90,7 +95,6 @@ class _ChatScreenState extends State<ChatScreen> {
               return false;
             },
             child: Scaffold(
-              backgroundColor: AppColors.white,
               body: SafeArea(
                 child: Column(
                   children: [
@@ -103,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ? AppSize.height(context) * 0.010
                             : AppSize.height(context) * 0.015,
                       ),
-                      color:  Color(0xff2260FF),
+                      color: colorScheme.primary,
                       child: isSelectionMode
                           ? Row(
                               children: [
@@ -119,9 +123,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                                 Text(
                                   "${selectedMessages.length}",
-                                  style: const TextStyle(
+                                  style: theme.textTheme.titleLarge?.copyWith(
                                     color: Colors.white,
-                                    fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -143,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   if (singleSelected.chatType == ChatType.text)
                                     IconButton(
-                                      icon:  Icon(
+                                      icon: const Icon(
                                         Icons.copy,
                                         color: Colors.white,
                                       ),
@@ -161,7 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   if (singleSelected.senderId == user!.uid &&
                                       singleSelected.chatType == ChatType.text)
                                     IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.edit,
                                         color: Colors.white,
                                       ),
@@ -176,7 +179,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                 ],
                                 IconButton(
-                                  icon:  Icon(
+                                  icon: const Icon(
                                     Icons.delete,
                                     color: Colors.white,
                                   ),
@@ -193,12 +196,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                 if (singleSelected != null)
                                   PopupMenuButton<String>(
                                     onOpened: () => _closeReactionPopup(),
-                                    offset: Offset(-10, 45),
-                                    icon:  Icon(
+                                    offset: const Offset(-10, 45),
+                                    icon: const Icon(
                                       Icons.more_vert,
                                       color: Colors.white,
                                     ),
-                                    color: AppColors.white,
+                                    color: theme.cardColor,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
@@ -226,11 +229,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                       bloc.add(UnSelectMessageEvent());
                                     },
                                     itemBuilder: (context) => [
-                                      _buildMenuItem("Verify security code"),
-                                      _buildMenuItem("Info"),
-                                      _buildMenuItem("Copy"),
-                                      if (isMe) _buildMenuItem("Edit"),
-                                      _buildMenuItem("Pin"),
+                                      _buildMenuItem(context, "Verify security code"),
+                                      _buildMenuItem(context, "Info"),
+                                      _buildMenuItem(context, "Copy"),
+                                      if (isMeSelected) _buildMenuItem(context, "Edit"),
+                                      _buildMenuItem(context, "Pin"),
                                     ],
                                   ),
                               ],
@@ -249,16 +252,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                 SizedBox(width: AppSize.width(context) * 0.025),
                                 Text(
                                   widget.receiverName ?? "",
-                                  style: GoogleFonts.leagueSpartan(
+                                  style: theme.textTheme.headlineSmall?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: AppSize.width(context) * 0.06,
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 chatBarIcons(
                                   context,
-                                  image:  AssetImage(
+                                  image: const AssetImage(
                                     "assets/images/chat_phone.png",
                                   ),
                                   height: AppSize.height(context) * 0.015,
@@ -268,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 SizedBox(width: AppSize.width(context) * 0.025),
                                 chatBarIcons(
                                   context,
-                                  image:  AssetImage(
+                                  image: const AssetImage(
                                     "assets/images/video_call.png",
                                   ),
                                   height: AppSize.height(context) * 0.012,
@@ -294,73 +296,75 @@ class _ChatScreenState extends State<ChatScreen> {
                           physics: const BouncingScrollPhysics(),
                           itemCount: chats.length,
                           itemBuilder: (context, index) {
-                            final key = GlobalKey();
                             final chat = chats[index];
                             final isMe = chat.senderId == user!.uid;
                             final isSelected = selectedMessages.any(
                               (m) => m.id == chat.id,
                             );
-                            return GestureDetector(
-                              onTap: () {
-                                if (isSelectionMode) {
-                                  context.read<ChatBloc>().add(
-                                        ToggleMessageSelection(chat),
+                            return Builder(
+                              builder: (itemContext) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (isSelectionMode) {
+                                      context.read<ChatBloc>().add(
+                                            ToggleMessageSelection(chat),
+                                          );
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    HapticFeedback.mediumImpact();
+                                    _closeReactionPopup();
+                                    FocusScope.of(context).unfocus();
+                                    if (!isSelectionMode) {
+                                      context.read<ChatBloc>().add(
+                                            ToggleMessageSelection(chat),
+                                          );
+                                      final renderBox = itemContext.findRenderObject() as RenderBox;
+                                      final position = renderBox.localToGlobal(
+                                        Offset.zero,
                                       );
-                                }
-                              },
-                              onLongPress: () {
-                                HapticFeedback.mediumImpact();
-                                _closeReactionPopup();
-                                FocusScope.of(context).unfocus();
-                                if (!isSelectionMode) {
-                                  context.read<ChatBloc>().add(
-                                        ToggleMessageSelection(chat),
+                                      showReactionPopup(
+                                        context,
+                                        Offset(
+                                          position.dx + renderBox.size.width / 2,
+                                          position.dy + 50,
+                                        ),
+                                        chat,
                                       );
-                                  final renderBox = key.currentContext!.findRenderObject() as RenderBox;
-                                  final position = renderBox.localToGlobal(
-                                    Offset.zero,
-                                  );
-                                  showReactionPopup(
-                                    context,
-                                    Offset(
-                                      position.dx + renderBox.size.width / 2,
-                                      position.dy + 50,
+                                    }
+                                  },
+                                  child: Dismissible(
+                                    key: ValueKey(chat.id),
+                                    direction: isMe ? DismissDirection.endToStart : DismissDirection.startToEnd,
+                                    confirmDismiss: (_) async {
+                                      if (isSelectionMode) return false;
+                                      HapticFeedback.mediumImpact();
+                                      context.read<ChatBloc>().add(
+                                            ReplyMessageEvent(chat),
+                                          );
+                                      return false;
+                                    },
+                                    background: Container(
+                                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: Icon(
+                                        Icons.reply,
+                                        color: theme.disabledColor,
+                                      ),
                                     ),
-                                    chat,
-                                  );
-                                }
+                                    child: Container(
+                                      width: double.infinity,
+                                      color: isSelected ? colorScheme.primary.withOpacity(0.15) : Colors.transparent,
+                                      child: Align(
+                                        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                                        child: messageBubble(chat, isMe),
+                                      ),
+                                    ),
+                                  ),
+                                );
                               },
-                              child: Dismissible(
-                                key: ValueKey(chat.id),
-                                direction: isMe ? DismissDirection.endToStart : DismissDirection.startToEnd,
-                                confirmDismiss: (_) async {
-                                  if (isSelectionMode) return false;
-                                  HapticFeedback.mediumImpact();
-                                  context.read<ChatBloc>().add(
-                                        ReplyMessageEvent(chat),
-                                      );
-                                  return false;
-                                },
-                                background: Container(
-                                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child:  Icon(
-                                    Icons.reply,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                child: Container(
-                                  key: key,
-                                  width: double.infinity,
-                                  color: isSelected ? Colors.blue.withOpacity(0.15) : Colors.transparent,
-                                  child: Align(
-                                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                                    child: messageBubble(chat, isMe),
-                                  ),
-                                ),
-                              ),
                             );
                           },
                         ),
@@ -372,7 +376,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         horizontal: AppSize.width(context) * 0.054,
                         vertical: AppSize.height(context) * 0.020,
                       ),
-                      color:  Color(0xffCAD6FF),
+                      color: colorScheme.secondary,
                       child: Row(
                         children: [
                           GestureDetector(
@@ -382,7 +386,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             child: chatBarIcons(
                               context,
-                              image:  AssetImage(
+                              image: const AssetImage(
                                 "assets/images/chat_document.png",
                               ),
                               imgHeight: AppSize.height(context) * 0.047,
@@ -398,8 +402,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 filled: true,
                                 fillColor: Colors.white,
                                 hintText: state.editingMessage != null ? "Edit message..." : "Type a message",
-                                hintStyle: GoogleFonts.leagueSpartan(
-                                  color:  Color(0xff2260FF),
+                                hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.primary,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25),
@@ -443,11 +447,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             },
                             child: chatBarIcons(
                               context,
-                              image:  AssetImage(
+                              image: const AssetImage(
                                 "assets/images/send_icon.png",
                               ),
                               imgHeight: AppSize.height(context) * 0.023,
-                              color: Color(0xff2260FF),
+                              color: colorScheme.primary,
                               height: AppSize.height(context) * 0.018,
                             ),
                           ),
@@ -465,6 +469,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildReplyPreview(BuildContext context, ChatModel reply) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: const EdgeInsets.all(10),
@@ -474,8 +479,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       child: Row(
         children: [
-          Container(width: 4, height: 40, color:  Color(0xff2260FF)),
-           SizedBox(width: 8),
+          Container(width: 4, height: 40, color: colorScheme.primary),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -484,7 +489,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   reply.senderId == user?.uid ? "You" : widget.receiverName ?? "",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff2260FF),
+                    color: colorScheme.primary,
                   ),
                 ),
                 Text(
@@ -501,7 +506,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           GestureDetector(
             onTap: () => context.read<ChatBloc>().add(CancelReply()),
-            child:  Icon(Icons.close),
+            child: const Icon(Icons.close),
           ),
         ],
       ),
@@ -511,23 +516,26 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget messageBubble(ChatModel chat, bool isMe) {
     return BlocBuilder<ChatBloc, ChatState>(
       buildWhen: (previous, current) {
-        return previous.selectedMessages != current.selectedMessages;
+        final wasSelected = previous.selectedMessages.any((m) => m.id == chat.id);
+        final isNowSelected = current.selectedMessages.any((m) => m.id == chat.id);
+        return wasSelected != isNowSelected;
       },
       builder: (context, state) {
+        final theme = Theme.of(context);
         return Column(
           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-             SizedBox(height: 03),
+            const SizedBox(height: 3),
             Container(
               constraints: BoxConstraints(maxWidth: AppSize.width(context) * 0.75),
-              padding:  EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isMe ? AppColors.lightPurple : Colors.grey.shade300,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(isMe ? 14 : 0),
                   topRight: Radius.circular(isMe ? 0 : 14),
-                  bottomLeft:  Radius.circular(14),
-                  bottomRight:  Radius.circular(16),
+                  bottomLeft: const Radius.circular(14),
+                  bottomRight: const Radius.circular(16),
                 ),
               ),
               child: Column(
@@ -545,13 +553,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ? fileContent(chat, context)
                                 : Text(
                                     chat.message ?? '',
-                                    style:  TextStyle(fontSize: 14),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 16
+                                    ),
                                   ),
                       ),
-                       SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         formatTime(chat.timestamp),
-                        style:  TextStyle(fontSize: 10, color: Colors.black54),
+                        style: theme.textTheme.labelSmall?.copyWith(color: Colors.black54,height: 0.5),
                       ),
                     ],
                   ),
@@ -566,7 +576,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: _buildReactionWidgets(chat.reaction),
                 ),
               ),
-             SizedBox(height: 03),
+            const SizedBox(height: 3),
           ],
         );
       },
@@ -596,12 +606,12 @@ class _ChatScreenState extends State<ChatScreen> {
               color: isMe ? Colors.blue : Colors.green,
             ),
           ),
-           SizedBox(height: 2),
+          const SizedBox(height: 2),
           Text(
             chat.replyMessage!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(fontSize: 11),
+            style: const TextStyle(fontSize: 11),
           ),
         ],
       ),
@@ -619,7 +629,7 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.only(right: 4),
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300),
         ),
@@ -647,7 +657,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: TweenAnimationBuilder(
                 duration: const Duration(milliseconds: 150),
                 tween: Tween(begin: 0.8, end: 1.0),
-                builder: (context, value, child) => Transform.scale(scale: value as double, child: child),
+                builder: (context, value, child) => Transform.scale(scale: value.toDouble(), child: child),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -699,7 +709,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _reactionOverlay = null;
   }
 
-  PopupMenuItem<String> _buildMenuItem(String title) {
+  PopupMenuItem<String> _buildMenuItem(BuildContext context, String title) {
     return PopupMenuItem<String>(
       value: title,
       padding: EdgeInsets.zero,
@@ -708,11 +718,7 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Text(
           title,
-          style: GoogleFonts.leagueSpartan(
-            color: AppColors.black,
-            fontWeight: FontWeight.w400,
-            fontSize: 18,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     );

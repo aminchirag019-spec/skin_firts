@@ -1,11 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/sharedpref_helper.dart';
@@ -19,7 +15,7 @@ import '../../global/coustom_widgets.dart';
 import '../../Utilities/media_query.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,6 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return WillPopScope(
       onWillPop: () async {
         context.go(RouterName.welcomeScreen.path);
@@ -43,8 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.064, // 25
-              vertical: AppSize.height(context) * 0.017, // 15
+              horizontal: AppSize.width(context) * 0.064,
+              vertical: AppSize.height(context) * 0.017,
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -55,47 +54,44 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: AppString.logIn,
                     onPressed: () => context.go(RouterName.welcomeScreen.path),
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011), // 10
+                  SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
                     children: [
                       Text(
                         AppString.welcome,
-                        style: GoogleFonts.leagueSpartan(
-                          fontSize: AppSize.width(context) * 0.061, // 24
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.darkPurple),
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ],
                   ),
-
                   Form(
                     key: formKey,
                     child: Column(
                       children: [
-                        SizedBox(height: AppSize.height(context) * 0.004), // 4
+                        SizedBox(height: AppSize.height(context) * 0.004),
                         Text(
                           AppString.loreum,
-                          style: GoogleFonts.leagueSpartan(
-                            fontSize: AppSize.width(context) * 0.035, // 14
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             letterSpacing: -0.7,
                             height: 0.9,
                             fontWeight: FontWeight.w300,
-                            color: const Color(0xff070707),
+                            color: AppColors.black,
                           ),
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.035), // 30
+                        SizedBox(height: AppSize.height(context) * 0.035),
                         Row(
                           children: [
                             Text(
                               AppString.loginLabel,
-                              style: GoogleFonts.leagueSpartan(
-                                fontSize: AppSize.width(context) * 0.053, // 21
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.005), // 5
+                        SizedBox(height: AppSize.height(context) * 0.005),
                         coustomTextField(
                           context: context,
                           controller: emailController,
@@ -104,19 +100,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           w: 10,
                           validator: Validators().validateEmail,
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.017), // 15
+                        SizedBox(height: AppSize.height(context) * 0.017),
                         Row(
                           children: [
                             Text(
                               AppString.passwordLable,
-                              style: GoogleFonts.leagueSpartan(
-                                fontSize: AppSize.width(context) * 0.053, // 21
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.005), // 5
+                        SizedBox(height: AppSize.height(context) * 0.005),
                         coustomTextField(
                           context: context,
                           controller: passwordController,
@@ -124,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "••••••••",
                           image: const AssetImage("assets/images/obsecure_image.png"),
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.005), // 5
+                        SizedBox(height: AppSize.height(context) * 0.005),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -134,77 +129,69 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: Text(
                                 AppString.forgotPass,
-                                style: GoogleFonts.leagueSpartan(
-                                  fontSize: AppSize.width(context) * 0.033, // 13
+                                style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w500,
-                                  color:AppColors.darkPurple
+                                  color: colorScheme.primary,
                                 ),
                               ),
                             ),
-                            SizedBox(width: AppSize.width(context) * 0.025), // 10
+                            SizedBox(width: AppSize.width(context) * 0.025),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.035), // 30
+                  SizedBox(height: AppSize.height(context) * 0.035),
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) async {
-
                       if (state.loginStatus == LoginStatus.success) {
-
                         String? userId = await SharedPrefsHelper.getUserId();
-
                         if (userId != null) {
-
                           context.go(RouterName.fingerAuthenticationScreen.path);
-                          // context.go(RouterName.chatListScreen.path);
                         }
                       }
                     },
                     builder: (context, state) {
                       if (state.loginStatus == LoginStatus.loading) {
-                        return  Center(
+                        return const Center(
                           child: CupertinoActivityIndicator(),
                         );
                       }
                       return customButton(
                         context,
                         text: AppString.logIn,
-                        backgroundColor: AppColors.darkPurple,
-                        textColor: AppColors.white,
-                        width: AppSize.width(context) * 0.512, // 200
+                        backgroundColor: colorScheme.primary,
+                        textColor: Colors.white,
+                        width: AppSize.width(context) * 0.512,
                         onPressed: () async {
                           if (!formKey.currentState!.validate()) return;
-
                           context.read<AuthBloc>().add(
-                            LoginEvent(
-                              loginModel: LoginModel(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            ),
-                          );
+                                LoginEvent(
+                                  loginModel: LoginModel(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  ),
+                                ),
+                              );
                         },
                       );
                     },
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011), // 10
+                  SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Center(
                         child: Text(
                           AppString.signupOptionTitle,
-                          style: GoogleFonts.leagueSpartan(
-                            fontSize: AppSize.width(context) * 0.033, // 13
+                          style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011), // 10
+                  SizedBox(height: AppSize.height(context) * 0.011),
                   loginRow(
                     context,
                     icons: [
@@ -215,37 +202,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
                       LoginRow(
                         svgPath: "assets/images/finger_svg.svg",
-                        // onTap: () => context.go(
-                        //   RouterName.fingerAuthenticationScreen.path,
-                        // ),
                         onTap: () => context.go(
                           RouterName.fingerAuthenticationScreen.path,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.041), // 35
+                  SizedBox(height: AppSize.height(context) * 0.041),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         AppString.dontHaveAccount,
-                        style: GoogleFonts.leagueSpartan(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w300,
-                          fontSize: AppSize.width(context) * 0.035, // 14
                         ),
                       ),
-                      SizedBox(width: AppSize.width(context) * 0.005), // 2
+                      SizedBox(width: AppSize.width(context) * 0.005),
                       GestureDetector(
                         onTap: () {
                           context.go(RouterName.signupScreen.path);
                         },
                         child: Text(
                           AppString.signUp,
-                          style: GoogleFonts.leagueSpartan(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
-                            fontSize: AppSize.width(context) * 0.035, // 14
-                            color: AppColors.darkPurple
+                            color: colorScheme.primary,
                           ),
                         ),
                       ),

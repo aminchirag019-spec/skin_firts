@@ -30,187 +30,194 @@ class _ChatListScreenState extends State<ChatListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Color(0xffF7F8FA),
-          body: state.role == null
-              ? Center(child: CircularProgressIndicator())
-              : SafeArea(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
+        return WillPopScope(
+          onWillPop: () async {
+            context.go(RouterName.profileScreen.path);
+            return false;
+
+          },
+          child: Scaffold(
+            backgroundColor: Color(0xffF7F8FA),
+            body: state.role == null
+                ? Center(child: CircularProgressIndicator())
+                : SafeArea(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  context.go(RouterName.profileScreen.path);
+                                },
+                                child: Icon(Icons.arrow_back_ios),
+                              ),
+                              Text(
+                                state.role == "doctor" ? "Patients" : "Doctors",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundColor: AppColors.blue,
+                                child: Icon(Icons.person, color: AppColors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context.go(RouterName.profileScreen.path);
-                              },
-                              child: Icon(Icons.arrow_back_ios),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            Text(
-                              state.role == "doctor" ? "Patients" : "Doctors",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.search),
+                                hintText: "Search...",
+                                border: InputBorder.none,
                               ),
                             ),
-                            CircleAvatar(
-                              radius: 22,
-                              backgroundColor: AppColors.blue,
-                              child: Icon(Icons.person, color: AppColors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.search),
-                              hintText: "Search...",
-                              border: InputBorder.none,
-                            ),
                           ),
                         ),
-                      ),
 
-                      SizedBox(height: 10),
+                        SizedBox(height: 10),
 
-                      Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          itemCount: state.role == "user"
-                              ? state.doctors.length
-                              : state.users.length,
-                          itemBuilder: (context, index) {
-                            final item = state.role == "user"
-                                ? state.doctors[index]
-                                : state.users[index];
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            itemCount: state.role == "user"
+                                ? state.doctors.length
+                                : state.users.length,
+                            itemBuilder: (context, index) {
+                              final item = state.role == "user"
+                                  ? state.doctors[index]
+                                  : state.users[index];
 
-                            return GestureDetector(
-                              onTap: () async {
-                                context.push(
-                                  RouterName.chatScreen.path,
-                                  extra: {
-                                    "receiverId": item.uid,
-                                    "receiverName": item.name,
-                                  },
-                                );
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 6),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 28,
-                                          backgroundColor: Color(0xffE0E7FF),
-                                          child: Icon(Icons.person, size: 30),
-                                        ),
-
-                                        Positioned(
-                                          bottom: 2,
-                                          right: 2,
-                                          child: Container(
-                                            height: 12,
-                                            width: 12,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              border: Border.all(
-                                                color: AppColors.white,
-                                                width: 2,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                              return GestureDetector(
+                                onTap: () async {
+                                  context.push(
+                                    RouterName.chatScreen.path,
+                                    extra: {
+                                      "receiverId": item.uid,
+                                      "receiverName": item.name,
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Stack(
                                         children: [
-                                          Text(
-                                            item.name,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          CircleAvatar(
+                                            radius: 28,
+                                            backgroundColor: Color(0xffE0E7FF),
+                                            child: Icon(Icons.person, size: 30),
                                           ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            item.email,
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: AppColors.grey,
+
+                                          Positioned(
+                                            bottom: 2,
+                                            right: 2,
+                                            child: Container(
+                                              height: 12,
+                                              width: 12,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.green,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                  color: AppColors.white,
+                                                  width: 2,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
+                                      SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.name,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              item.email,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: AppColors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
 
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "2:30 PM",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.grey,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "2:30 PM",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(height: 6),
-                                        BlocBuilder<ChatBloc, ChatState>(
-                                          builder: (context, state) {
-                                            return Container(
-                                              padding: const EdgeInsets.all(6),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.blue,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Text(
-                                                state.chats!.length.toString(),
-                                                style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 10,
+                                          SizedBox(height: 6),
+                                          BlocBuilder<ChatBloc, ChatState>(
+                                            builder: (context, state) {
+                                              return Container(
+                                                padding: const EdgeInsets.all(6),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.blue,
+                                                  shape: BoxShape.circle,
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                                child: Text(
+                                                  state.chats!.length.toString(),
+                                                  style: TextStyle(
+                                                    color: AppColors.white,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+          ),
         );
       },
     );
