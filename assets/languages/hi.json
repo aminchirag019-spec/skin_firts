@@ -30,7 +30,7 @@
   "setting": "सेटिंग",
   "logout": "लॉग आउट",
   "profile": "प्रोफाइल",
-  "notificationSetting": "सूचना सेटिंग",
+  "Notification Setting": "सूचना सेटिंग",
   "passWordManager": "पासवर्ड मैनेजर",
   "deleteAccount": "खाता हटाएं",
   "Payment Method": "भुगतान विधि",
@@ -64,5 +64,7 @@
   "thu": "गुरु",
   "fri": "शुक्र",
   "sat": "शनिवार",
-  "sun": "रवि"
+  "sun": "रवि",
+  "Dr. Olivia Turner, M.D.":"डॉ. ओलिविया टर्नर, एम.डी.",
+  "treatment": "त्वचा और फोटो डर्मेटाइटिस\n के उपचार और रोकथाम।"
 }

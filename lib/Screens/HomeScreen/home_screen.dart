@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Global/coustom_widgets.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final localization = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toString();
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FB),
@@ -65,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                // 🌐 Localized "Hi" and the name is pre-translated by AuthBloc
                                 "${localization?.translate("welcome") ?? "Hi"}, ${state.currentUser?.name ?? ""} ",
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: colorScheme.primary,
@@ -213,46 +215,60 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: SizedBox(
                                   height: AppSize.height(context) * 0.082,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: appointmentDates.length,
-                                    itemBuilder: (context, index) {
-                                      final item = appointmentDates[index];
-                                      bool isSelected = index == 2 || index == 4 || index == 5;
-                                      return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: AppSize.width(context) * 0.012,
-                                        ),
-                                        child: Container(
-                                          width: AppSize.width(context) * 0.115,
-                                          decoration: BoxDecoration(
-                                            color: isSelected ? colorScheme.primary : AppColors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              AppSize.width(context) * 0.051,
+                                  child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                                    builder: (context, state) {
+                                      return ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: appointmentDates.length,
+                                        itemBuilder: (context, index) {
+                                          final item = appointmentDates[index];
+                                          bool isSelected = index == state.selectedDateIndex;
+
+                                          final dateStr = DateFormat.d(locale).format(item.date);
+                                          final localizedDateStr = localization?.formatNumber(dateStr) ?? dateStr;
+                                          final dayStr = DateFormat.E(locale).format(item.date).toUpperCase();
+
+                                          return GestureDetector(
+                                            onTap: () {
+                                              context.read<DoctorScreenBloc>().add(SelectDateEvent(index));
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: AppSize.width(context) * 0.012,
+                                              ),
+                                              child: Container(
+                                                width: AppSize.width(context) * 0.115,
+                                                decoration: BoxDecoration(
+                                                  color: isSelected ? colorScheme.primary : AppColors.white,
+                                                  borderRadius: BorderRadius.circular(
+                                                    AppSize.width(context) * 0.051,
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      localizedDateStr,
+                                                      style: TextStyle(
+                                                        fontSize: AppSize.width(context) * 0.064,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: isSelected ? Colors.white : AppColors.black,
+                                                        height: 1,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      dayStr,
+                                                      style: TextStyle(
+                                                        fontSize: AppSize.width(context) * 0.030,
+                                                        color: isSelected ? Colors.white : Colors.black54,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                item.date.toString(),
-                                                style: TextStyle(
-                                                  fontSize: AppSize.width(context) * 0.064,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected ? Colors.white : AppColors.black,
-                                                  height: 1,
-                                                ),
-                                              ),
-                                              Text(
-                                                item.day,
-                                                style: TextStyle(
-                                                  fontSize: AppSize.width(context) * 0.030,
-                                                  color: isSelected ? Colors.white : Colors.black54,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                          );
+                                        },
                                       );
                                     },
                                   ),

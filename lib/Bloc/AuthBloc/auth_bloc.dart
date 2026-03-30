@@ -23,8 +23,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this.repository, this.biometricAuthService, this.prefsHelper, this.localeBloc)
     : super( AuthState()) {
-    
-    // 🌐 Automatically re-fetch user details when language changes
     _localeSubscription = localeBloc.stream.listen((localeState) {
       print("🌐 AuthBloc: Language changed to ${localeState.locale.languageCode}. Re-fetching user...");
       add(LoadCurrentUser());

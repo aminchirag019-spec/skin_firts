@@ -238,7 +238,7 @@ Widget appointmentInformation(BuildContext context) {
                   top: AppSize.height(context) * 0.008,
                   left: AppSize.width(context) * 0.051,
                   child: Text(
-                    "Dr. Olivia Turner, M.D.",
+                    localization?.translate("Dr. Olivia Turner, M.D.") ?? "Dr. Olivia Turner, M.D.",
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: colorScheme.primary,
@@ -249,7 +249,7 @@ Widget appointmentInformation(BuildContext context) {
                   top: AppSize.height(context) * 0.033,
                   left: AppSize.width(context) * 0.051,
                   child: Text(
-                    "Treatment and prevention of\nskin and photodermatitis.",
+                    localization?.translate("treatment") ?? "treatment",
                     style: theme.textTheme.bodySmall?.copyWith(
                       height: 0.8,
                       letterSpacing: 0.2,

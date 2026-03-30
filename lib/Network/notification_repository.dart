@@ -25,7 +25,7 @@ class NotificationRepository {
     }
   }
 
-  Future<List<NotificationModel>> getNotifications() async {
+  Future<List<NotificationModel>> getNotifications({String? langCode}) async {
     try {
       if (user == null) {
         print("User is null");

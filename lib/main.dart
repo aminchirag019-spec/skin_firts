@@ -36,6 +36,7 @@ void main() async {
 
   final authRepository = AuthRepository();
   final notificationService = NotificationService();
+  final notificationRepository = NotificationRepository();
 
   runApp(
     MultiBlocProvider(
@@ -55,11 +56,14 @@ void main() async {
             authRepository,
             BiometricAuthService(),
             SharedPrefsHelper(),
-            LocaleBloc()
+            context.read<LocaleBloc>(),
           ),
         ),
         BlocProvider(
-          create: (context) => NotificationBloc(NotificationRepository()),
+          create: (context) => NotificationBloc(
+            notificationRepository,
+            context.read<LocaleBloc>(),
+          ),
         ),
         BlocProvider(create: (context) => ChatBloc(ChatRepository())),
       ],

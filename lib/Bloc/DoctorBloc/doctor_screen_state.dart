@@ -13,6 +13,7 @@ class DoctorScreenState extends Equatable {
   final AddDoctor? doctorDetails;
   final List<ServiceModel> service;
   final bool isPasswordHidden;
+  final int selectedDateIndex;
 
   const DoctorScreenState({
     this.service = const [],
@@ -23,6 +24,7 @@ class DoctorScreenState extends Equatable {
     this.selectedFilter = DoctorFilter.none,
     this.isTab = true,
     this.isPasswordHidden = true,
+    this.selectedDateIndex = 0,
     this.switches = const [false, false, true, false, false, true, true, true],
   });
 
@@ -36,6 +38,7 @@ class DoctorScreenState extends Equatable {
     List<ServiceModel>? service,
     List<bool>? switches,
     bool? isPasswordHidden,
+    int? selectedDateIndex,
   }) {
     return DoctorScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
@@ -47,6 +50,7 @@ class DoctorScreenState extends Equatable {
       service: service ?? this.service,
       switches: switches ?? this.switches,
       isPasswordHidden: isPasswordHidden ?? this.isPasswordHidden,
+      selectedDateIndex: selectedDateIndex ?? this.selectedDateIndex,
     );
   }
 
@@ -61,5 +65,6 @@ class DoctorScreenState extends Equatable {
     service,
     switches,
     isPasswordHidden,
+    selectedDateIndex,
   ];
 }

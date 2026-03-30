@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Utilities/colors.dart';
@@ -200,47 +201,26 @@ Widget customButton(BuildContext context, {
 }
 
 class Days {
-  final int date;
+  final DateTime date;
   final String day;
 
   Days({required this.date, required this.day});
 }
 
-List<Days> appointmentDates = [
-  Days(date: 6, day: "THU"),
-  Days(date: 7, day: "FRI"),
-  Days(date: 8, day: "SAT"),
-  Days(date: 9, day: "SUN"),
-  Days(date: 10, day: "MON"),
-  Days(date: 11, day: "TUE"),
-  Days(date: 12, day: "WED"),
-  Days(date: 13, day: "THU"),
-  Days(date: 14, day: "FRI"),
-  Days(date: 15, day: "SAT"),
-  Days(date: 16, day: "SUN"),
-  Days(date: 17, day: "MON"),
-  Days(date: 18, day: "TUE"),
-  Days(date: 19, day: "WED"),
-  Days(date: 20, day: "THU"),
-  Days(date: 21, day: "FRI"),
-  Days(date: 22, day: "SAT"),
-  Days(date: 23, day: "SUN"),
-  Days(date: 24, day: "MON"),
-  Days(date: 25, day: "TUE"),
-  Days(date: 26, day: "WED"),
-  Days(date: 27, day: "THU"),
-  Days(date: 28, day: "FRI"),
-  Days(date: 29, day: "SAT"),
-  Days(date: 30, day: "SUN"),
+List<Days> getDynamicAppointmentDates() {
+  List<Days> dates = [];
+  DateTime now = DateTime.now();
+  for (int i = 0; i < 30; i++) {
+    DateTime current = now.add(Duration(days: i));
+    dates.add(Days(
+      date: current,
+      day: DateFormat('EEE').format(current).toUpperCase(),
+    ));
+  }
+  return dates;
+}
 
-  /// next month
-  Days(date: 1, day: "MON"),
-  Days(date: 2, day: "TUE"),
-  Days(date: 3, day: "WED"),
-  Days(date: 4, day: "THU"),
-  Days(date: 5, day: "FRI"),
-  Days(date: 6, day: "SAT"),
-];
+List<Days> appointmentDates = getDynamicAppointmentDates();
 
 Widget homeCircleIcon(BuildContext context,
     String svgPath, {

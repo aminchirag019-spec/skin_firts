@@ -55,3 +55,8 @@ class SwitchEvent extends DoctorScreenEvent {
 }
 
 class TogglePasswordVisibility extends DoctorScreenEvent {}
+
+class SelectDateEvent extends DoctorScreenEvent {
+  final int index;
+  SelectDateEvent(this.index);
+}

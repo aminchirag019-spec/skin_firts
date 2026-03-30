@@ -37,6 +37,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<GetServiceEvent>(_onGetServiceEvent);
     on<SwitchEvent>(_onSwitch);
     on<TogglePasswordVisibility>(_onTogglePasswordVisibility);
+    on<SelectDateEvent>(_onSelectDate);
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -45,6 +46,10 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   Future<void> close() {
     _localeSubscription?.cancel();
     return super.close();
+  }
+
+  void _onSelectDate(SelectDateEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedDateIndex: event.index));
   }
 
   void _onTogglePasswordVisibility(TogglePasswordVisibility event, Emitter<DoctorScreenState> emit) {

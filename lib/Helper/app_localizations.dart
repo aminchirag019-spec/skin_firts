@@ -32,6 +32,27 @@ class AppLocalizations {
   String translate(String key) {
     return localizedStrings[key] ?? key;
   }
+
+  /// 🌐 Converts numbers to native script based on locale
+  String formatNumber(String input) {
+    if (locale.languageCode == 'en') return input;
+
+    const Map<String, Map<String, String>> digitMap = {
+      'hi': {
+        '0': '०', '1': '१', '2': '२', '3': '३', '4': '४',
+        '5': '५', '6': '६', '7': '७', '8': '८', '9': '९'
+      },
+      'gu': {
+        '0': '૦', '1': '૧', '2': '૨', '3': '૩', '4': '૪',
+        '5': '૫', '6': '૬', '7': '૭', '8': '૮', '9': '૯'
+      },
+    };
+
+    final currentMap = digitMap[locale.languageCode];
+    if (currentMap == null) return input;
+
+    return input.split('').map((char) => currentMap[char] ?? char).join('');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

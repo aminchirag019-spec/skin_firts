@@ -80,6 +80,9 @@ class _MessageScreenState extends State<MessageScreen> {
                         itemCount: state.notifications.length,
                         itemBuilder: (context, index) {
                           final notification = state.notifications[index];
+                          final translatedTitle = localization?.translate(notification.title) ?? notification.title;
+                          final translatedBody = localization?.translate(notification.body) ?? notification.body;
+
                           return GestureDetector(
                             onTap: () {
                               context.go(RouterName.chatScreen.path);
@@ -119,7 +122,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          notification.title,
+                                          translatedTitle,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: theme.textTheme.titleMedium?.copyWith(
@@ -127,7 +130,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                           ),
                                         ),
                                         Text(
-                                          notification.body,
+                                          translatedBody,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: theme.textTheme.bodyMedium?.copyWith(
@@ -138,7 +141,6 @@ class _MessageScreenState extends State<MessageScreen> {
                                       ],
                                     ),
                                   ),
-                                  // Text(notificationFormatTime(notification.timestamp))
                                 ],
                               ),
                             ),
