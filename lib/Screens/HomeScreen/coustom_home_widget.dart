@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,16 +7,25 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Utilities/colors.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
-import 'home_screen.dart';
 
 Widget doctorInformationCard() {
   return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
     builder: (context, state) {
+      final theme = Theme.of(context);
+      final colorScheme = theme.colorScheme;
+      final localization = AppLocalizations.of(context);
+
       if (state.getDoctor.isEmpty) {
-        return const Center(child: Text("No Doctors Found"));
+        return Center(
+          child: Text(
+            localization?.translate('noDoctorsFound') ?? "No Doctors Found",
+            style: theme.textTheme.bodyMedium,
+          ),
+        );
       }
       return ListView.builder(
         scrollDirection: Axis.vertical,
@@ -25,11 +33,12 @@ Widget doctorInformationCard() {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final doctor = state.getDoctor[index];
+          final langCode = Localizations.localeOf(context).languageCode;
+
           return Padding(
             padding: EdgeInsets.symmetric(
               vertical: AppSize.height(context) * 0.005,
-              // 5
-              horizontal: AppSize.width(context) * 0.051, // 20
+              horizontal: AppSize.width(context) * 0.051,
             ),
             child: GestureDetector(
               onTap: () {
@@ -37,21 +46,21 @@ Widget doctorInformationCard() {
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppSize.width(context) * 0.035, // 14
-                  vertical: AppSize.height(context) * 0.009, // 8
+                  horizontal: AppSize.width(context) * 0.035,
+                  vertical: AppSize.height(context) * 0.009,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xffCAD6FF).withOpacity(0.6),
+                  color: colorScheme.secondary.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(
                     AppSize.width(context) * 0.064,
-                  ), // 25
+                  ),
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: AppSize.width(context) * 0.087, // 34
+                      radius: AppSize.width(context) * 0.087,
                       backgroundColor: Colors.white,
-                      backgroundImage:  AssetImage(
+                      backgroundImage: const AssetImage(
                         "assets/images/user_image.png",
                       ),
                     ),
@@ -71,28 +80,23 @@ Widget doctorInformationCard() {
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    AppSize.width(context) * 0.030,
+                                horizontal: AppSize.width(context) * 0.030,
                                 vertical: AppSize.height(context) * 0.005,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "${doctor.doctorName},${doctor.qualification}",
-                                    style: GoogleFonts.leagueSpartan(
-                                      fontSize:
-                                          AppSize.width(context) * 0.038, // 14
+                                    "${doctor.getLocalized(doctor.doctorName, langCode, localization)}, ${doctor.getLocalized(doctor.qualification, langCode, localization)}",
+                                    style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w600,
-                                      color:  Color(0xff2260FF),
+                                      color: colorScheme.primary,
                                       height: 1,
                                     ),
                                   ),
                                   Text(
-                                    "${doctor.specialization}",
-                                    style: GoogleFonts.leagueSpartan(
-                                      fontSize:
-                                          AppSize.width(context) * 0.033, // 13
+                                    doctor.getLocalized(doctor.specialization, langCode, localization),
+                                    style: theme.textTheme.bodySmall?.copyWith(
                                       color: Colors.black87,
                                       height: 0.9,
                                     ),
@@ -102,16 +106,14 @@ Widget doctorInformationCard() {
                             ),
                           ),
                           SizedBox(height: AppSize.height(context) * 0.005),
-                          // 5
                           Row(
                             children: [
                               infoBadge(
                                 context,
                                 "assets/images/star_svg.svg",
-                                "5",
+                                doctor.rating.toString(),
                               ),
                               SizedBox(width: AppSize.width(context) * 0.025),
-                              // 10
                               infoBadge(
                                 context,
                                 "assets/images/meesage_svg.svg",
@@ -124,24 +126,17 @@ Widget doctorInformationCard() {
                                 isBlue: true,
                               ),
                               SizedBox(width: AppSize.width(context) * 0.012),
-                              BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-                                builder: (context, state) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      context.read<DoctorScreenBloc>().add(
-                                        LikedEvent(doctor.id,
-                                        !doctor.isLiked),
+                              GestureDetector(
+                                onTap: () {
+                                  context.read<DoctorScreenBloc>().add(
+                                        LikedEvent(doctor.id, !doctor.isLiked),
                                       );
-                                    },
-                                    child: circleIcon(
-                                      context,
-                                      doctor.isLiked
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      isBlue: true,
-                                    ),
-                                  );
                                 },
+                                child: circleIcon(
+                                  context,
+                                  doctor.isLiked ? Icons.favorite : Icons.favorite_border,
+                                  isBlue: true,
+                                ),
                               ),
                             ],
                           ),
@@ -161,24 +156,27 @@ Widget doctorInformationCard() {
 }
 
 Widget appointmentInformation(BuildContext context) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+  final localization = AppLocalizations.of(context);
+
   return Container(
-    height: AppSize.height(context) * 0.154, // 130
+    height: AppSize.height(context) * 0.154,
     width: AppSize.width(context) * 3,
     decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(AppSize.width(context) * 0.064), // 25
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(AppSize.width(context) * 0.064),
     ),
     child: Stack(
       children: [
         Positioned(
-          left: AppSize.width(context) * 0.5, // 155
-          top: AppSize.height(context) * 0.011, // 10
+          left: AppSize.width(context) * 0.5,
+          top: AppSize.height(context) * 0.011,
           child: Text(
-            "11 Wednesday - Today",
-            style: GoogleFonts.leagueSpartan(
-              color: AppColors.darkPurple,
+            "11 Wednesday - ${localization?.translate('today') ?? "Today"}",
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.primary,
               letterSpacing: 0.6,
-              fontSize: AppSize.width(context) * 0.035,
             ),
           ),
         ),
@@ -186,115 +184,100 @@ Widget appointmentInformation(BuildContext context) {
           top: AppSize.height(context) * 0.027,
           left: AppSize.width(context) * 0.128,
           right: AppSize.width(context) * 0.128,
-          child: Divider(color: AppColors.darkPurple, thickness: 1),
+          child: Divider(color: colorScheme.primary, thickness: 1),
         ),
         Positioned(
           bottom: AppSize.height(context) * 0.015,
           left: AppSize.width(context) * 0.128,
           right: AppSize.width(context) * 0.128,
-          child: Divider(color: AppColors.darkPurple, thickness: 1),
+          child: Divider(color: colorScheme.primary, thickness: 1),
         ),
         Positioned(
-          top: AppSize.height(context) * 0.017, // 15
-          left: AppSize.width(context) * 0.025, // 10
+          top: AppSize.height(context) * 0.017,
+          left: AppSize.width(context) * 0.025,
           child: Column(
             children: [
-              SizedBox(height: AppSize.height(context) * 0.009), // 8
+              SizedBox(height: AppSize.height(context) * 0.009),
               Text(
                 "9 AM",
-                style: GoogleFonts.leagueSpartan(
-                  color: AppColors.darkPurple,
-                  fontSize: AppSize.width(context) * 0.035,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
-              SizedBox(height: AppSize.height(context) * 0.009), // 8
+              SizedBox(height: AppSize.height(context) * 0.009),
               Text(
                 "10 AM",
-                style: GoogleFonts.leagueSpartan(
-                  color: AppColors.darkPurple,
-                  fontSize: AppSize.width(context) * 0.035,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
-              SizedBox(height: AppSize.height(context) * 0.009), // 8
+              SizedBox(height: AppSize.height(context) * 0.009),
               Text(
                 "11 AM",
-                style: GoogleFonts.leagueSpartan(
-                  color: AppColors.darkPurple,
-                  fontSize: AppSize.width(context) * 0.035,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
-              SizedBox(height: AppSize.height(context) * 0.005), // 5
+              SizedBox(height: AppSize.height(context) * 0.005),
               Text(
                 "12 AM",
-                style: GoogleFonts.leagueSpartan(
-                  color: AppColors.darkPurple,
-                  fontSize: AppSize.width(context) * 0.035,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
             ],
           ),
         ),
         Positioned(
-          top: AppSize.height(context) * 0.047, // 40
-          left: AppSize.width(context) * 0.141, // 55
+          top: AppSize.height(context) * 0.047,
+          left: AppSize.width(context) * 0.141,
           child: Container(
-            height: AppSize.height(context) * 0.071, // 60
-            width: AppSize.width(context) * 0.641, // 250
+            height: AppSize.height(context) * 0.071,
+            width: AppSize.width(context) * 0.641,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
-                AppSize.width(context) * 0.051, // 20
+                AppSize.width(context) * 0.051,
               ),
-              color: AppColors.lightPurple,
+              color: colorScheme.secondary,
             ),
             child: Stack(
               children: [
                 Positioned(
-                  top: AppSize.height(context) * 0.008, // 7
-                  left: AppSize.width(context) * 0.051, // 20
+                  top: AppSize.height(context) * 0.008,
+                  left: AppSize.width(context) * 0.051,
                   child: Text(
                     "Dr. Olivia Turner, M.D.",
-                    style: GoogleFonts.leagueSpartan(
-                      fontSize: AppSize.width(context) * 0.041, // 16
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.darkPurple,
+                      color: colorScheme.primary,
                     ),
                   ),
                 ),
                 Positioned(
-                  top: AppSize.height(context) * 0.033, // 28
-                  left: AppSize.width(context) * 0.051, // 20
+                  top: AppSize.height(context) * 0.033,
+                  left: AppSize.width(context) * 0.051,
                   child: Text(
                     "Treatment and prevention of\nskin and photodermatitis.",
-                    style: GoogleFonts.leagueSpartan(
-                      fontSize: AppSize.width(context) * 0.038,
-                      fontWeight: FontWeight.w300,
+                    style: theme.textTheme.bodySmall?.copyWith(
                       height: 0.8,
                       letterSpacing: 0.2,
                     ),
                   ),
                 ),
                 Positioned(
-                  top: AppSize.height(context) * 0.009, // 8
-                  right: AppSize.width(context) * 0.025, // 10
+                  top: AppSize.height(context) * 0.009,
+                  right: AppSize.width(context) * 0.025,
                   child: Row(
                     children: [
                       Container(
-                        height: AppSize.width(context) * 0.038, // 15
-                        width: AppSize.width(context) * 0.038, // 15
-                        decoration:  BoxDecoration(
-                          color: AppColors.white,
+                        height: 15,
+                        width: 15,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage("assets/images/right_icon.png"),
                           ),
                         ),
                       ),
-                      SizedBox(width: AppSize.width(context) * 0.015), // 6
+                      const SizedBox(width: 6),
                       Container(
-                        height: AppSize.width(context) * 0.038, // 15
-                        width: AppSize.width(context) * 0.038, // 15
-                        decoration:  BoxDecoration(
-                          color: AppColors.white,
+                        height: 15,
+                        width: 15,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage("assets/images/wrong_icon.png"),
@@ -314,19 +297,16 @@ Widget appointmentInformation(BuildContext context) {
 }
 
 Widget circleIcon(BuildContext context, IconData icon, {bool isBlue = false}) {
+  final colorScheme = Theme.of(context).colorScheme;
   return Container(
-    height: AppSize.width(context) * 0.056, // 22
-    width: AppSize.width(context) * 0.056, // 22
+    height: 22,
+    width: 22,
     decoration: const BoxDecoration(
-      color: AppColors.white,
+      color: Colors.white,
       shape: BoxShape.circle,
     ),
     child: Center(
-      child: Icon(
-        icon,
-        size: AppSize.width(context) * 0.038,
-        color: AppColors.darkPurple
-      ), // 15
+      child: Icon(icon, size: 15, color: colorScheme.primary),
     ),
   );
 }
@@ -337,31 +317,31 @@ Widget infoBadge(
   String text, {
   double width = 50,
 }) {
+  final colorScheme = Theme.of(context).colorScheme;
   return Container(
     width: AppSize.width(context) * (width / 390.0),
-    height: AppSize.height(context) * 0.026, // 22
+    height: 22,
     decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(AppSize.width(context) * 0.051), // 20
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(width: AppSize.width(context) * 0.012), // 5
+        const SizedBox(width: 5),
         SvgPicture.asset(
           svgPath,
-          height: AppSize.width(context) * 0.041, // 16
-          width: AppSize.width(context) * 0.041, // 16
-          color: AppColors.darkPurple
+          height: 16,
+          width: 16,
+          color: colorScheme.primary,
         ),
-        SizedBox(width: AppSize.width(context) * 0.010), // 4
+        const SizedBox(width: 4),
         Text(
           text,
-          style: TextStyle(
-            color: AppColors.darkPurple,
-            fontWeight: FontWeight.w300,
-            fontSize: AppSize.width(context) * 0.030, // 12
-          ),
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w300,
+              ),
         ),
       ],
     ),

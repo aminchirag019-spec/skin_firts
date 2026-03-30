@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,7 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:skin_firts/Data/auth_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
-import 'package:skin_firts/main.dart';
+import 'package:skin_firts/Bloc/LocaleBloc/locale_bloc.dart';
 
 import '../../Helper/sharedpref_helper.dart';
 import '../../Utilities/bio_metric.dart';
@@ -17,8 +18,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository repository;
   final BiometricAuthService biometricAuthService;
   final SharedPrefsHelper prefsHelper;
-  AuthBloc(this.repository, this.biometricAuthService, this.prefsHelper)
+  final LocaleBloc localeBloc;
+  StreamSubscription? _localeSubscription;
+
+  AuthBloc(this.repository, this.biometricAuthService, this.prefsHelper, this.localeBloc)
     : super( AuthState()) {
+    
+    // 🌐 Automatically re-fetch user details when language changes
+    _localeSubscription = localeBloc.stream.listen((localeState) {
+      print("🌐 AuthBloc: Language changed to ${localeState.locale.languageCode}. Re-fetching user...");
+      add(LoadCurrentUser());
+    });
+
     on<SignUpEvent>(_onSignUpEvent);
     on<LoginEvent>(_onLoginEvent);
     on<BiometricLoginEvent>(_onBiometricLoginEvent);
@@ -30,6 +41,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SelectRoleEvent>(selectedRoleMethod);
     on<LoadChatListEvent>(onLoadChatList);
   }
+
+  String get _currentLang => localeBloc.state.locale.languageCode;
+
+  @override
+  Future<void> close() {
+    _localeSubscription?.cancel();
+    return super.close();
+  }
+
   void _onUpdatePasswordEvent(
       UpdatePasswordEvent event,
       Emitter<AuthState> emit,
@@ -104,16 +124,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onLoadCurrentUser(LoadCurrentUser event, Emitter<AuthState> emit) async{
-    final user =await repository.getCurrentUserDetails();
-
+    print("AuthBloc: Loading user for lang: $_currentLang");
+    final user = await repository.getCurrentUserDetails(langCode: _currentLang);
     emit(state.copyWith(currentUser: user));
-
+    print("AuthBloc: User loaded - Name: ${user?.name}");
   }
 
   void _onLogoutEvent(LogoutEvent event, Emitter<AuthState> emit) async {
     String? userId = await SharedPrefsHelper.getUserId();
 
-    await AuthRepository().logout();
+    await repository.logout();
 
     if (userId != null) {
       await SharedPrefsHelper.logout(userId);
@@ -196,6 +216,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           loginModel: event.loginModel,
         ),
       );
+      // Load current user immediately after login
+      add(LoadCurrentUser());
     } catch (e) {
       emit(state.copyWith(loginStatus: LoginStatus.failure));
     }
@@ -212,6 +234,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           signupModel: event.signupModel,
         ),
       );
+      add(LoadCurrentUser());
     } catch (e) {
       emit(state.copyWith(signupStatus: SignupStatus.failure));
     }
@@ -224,7 +247,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
 
     try {
-      final currentUser = await repository.getCurrentUserDetails();
+      final currentUser = await repository.getCurrentUserDetails(langCode: _currentLang);
       final role = currentUser?.role;
 
       if (role == "user") {

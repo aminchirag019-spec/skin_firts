@@ -47,10 +47,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
               unselectedItemColor: Colors.white70,
               items: [
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/bottom_home2.svg",
-                    height: AppSize.width(context) * 0.056, // 22
-                    width: AppSize.width(context) * 0.056, // 22
+                  icon: Icon(Icons.home,
+                    size: 25,
                     color: widget.navigationShell.currentIndex == 0
                         ? AppColors.selectedColor
                         : AppColors.white,
@@ -58,21 +56,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   label: "",
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/bottom_message.svg",
-                    height: AppSize.width(context) * 0.056, // 22
-                    width: AppSize.width(context) * 0.056, // 22
-                    color: widget.navigationShell.currentIndex == 1
+                  icon: Icon(Icons.access_time_filled_outlined,size: 25,color: widget.navigationShell.currentIndex == 1
                         ? AppColors.selectedColor
                         : AppColors.white,
                   ),
                   label: "",
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/bottom_user.svg",
-                    height: AppSize.width(context) * 0.056, // 22
-                    width: AppSize.width(context) * 0.056, // 22
+                  icon:   Icon(Icons.person,size: 25, // 22
                     color: widget.navigationShell.currentIndex == 2
                         ? AppColors.selectedColor
                         : AppColors.white,
@@ -80,10 +71,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   label: "",
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/images/bottom_calender.svg",
-                    height: AppSize.width(context) * 0.056, // 22
-                    width: AppSize.width(context) * 0.056, // 22
+                  icon: Icon(Icons.calendar_month,size: 25, // 22
                     color: widget.navigationShell.currentIndex == 3
                         ? AppColors.selectedColor
                         : AppColors.white,

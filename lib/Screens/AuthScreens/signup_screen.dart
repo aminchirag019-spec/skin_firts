@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Global/enums.dart';
-
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
@@ -58,13 +57,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ChoiceChip(
-                            label:  Text(localization?.translate("user") ?? "user"),
+                            label: Text(localization?.translate("user") ?? "User"),
                             selected: state.selectedRole == "user",
                             onSelected: (_) {
                               context.read<AuthBloc>().add( SelectRoleEvent("user"));
                             },
                           ),
-                           SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           ChoiceChip(
                             label: Text(localization?.translate('doctors') ?? "Doctor"),
                             selected: state.selectedRole == "doctor",
@@ -76,13 +75,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     },
                   ),
-                   SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   topRow(
                     context,
                     onPressed: () {
                       context.go(RouterName.loginScreen.path);
                     },
-                    text: localization?.translate('New Account') ?? "New Account",
+                    text: localization?.translate('newAccount') ?? "New Account",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   Row(
@@ -110,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Row(
                           children: [
                             Text(
-                              localization?.translate('passwordLable') ?? "Password",
+                              localization?.translate('password') ?? "password",
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),

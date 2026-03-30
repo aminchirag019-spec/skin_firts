@@ -65,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Hi, ${state.currentUser?.name ?? ""} ",
+                                // 🌐 Localized "Hi" and the name is pre-translated by AuthBloc
+                                "${localization?.translate("welcome") ?? "Hi"}, ${state.currentUser?.name ?? ""} ",
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: colorScheme.primary,
                                   fontWeight: FontWeight.w300,
@@ -231,9 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           child: Column(
-
-
-                                           mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 item.date.toString(),

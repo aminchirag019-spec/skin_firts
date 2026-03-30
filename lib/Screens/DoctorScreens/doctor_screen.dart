@@ -5,9 +5,9 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/DoctorScreens/coustom_doctor_widget.dart';
-
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/dummy_data.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 import 'doctor_info_screen.dart';
@@ -31,6 +31,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -50,7 +51,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   children: [
                     doctorsTopRow(
                       context,
-                      text: "Doctors",
+                      text: localization?.translate('doctors') ?? "Doctors",
                       onPressed: () => context.go(RouterName.homeScreen.path),
                     ),
                     SizedBox(height: AppSize.height(context) * 0.023),
@@ -58,7 +59,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Sort By",
+                          localization?.translate('sortBy') ?? "Sort By",
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300,
                             height: 1,
@@ -134,14 +135,17 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       ],
                     ),
                     SizedBox(height: AppSize.height(context) * 0.011),
-                    if (state.selectedFilter == DoctorFilter.liked) likedBar() else Container(),
+                    if (state.selectedFilter == DoctorFilter.liked) likedBar(
+                      text: localization?.translate('doctors') ?? "Doctors",
+                      title: localization?.translate('services') ?? "Services",
+                    ) else Container(),
                     SizedBox(height: AppSize.height(context) * 0.011),
                     state.isTab
                         ? Expanded(child: doctorDetailsCard())
                         : Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: serviceDetails(),
+                              // child: serviceDetails(),
                             ),
                           ),
                   ],

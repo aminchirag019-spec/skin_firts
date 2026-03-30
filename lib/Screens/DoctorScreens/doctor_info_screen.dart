@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
-import '../../Global/dummy_data.dart';
+import 'package:skin_firts/Global/dummy_data.dart';
 import '../../Global/enums.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 
@@ -23,6 +24,8 @@ class DoctorInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
+    final langCode = Localizations.localeOf(context).languageCode;
 
     return WillPopScope(
       onWillPop: () async {
@@ -44,7 +47,7 @@ class DoctorInfoScreen extends StatelessWidget {
                     children: [
                       doctorsTopRow(
                         context,
-                        text: "Doctor Info",
+                        text: localization?.translate('info') ?? "Doctor Info",
                         onPressed: () {
                           context.go(RouterName.doctorScreen.path);
                         },
@@ -126,12 +129,12 @@ class DoctorInfoScreen extends StatelessWidget {
                                               height: 0.9,
                                             ),
                                             children: [
-                                              const TextSpan(
-                                                text: "Focus: ",
-                                                style: TextStyle(fontWeight: FontWeight.bold),
+                                              TextSpan(
+                                                text: "${localization?.translate('focus') ?? 'Focus'}: ",
+                                                style: const TextStyle(fontWeight: FontWeight.bold),
                                               ),
                                               TextSpan(
-                                                text: data?.description ?? "",
+                                                text: data?.getLocalized(data?.description, langCode, localization) ?? "",
                                               ),
                                             ],
                                           ),
@@ -153,7 +156,7 @@ class DoctorInfoScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    "${data?.doctorName ?? ""},${data?.qualification ?? ""}",
+                                    "${data?.getLocalized(data?.doctorName, langCode, localization) ?? ""}, ${data?.getLocalized(data?.qualification, langCode, localization) ?? ""}",
                                     style: theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: colorScheme.primary,
@@ -162,7 +165,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    data?.specialization ?? "",
+                                    data?.getLocalized(data?.specialization, langCode, localization) ?? "",
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w300,
                                       height: 1,
@@ -241,7 +244,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        "Schedule",
+                                        localization?.translate('schedule') ?? "Schedule",
                                         style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
                                       ),
                                     ],
@@ -280,7 +283,7 @@ class DoctorInfoScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Profile",
+                            localization?.translate('profile') ?? "Profile",
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.w500,
@@ -292,7 +295,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.profile ?? "",
+                              data?.getLocalized(data?.profile, langCode, localization) ?? "",
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),
@@ -304,7 +307,7 @@ class DoctorInfoScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Career Path",
+                            localization?.translate('careerPath') ?? "Career Path",
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.w500,
@@ -316,7 +319,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.careerPath ?? "",
+                              data?.getLocalized(data?.careerPath, langCode, localization) ?? "",
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),
@@ -328,7 +331,7 @@ class DoctorInfoScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Highlights",
+                            localization?.translate('highlights') ?? "Highlights",
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.w500,
@@ -340,7 +343,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.highlights ?? "",
+                              data?.getLocalized(data?.highlights, langCode, localization) ?? "",
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),

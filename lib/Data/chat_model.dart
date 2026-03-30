@@ -61,7 +61,6 @@ class ChatModel {
     );
   }
 
-  /// JSON → Object (Firestore safe)
   factory ChatModel.fromJson(Map<String, dynamic> json, String docId) {
     return ChatModel(
       id: docId,

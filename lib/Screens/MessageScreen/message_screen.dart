@@ -52,7 +52,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 topRow(
                   context,
                   onPressed: () => context.go(RouterName.homeScreen.path),
-                  text: localization?.translate('notification') ?? "Notification",
+                  text: localization?.translate('Notification') ?? "Notification",
                 ),
                 SizedBox(height: AppSize.height(context) * 0.023),
                 Row(

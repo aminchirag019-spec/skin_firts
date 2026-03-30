@@ -103,11 +103,11 @@ class HelpCentreScreen extends StatelessWidget {
                         ),
                         child: likedBar(text: "FAQ", title: "Contact Us"),
                       ),
-                      Expanded(
-                        child: state.isTab
-                            ? serviceDetails()   // should contain ListView
-                            : doctorDetailsCard(),
-                      ),
+                      // Expanded(
+                      //   child: state.isTab
+                      //       ? serviceDetails()   // should contain ListView
+                      //       : doctorDetailsCard(),
+                      // ),
                     ],
                   ),
                 )

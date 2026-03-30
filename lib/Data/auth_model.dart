@@ -1,4 +1,6 @@
-class SignupModel {
+import 'package:equatable/equatable.dart';
+
+class SignupModel extends Equatable {
   final String uid;
   final String email;
   final String password;
@@ -7,7 +9,7 @@ class SignupModel {
   final String dob;
   final String role;
 
-  SignupModel({
+  const SignupModel({
     required this.email,
     required this.password,
     required this.name,
@@ -61,13 +63,16 @@ class SignupModel {
       uid: json["uid"] ?? '',
     );
   }
+
+  @override
+  List<Object?> get props => [uid, email, name, phone, dob, role];
 }
 
-class LoginModel {
+class LoginModel extends Equatable {
   final String email;
   final String password;
 
-  LoginModel({required this.email, required this.password});
+  const LoginModel({required this.email, required this.password});
 
   LoginModel copyWith({String? email, String? password}) {
     return LoginModel(
@@ -79,4 +84,7 @@ class LoginModel {
   Map<String, dynamic> toJson() {
     return {"email": email, "password": password};
   }
+
+  @override
+  List<Object?> get props => [email, password];
 }

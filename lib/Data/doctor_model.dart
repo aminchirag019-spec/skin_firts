@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Helper/app_localizations.dart';
+import '../Network/translation_repository.dart';
 
 class AddDoctor {
   final String id;
-  final String doctorName;
-  final String qualification;
+  final dynamic doctorName;
+  final dynamic qualification;
   final String experience;
-  final String specialization;
+  final dynamic specialization;
   final String availability;
-  final String description;
-  final String profile;
-  final String careerPath;
-  final String highlights;
+  final dynamic description;
+  final dynamic profile;
+  final dynamic careerPath;
+  final dynamic highlights;
   final bool isLiked;
   final double rating;
   final String email;
@@ -32,18 +34,40 @@ class AddDoctor {
     required this.email,
     required this.gender,
   });
+  String getLocalized(dynamic field, String langCode, AppLocalizations? localization) {
+    if (field == null) return "";
+    
+    if (field is Map) {
+      return (field[langCode] ?? field['en'] ?? field.values.first).toString();
+    }
+    
+    final fieldStr = field.toString();
+    if (localization != null) {
+      final translated = localization.translate(fieldStr);
+      if (translated != fieldStr) return translated;
+    }
+    return fieldStr;
+  }
+  Future<String> getLocalizedAsync(dynamic field, String langCode, AppLocalizations? localization) async {
+    final basicResult = getLocalized(field, langCode, localization);
+    if (langCode != 'en' && basicResult.isNotEmpty) {
+      return await TranslationService.translate(basicResult, langCode);
+    }
+    
+    return basicResult;
+  }
 
   AddDoctor copyWith({
     String? id,
-    String? doctorName,
+    dynamic doctorName,
     String? experience,
-    String? specialization,
+    dynamic specialization,
     String? availability,
-    String? description,
-    String? profile,
-    String? careerPath,
-    String? highlights,
-    String? qualification,
+    dynamic description,
+    dynamic profile,
+    dynamic careerPath,
+    dynamic highlights,
+    dynamic qualification,
     bool? isLiked,
     double? rating,
     String? email,
@@ -67,7 +91,6 @@ class AddDoctor {
     );
   }
 
-  /// Convert Model → JSON (for Firebase)
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -87,7 +110,6 @@ class AddDoctor {
     };
   }
 
-  /// Convert JSON → Model (from Firebase)
   factory AddDoctor.fromJson(Map<String, dynamic> json, String id) {
     return AddDoctor(
       id: id,
@@ -101,7 +123,7 @@ class AddDoctor {
       highlights: json["highlights"] ?? "",
       qualification: json["qualification"] ?? "",
       isLiked: json["isLiked"] ?? false,
-      rating: json["rating"] ?? 0.0,
+      rating: (json["rating"] ?? 0.0).toDouble(),
       email: json["email"] ?? "",
       gender: json["gender"] ?? "",
     );
@@ -109,10 +131,36 @@ class AddDoctor {
 }
 
 class ServiceModel {
-  final String title;
-  final String discription;
+  final dynamic title;
+  final dynamic discription;
 
   ServiceModel({required this.title, required this.discription});
+
+  String getLocalizedTitle(String langCode) {
+    if (title is Map) return (title[langCode] ?? title['en'] ?? "").toString();
+    return title.toString();
+  }
+
+  Future<String> getLocalizedTitleAsync(String langCode) async {
+    final text = getLocalizedTitle(langCode);
+    if (langCode != 'en' && text.isNotEmpty) {
+      return await TranslationService.translate(text, langCode);
+    }
+    return text;
+  }
+
+  String getLocalizedDesc(String langCode) {
+    if (discription is Map) return (discription[langCode] ?? discription['en'] ?? "").toString();
+    return discription.toString();
+  }
+
+  Future<String> getLocalizedDescAsync(String langCode) async {
+    final text = getLocalizedDesc(langCode);
+    if (langCode != 'en' && text.isNotEmpty) {
+      return await TranslationService.translate(text, langCode);
+    }
+    return text;
+  }
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
@@ -123,22 +171,20 @@ class ServiceModel {
 }
 
 class NotificationModel {
-  final String title;
-  final String body;
+  final dynamic title;
+  final dynamic body;
   final Timestamp? createdAt;
 
   NotificationModel({required this.title, required this.body, this.createdAt});
 
-  NotificationModel copyWith({
-    String? title,
-    String? body,
-    Timestamp? createdAt,
-  }) {
-    return NotificationModel(
-      title: title ?? this.title,
-      body: body ?? this.body,
-      createdAt: createdAt ?? this.createdAt,
-    );
+  String getLocalizedTitle(String langCode) {
+    if (title is Map) return (title[langCode] ?? title['en'] ?? "").toString();
+    return title.toString();
+  }
+
+  String getLocalizedBody(String langCode) {
+    if (body is Map) return (body[langCode] ?? body['en'] ?? "").toString();
+    return body.toString();
   }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -151,7 +197,6 @@ class NotificationModel {
     );
   }
 
-  /// Convert Model -> JSON
   Map<String, dynamic> toJson() {
     return {
       'title': title,

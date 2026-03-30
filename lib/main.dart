@@ -33,27 +33,35 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: AppColors.darkPurple),
   );
+
+  final authRepository = AuthRepository();
+  final notificationService = NotificationService();
+
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              DoctorScreenBloc(AuthRepository(), NotificationService()),
+          create: (context) => LocaleBloc()..add(LoadStoredLocale()),
+        ),
+        BlocProvider(
+          create: (context) => DoctorScreenBloc(
+            authRepository,
+            notificationService,
+            context.read<LocaleBloc>(),
+          ),
         ),
         BlocProvider(
           create: (context) => AuthBloc(
-            AuthRepository(),
+            authRepository,
             BiometricAuthService(),
             SharedPrefsHelper(),
+            LocaleBloc()
           ),
         ),
         BlocProvider(
           create: (context) => NotificationBloc(NotificationRepository()),
         ),
         BlocProvider(create: (context) => ChatBloc(ChatRepository())),
-        BlocProvider(
-          create: (context) => LocaleBloc()..add(LoadStoredLocale()),
-        ),
       ],
       child: const MyApp(),
     ),
