@@ -1,4 +1,3 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -259,6 +258,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.white,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 const Spacer(),
                                 chatBarIcons(
@@ -554,7 +555,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             ? imageContent(chat, context)
                             : chat.chatType == ChatType.file
                                 ? fileContent(chat, context)
-                                : ChatBubbleText(chat: chat, isMe: isMe),
+                                : DynamicTranslatedText(
+                                    text: chat.message ?? "",
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 16,
+                                    ),
+                                  ),
                       ),
                       const SizedBox(width: 8),
                       Text(

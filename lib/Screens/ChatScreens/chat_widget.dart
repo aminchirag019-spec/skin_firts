@@ -4,17 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:skin_firts/Helper/app_localizations.dart';
 import 'package:skin_firts/Network/translation_repository.dart';
-import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/ChatBloc/chat_bloc.dart';
 import '../../Bloc/ChatBloc/chat_event.dart';
 import '../../Data/chat_model.dart';
 import '../../Global/enums.dart';
 import '../../Utilities/media_query.dart';
-import '../../Utilities/time_zones.dart';
-import '../../main.dart';
 
 final ImagePicker picker = ImagePicker();
 
@@ -69,24 +65,24 @@ void showAttachmentOptions(BuildContext context, String receiverId) {
       return Wrap(
         children: [
           ListTile(
-            leading: Icon(Icons.camera_alt),
-            title: Text("Camera"),
+            leading: const Icon(Icons.camera_alt),
+            title: const Text("Camera"),
             onTap: () {
               Navigator.pop(context);
               pickFromCamera(context, receiverId);
             },
           ),
           ListTile(
-            leading: Icon(Icons.image),
-            title: Text("Gallery"),
+            leading: const Icon(Icons.image),
+            title: const Text("Gallery"),
             onTap: () {
               Navigator.pop(context);
               pickFromGallery(context, receiverId);
             },
           ),
           ListTile(
-            leading: Icon(Icons.insert_drive_file),
-            title: Text("File"),
+            leading: const Icon(Icons.insert_drive_file),
+            title: const Text("File"),
             onTap: () {
               Navigator.pop(context);
               pickFile(context, receiverId);
@@ -159,59 +155,19 @@ Widget imageContent(ChatModel chat, BuildContext context) {
   );
 }
 
-class ChatBubbleText extends StatefulWidget {
-  final ChatModel chat;
-  final bool isMe;
-
-  const ChatBubbleText({super.key, required this.chat, required this.isMe});
-
-  @override
-  State<ChatBubbleText> createState() => _ChatBubbleTextState();
-}
-
-class _ChatBubbleTextState extends State<ChatBubbleText> {
-  String? translatedText;
-  String? lastLocale;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final currentLocale = Localizations.localeOf(context).languageCode;
-    if (lastLocale != currentLocale) {
-      lastLocale = currentLocale;
-      _translateMessage();
-    }
-  }
-
-  Future<void> _translateMessage() async {
-    if (lastLocale == 'en' || widget.chat.chatType != ChatType.text) {
-      if (mounted) setState(() => translatedText = widget.chat.message);
-      return;
-    }
-
-    final result = await TranslationService.translate(
-      widget.chat.message ?? "",
-      lastLocale!,
-    );
-    if (mounted) setState(() => translatedText = result);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      translatedText ?? widget.chat.message ?? "",
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontSize: 16,
-          ),
-    );
-  }
-}
-
 class DynamicTranslatedText extends StatefulWidget {
   final String text;
   final TextStyle? style;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
-  const DynamicTranslatedText({super.key, required this.text, this.style});
+  const DynamicTranslatedText({
+    super.key,
+    required this.text,
+    this.style,
+    this.maxLines,
+    this.overflow,
+  });
 
   @override
   State<DynamicTranslatedText> createState() => _DynamicTranslatedTextState();
@@ -220,6 +176,14 @@ class DynamicTranslatedText extends StatefulWidget {
 class _DynamicTranslatedTextState extends State<DynamicTranslatedText> {
   String? translatedText;
   String? lastLocale;
+
+  @override
+  void didUpdateWidget(covariant DynamicTranslatedText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _translateText();
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -232,7 +196,7 @@ class _DynamicTranslatedTextState extends State<DynamicTranslatedText> {
   }
 
   Future<void> _translateText() async {
-    if (lastLocale == 'en') {
+    if (lastLocale == 'en' || widget.text.isEmpty) {
       if (mounted) setState(() => translatedText = widget.text);
       return;
     }
@@ -249,8 +213,8 @@ class _DynamicTranslatedTextState extends State<DynamicTranslatedText> {
     return Text(
       translatedText ?? widget.text,
       style: widget.style,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      maxLines: widget.maxLines,
+      overflow: widget.overflow,
     );
   }
 }
