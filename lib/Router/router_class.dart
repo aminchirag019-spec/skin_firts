@@ -1,5 +1,4 @@
 
-
 enum RouterName {
   loginScreen('/LoginScreen','LoginScreen'),
   signupScreen('/SignupScreen','SignupScreen'),
@@ -11,6 +10,7 @@ enum RouterName {
   doctorScreen('/DoctorScreen','DoctorScreen'),
   doctorInfoScreen('/DoctorInfoScreen','DoctorInfoScreen'),
   appointmentScreen('/AppointmentScreen','AppointmentScreen'),
+  scheduleScreen('/ScheduleScreen','ScheduleScreen'),
   messageScreen('/MessageScreen','MessageScreen'),
   profileScreen('/ProfileScreen','ProfileScreen'),
   settingScreen('/SettingScreen','SettingScreen'),

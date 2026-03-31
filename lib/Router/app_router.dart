@@ -19,6 +19,7 @@ import 'package:skin_firts/screens/authScreens/splash_screen.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 import '../Data/doctor_model.dart';
+import '../Screens/AppointmentScreen/schedule_screen.dart';
 import '../Screens/ChatScreens/chat_list_screen.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/ChatScreens/chat_screen.dart';
@@ -74,6 +75,7 @@ final GoRouter app_router = GoRouter(
                 return DoctorInfoScreen(data: data);
               },
             ),
+
           ],
         ),
         StatefulShellBranch(
@@ -95,8 +97,11 @@ final GoRouter app_router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouterName.chatListScreen.path,
-              builder: (context, state) => ChatListScreen(),
+              path: RouterName.appointmentScreen.path,
+              builder: (context, state) {
+                final data = state.extra as AddDoctor?;
+                return AppointmentScreen(doctor: data);
+              },
             ),
           ],
         ),
@@ -148,5 +153,7 @@ final GoRouter app_router = GoRouter(
       path: RouterName.helpCentreScreen.path,
       builder: (context, state) => HelpCentreScreen(),
     ),
+    GoRoute(path: RouterName.scheduleScreen.path,
+        builder: (context, state) => ScheduleScreen())
   ],
 );
