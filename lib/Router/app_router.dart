@@ -95,8 +95,8 @@ final GoRouter app_router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouterName.appointmentScreen.path,
-              builder: (context, state) => AppointmentScreen(),
+              path: RouterName.chatListScreen.path,
+              builder: (context, state) => ChatListScreen(),
             ),
           ],
         ),

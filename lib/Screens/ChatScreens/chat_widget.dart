@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:skin_firts/Helper/app_localizations.dart';
+import 'package:skin_firts/Network/translation_repository.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 
 import '../../Bloc/ChatBloc/chat_bloc.dart';
@@ -155,4 +157,100 @@ Widget imageContent(ChatModel chat, BuildContext context) {
       ),
     ),
   );
+}
+
+class ChatBubbleText extends StatefulWidget {
+  final ChatModel chat;
+  final bool isMe;
+
+  const ChatBubbleText({super.key, required this.chat, required this.isMe});
+
+  @override
+  State<ChatBubbleText> createState() => _ChatBubbleTextState();
+}
+
+class _ChatBubbleTextState extends State<ChatBubbleText> {
+  String? translatedText;
+  String? lastLocale;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentLocale = Localizations.localeOf(context).languageCode;
+    if (lastLocale != currentLocale) {
+      lastLocale = currentLocale;
+      _translateMessage();
+    }
+  }
+
+  Future<void> _translateMessage() async {
+    if (lastLocale == 'en' || widget.chat.chatType != ChatType.text) {
+      if (mounted) setState(() => translatedText = widget.chat.message);
+      return;
+    }
+
+    final result = await TranslationService.translate(
+      widget.chat.message ?? "",
+      lastLocale!,
+    );
+    if (mounted) setState(() => translatedText = result);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      translatedText ?? widget.chat.message ?? "",
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontSize: 16,
+          ),
+    );
+  }
+}
+
+class DynamicTranslatedText extends StatefulWidget {
+  final String text;
+  final TextStyle? style;
+
+  const DynamicTranslatedText({super.key, required this.text, this.style});
+
+  @override
+  State<DynamicTranslatedText> createState() => _DynamicTranslatedTextState();
+}
+
+class _DynamicTranslatedTextState extends State<DynamicTranslatedText> {
+  String? translatedText;
+  String? lastLocale;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentLocale = Localizations.localeOf(context).languageCode;
+    if (lastLocale != currentLocale) {
+      lastLocale = currentLocale;
+      _translateText();
+    }
+  }
+
+  Future<void> _translateText() async {
+    if (lastLocale == 'en') {
+      if (mounted) setState(() => translatedText = widget.text);
+      return;
+    }
+
+    final result = await TranslationService.translate(
+      widget.text,
+      lastLocale!,
+    );
+    if (mounted) setState(() => translatedText = result);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      translatedText ?? widget.text,
+      style: widget.style,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
 }

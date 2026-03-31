@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Helper/app_localizations.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import '../../Bloc/ChatBloc/chat_bloc.dart';
@@ -50,6 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final loc = AppLocalizations.of(context)!;
 
     return BlocConsumer<ChatBloc, ChatState>(
       listenWhen: (previous, current) =>
@@ -229,11 +231,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                       bloc.add(UnSelectMessageEvent());
                                     },
                                     itemBuilder: (context) => [
-                                      _buildMenuItem(context, "Verify security code"),
+                                      _buildMenuItem(context, loc.translate("verifySecurityCode")),
                                       _buildMenuItem(context, "Info"),
-                                      _buildMenuItem(context, "Copy"),
-                                      if (isMeSelected) _buildMenuItem(context, "Edit"),
-                                      _buildMenuItem(context, "Pin"),
+                                      _buildMenuItem(context, loc.translate("copy")),
+                                      if (isMeSelected) _buildMenuItem(context, loc.translate("edit")),
+                                      _buildMenuItem(context, loc.translate("pin")),
                                     ],
                                   ),
                               ],
@@ -250,11 +252,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.025),
-                                Text(
-                                  widget.receiverName ?? "",
-                                  style: theme.textTheme.headlineSmall?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
+                                DynamicTranslatedText(
+                                  text: widget.receiverName ?? "",
+                                  style: GoogleFonts.leagueSpartan(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.white,
                                   ),
                                 ),
                                 const Spacer(),
@@ -401,7 +404,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                hintText: state.editingMessage != null ? "Edit message..." : "Type a message",
+                                hintText: state.editingMessage != null ? "${loc.translate("editMessage")}" : loc.translate("typeMessage"),
                                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.primary,
                                 ),
@@ -551,12 +554,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ? imageContent(chat, context)
                             : chat.chatType == ChatType.file
                                 ? fileContent(chat, context)
-                                : Text(
-                                    chat.message ?? '',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontSize: 16
-                                    ),
-                                  ),
+                                : ChatBubbleText(chat: chat, isMe: isMe),
                       ),
                       const SizedBox(width: 8),
                       Text(

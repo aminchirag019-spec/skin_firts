@@ -56,7 +56,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   label: "",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.access_time_filled_outlined,size: 25,color: widget.navigationShell.currentIndex == 1
+                  icon: Icon(Icons.notifications_active_sharp,size: 25,color: widget.navigationShell.currentIndex == 1
                         ? AppColors.selectedColor
                         : AppColors.white,
                   ),
@@ -71,7 +71,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   label: "",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month,size: 25, // 22
+                  icon: Icon(Icons.list_alt,size: 25, // 22
                     color: widget.navigationShell.currentIndex == 3
                         ? AppColors.selectedColor
                         : AppColors.white,

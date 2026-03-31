@@ -81,6 +81,24 @@
   "9 AM": "९ बजे",
   "10 AM": "१० बजे",
   "11 AM": "११ बजे",
-  "12 PM": "१२ बजे"
-
+  "12 PM": "१२ बजे",
+  "New Message": "नया संदेश",
+  "new_message_prefix": "आपको एक नया संदेश मिला है: ",
+  "add_doctor_prefix": "आपने सफलतापूर्वक जोड़ा है: ",
+  "Error": "त्रुटि",
+  "Something went wrong": "कुछ गलत हो गया",
+  "patients": "मरीज",
+  "searchConversations": "बातचीत खोजें...",
+  "recentChats": "हाल की चैट",
+  "verifySecurityCode": "सुरक्षा कोड सत्यापित करें",
+  "copy": "कॉपी करें",
+  "edit": "संपादन",
+  "pin": "पिन",
+  "typeMessage": "एक संदेश टाइप करें",
+  "editMessage": "संदेश संपादित करें...",
+  "you": "आप",
+  "photo": "फोटो",
+  "file": "फ़ाइल",
+  "camera": "कैमरा",
+  "gallery": "गैलरी"
 }

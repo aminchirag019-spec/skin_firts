@@ -66,6 +66,25 @@
   "9 AM": "૯ વાગ્યે",
   "10 AM": "૧૦ વાગ્યે",
   "11 AM": "૧૧ વાગ્યે",
-  "12 PM": "૧૨ વાગ્યે"
-
+  "12 PM": "૧૨ વાગ્યે",
+  "New Message": "નવો સંદેશ",
+  "new_message_prefix": "તમને એક નવો સંદેશ મળ્યો છે: ",
+  "add_doctor_prefix": "તમે સફળતાપૂર્વક ઉમેર્યું છે: ",
+  "Error": "ભૂલ",
+  "Something went wrong": "કંઈક ખોટું થયું",
+  "markAll": "બધાને નિશાન કરો",
+  "patients": "દર્દીઓ",
+  "searchConversations": "વાતચીત શોધો...",
+  "recentChats": "તાજેતરની ચેટ્સ",
+  "verifySecurityCode": "સુરક્ષા કોડ ચકાસો",
+  "copy": "કોપી કરો",
+  "edit": "ફેરફાર કરો",
+  "pin": "પિન",
+  "typeMessage": "સંદેશ ટાઇપ કરો",
+  "editMessage": "સંદેશ ફેરફાર કરો...",
+  "you": "તમે",
+  "photo": "ફોટો",
+  "file": "ફાઇલ",
+  "camera": "કેમેરા",
+  "gallery": "ગેલેરી"
 }
