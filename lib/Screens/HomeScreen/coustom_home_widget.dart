@@ -173,7 +173,7 @@ Widget appointmentInformation(BuildContext context) {
           left: AppSize.width(context) * 0.5,
           top: AppSize.height(context) * 0.011,
           child: Text(
-            "11 Wednesday - ${localization?.translate('today') ?? "Today"}",
+            "${localization?.translate("11 Wednesday") ?? "11 Wednesday"} - ${localization?.translate('today') ?? "Today"}",
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.primary,
               letterSpacing: 0.6,
@@ -181,14 +181,14 @@ Widget appointmentInformation(BuildContext context) {
           ),
         ),
         Positioned(
-          top: AppSize.height(context) * 0.027,
-          left: AppSize.width(context) * 0.128,
+          top: AppSize.height(context) * 0.025,
+          left: AppSize.width(context) * 0.14,
           right: AppSize.width(context) * 0.128,
           child: Divider(color: colorScheme.primary, thickness: 1),
         ),
         Positioned(
           bottom: AppSize.height(context) * 0.015,
-          left: AppSize.width(context) * 0.128,
+          left: AppSize.width(context) * 0.145,
           right: AppSize.width(context) * 0.128,
           child: Divider(color: colorScheme.primary, thickness: 1),
         ),
@@ -199,22 +199,22 @@ Widget appointmentInformation(BuildContext context) {
             children: [
               SizedBox(height: AppSize.height(context) * 0.009),
               Text(
-                "9 AM",
+                  localization?.translate("9 AM") ?? "9 AM",
                 style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
               SizedBox(height: AppSize.height(context) * 0.009),
               Text(
-                "10 AM",
+                localization?.translate("10 AM")?? "10 AM",
                 style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
               SizedBox(height: AppSize.height(context) * 0.009),
               Text(
-                "11 AM",
+                localization?.translate("11 AM")??"11 AM",
                 style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
-              SizedBox(height: AppSize.height(context) * 0.005),
+              SizedBox(height: AppSize.height(context) * 0.012),
               Text(
-                "12 AM",
+                localization?.translate("12 PM")??"12 PM",
                 style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
               ),
             ],
@@ -222,7 +222,7 @@ Widget appointmentInformation(BuildContext context) {
         ),
         Positioned(
           top: AppSize.height(context) * 0.047,
-          left: AppSize.width(context) * 0.141,
+          left: AppSize.width(context) * 0.145,
           child: Container(
             height: AppSize.height(context) * 0.071,
             width: AppSize.width(context) * 0.641,
@@ -251,7 +251,7 @@ Widget appointmentInformation(BuildContext context) {
                   child: Text(
                     localization?.translate("treatment") ?? "treatment",
                     style: theme.textTheme.bodySmall?.copyWith(
-                      height: 0.8,
+                      height: 1,
                       letterSpacing: 0.2,
                     ),
                   ),
