@@ -93,7 +93,6 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                   backgroundColor: AppColors.darkPurple,
                   textColor: Colors.white,
                   onPressed: () {
-                    // Handle cancellation logic
                     context.pop();
                   },
                   width: double.infinity,

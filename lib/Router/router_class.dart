@@ -26,7 +26,9 @@ enum RouterName {
   notificationSetting('/NotificationScreen','NotificationScreen'),
   passwordManagerScreen('/PasswordManagerScreen','PasswordManagerScreen'),
   welcomeScreen('/WelcomeScreen','WelcomeScreen'),
-  reviewScreen('/ReviewScreen','ReviewScreen');
+  reviewScreen('/ReviewScreen','ReviewScreen'),
+  paymentMethodScreen('/PaymentMethodScreen','PaymentMethodScreen'),
+  addPaymentMethodScreen('/AddPaymentMethodScreen','AddPaymentMethodScreen');
 
 
   final String path;

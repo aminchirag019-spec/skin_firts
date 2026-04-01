@@ -268,10 +268,15 @@ class DoctorInfoScreen extends StatelessWidget {
                                   size: 18,
                                 ),
                                 const SizedBox(width: 3),
-                                servicesOptions(
-                                  context,
-                                  icon: Icons.star_outline,
-                                  size: 18,
+                                GestureDetector(
+                                  onTap: () {
+                                    context.push(RouterName.reviewScreen.path, extra: data);
+                                  },
+                                  child: servicesOptions(
+                                    context,
+                                    icon: Icons.star_outline,
+                                    size: 18,
+                                  ),
                                 ),
                                 const SizedBox(width: 3),
                                 servicesOptions(

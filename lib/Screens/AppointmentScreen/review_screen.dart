@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Global/coustom_widgets.dart';
 import '../../Data/doctor_model.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
-import 'doctor_info_screen.dart';
+import '../DoctorScreens/doctor_info_screen.dart';
 
 class ReviewScreen extends StatefulWidget {
   final AddDoctor? doctor;
@@ -32,10 +33,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
           child: Column(
             children: [
-              doctorsTopRow(
+              topRow(
                 context,
-                text: localization?.translate('review') ?? "Review",
-                onPressed: () => context.pop(),
+                text: localization?.translate('Review') ?? "Review",
+                onPressed: () => context.go(RouterName.appointmentScreen.path),
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -136,7 +137,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             ),
                           ),
                           child: Text(
-                            localization?.translate('add_review') ?? "Add Review",
+                            localization?.translate('Add Review') ?? "Add Review",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,

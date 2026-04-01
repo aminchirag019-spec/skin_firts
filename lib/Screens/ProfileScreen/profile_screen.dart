@@ -109,7 +109,9 @@ class ProfileScreen extends StatelessWidget {
                           "assets/images/wallet_icon.png",
                         ),
                         title: localization?.translate('Payment Method') ?? "Payment Method",
-                        onTap: () {},
+                        onTap: () {
+                          context.go(RouterName.paymentMethodScreen.path);
+                        },
                       ),
                       _space(context),
                       _ProfileOptionTile(
