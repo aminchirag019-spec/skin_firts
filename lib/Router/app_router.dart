@@ -4,7 +4,7 @@ import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/HelpCentreScreen/help_centre_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
-import 'package:skin_firts/Screens/ProfileScreen/edit_user.dart';
+import 'package:skin_firts/Screens/ProfileScreen/edit_user_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/password_manager_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/profile_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/setting_screen.dart';
@@ -46,7 +46,7 @@ final GoRouter app_router = GoRouter(
     ),
     GoRoute(
       path: RouterName.setPasswordScreen.path,
-      builder: (context, state) => SetPasswordScreen(),
+      builder: (context,state) => SetPasswordScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

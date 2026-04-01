@@ -70,8 +70,7 @@ Widget doctorInformationCard() {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: AppSize.width(context) * 0.769,
-                            height: AppSize.height(context) * 0.045,
+                            width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(
@@ -88,17 +87,18 @@ Widget doctorInformationCard() {
                                 children: [
                                   Text(
                                     "${doctor.getLocalized(doctor.doctorName, langCode, localization)}, ${doctor.getLocalized(doctor.qualification, langCode, localization)}",
+                                    overflow: TextOverflow.ellipsis,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: colorScheme.primary,
-                                      height: 1,
+                                      height: 1.2,
                                     ),
                                   ),
                                   Text(
                                     doctor.getLocalized(doctor.specialization, langCode, localization),
+                                    overflow: TextOverflow.ellipsis,
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       color: Colors.black87,
-                                      height: 0.9,
                                     ),
                                   ),
                                 ],
@@ -161,138 +161,122 @@ Widget appointmentInformation(BuildContext context) {
   final localization = AppLocalizations.of(context);
 
   return Container(
-    height: AppSize.height(context) * 0.154,
-    width: AppSize.width(context) * 3,
+    padding: EdgeInsets.all(AppSize.width(context) * 0.026),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(AppSize.width(context) * 0.064),
     ),
-    child: Stack(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Positioned(
-          left: AppSize.width(context) * 0.5,
-          top: AppSize.height(context) * 0.011,
-          child: Text(
-            "${localization?.translate("11 Wednesday") ?? "11 Wednesday"} - ${localization?.translate('today') ?? "Today"}",
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.primary,
-              letterSpacing: 0.6,
-            ),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: AppSize.height(context) * 0.017,),
+            _timeText(context, localization?.translate("9 AM") ?? "9 AM"),
+            _timeText(context, localization?.translate("10 AM") ?? "10 AM"),
+            _timeText(context, localization?.translate("11 AM") ?? "11 AM"),
+            _timeText(context, localization?.translate("12 PM") ?? "12 PM"),
+          ],
         ),
-        Positioned(
-          top: AppSize.height(context) * 0.025,
-          left: AppSize.width(context) * 0.14,
-          right: AppSize.width(context) * 0.128,
-          child: Divider(color: colorScheme.primary, thickness: 1),
-        ),
-        Positioned(
-          bottom: AppSize.height(context) * 0.015,
-          left: AppSize.width(context) * 0.145,
-          right: AppSize.width(context) * 0.128,
-          child: Divider(color: colorScheme.primary, thickness: 1),
-        ),
-        Positioned(
-          top: AppSize.height(context) * 0.017,
-          left: AppSize.width(context) * 0.025,
+        SizedBox(width: AppSize.width(context) * 0.03),
+        Expanded(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: AppSize.height(context) * 0.009),
-              Text(
-                  localization?.translate("9 AM") ?? "9 AM",
-                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-              ),
-              SizedBox(height: AppSize.height(context) * 0.009),
-              Text(
-                localization?.translate("10 AM")?? "10 AM",
-                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-              ),
-              SizedBox(height: AppSize.height(context) * 0.009),
-              Text(
-                localization?.translate("11 AM")??"11 AM",
-                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-              ),
-              SizedBox(height: AppSize.height(context) * 0.012),
-              Text(
-                localization?.translate("12 PM")??"12 PM",
-                style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.primary),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          top: AppSize.height(context) * 0.047,
-          left: AppSize.width(context) * 0.145,
-          child: Container(
-            height: AppSize.height(context) * 0.071,
-            width: AppSize.width(context) * 0.641,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                AppSize.width(context) * 0.051,
-              ),
-              color: colorScheme.secondary,
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: AppSize.height(context) * 0.008,
-                  left: AppSize.width(context) * 0.051,
-                  child: Text(
-                    localization?.translate("Dr. Olivia Turner, M.D.") ?? "Dr. Olivia Turner, M.D.",
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: AppSize.height(context) * 0.033,
-                  left: AppSize.width(context) * 0.051,
-                  child: Text(
-                    localization?.translate("treatment") ?? "treatment",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "${localization?.translate("11 Wednesday") ?? "11 Wednesday"} - ${localization?.translate('today') ?? "Today"}",
                     style: theme.textTheme.bodySmall?.copyWith(
-                      height: 1,
-                      letterSpacing: 0.2,
+                      color: colorScheme.primary,
+                      letterSpacing: 0.6,
                     ),
                   ),
+                ],
+              ),
+              Divider(color: colorScheme.primary.withOpacity(0.3)),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+                width: 240,
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(AppSize.width(context) * 0.04),
                 ),
-                Positioned(
-                  top: AppSize.height(context) * 0.009,
-                  right: AppSize.width(context) * 0.025,
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 15,
-                        width: 15,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/right_icon.png"),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5,vertical:0),
+                          child: Text(
+                            localization?.translate("Dr. Olivia Turner, M.D.") ?? "Dr. Olivia Turner, M.D.",
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.primary,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 6),
-                      Container(
-                        height: 15,
-                        width: 15,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/wrong_icon.png"),
+                        SizedBox(width: AppSize.width(context) * 0.07,),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Row(
+                            children: [
+                              _statusIcon("assets/images/right.svg.svg"),
+                              SizedBox(width: 5),
+                              _statusIcon("assets/images/wrong.svg.svg"),
+                            ],
                           ),
                         ),
+                      ],
+                    ),
+                    // SizedBox(height: 4),
+                    Text(
+                      localization?.translate(' Treatment and prevention of\n skin and photodermatitis.') ??
+                          "Treatment and prevention of skin and photodermatitis.",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        height: 1,
+                        fontSize: 13,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Divider(color: colorScheme.primary.withOpacity(0.3)),
+            ],
           ),
         ),
       ],
     ),
+  );
+}
+
+Widget _timeText(BuildContext context, String text) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: AppSize.height(context) * 0.0065),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 11,
+          ),
+    ),
+  );
+}
+
+Widget _statusIcon(String assetPath) {
+  return Container(
+    padding: EdgeInsetsGeometry.symmetric(vertical: 3,horizontal: 3),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      shape: BoxShape.circle,
+    ),
+    child: Center(child: SvgPicture.asset(assetPath,fit: BoxFit.cover,height: 7,width: 7,)),
   );
 }
 

@@ -66,7 +66,7 @@
   "sat": "शनिवार",
   "sun": "रवि",
   "Dr. Olivia Turner, M.D.":"डॉ. ओलिविया टर्नर, एम.डी.",
-  "treatment": "त्वचा और फोटो डर्मेटाइटिस\n के उपचार और रोकथाम।",
+  "Treatment and prevention of skin and photodermatitis.": "त्वचा और फोटो डर्मेटाइटिस\n के उपचार और रोकथाम।",
   "Specialization": "विशेषज्ञता",
   "qualification": "योग्यता",
   "Availybility": "उपलब्धता",
@@ -108,5 +108,9 @@
   "Please enter valid mobile number": "कृपया एक मान्य मोबाइल नंबर दर्ज करें",
   "Please enter your full name": "कृपया अपना पूरा नाम दर्ज करें",
   "DD/MM/YYYY": "दिन / माह / वर्ष",
-  "Please enter you birth date": "कृपया अपनी जन्म तिथि दर्ज करें"
+  "Please enter you birth date": "कृपया अपनी जन्म तिथि दर्ज करें",
+  "or use pin code":"या पिन कोड का उपयोग करें",
+  "Personal Information": "व्यक्तिगत जानकारी",
+  "Professional Details": "पेशेवर विवरण",
+  "Extra Details": "अतिरिक्त विवरण"
 }

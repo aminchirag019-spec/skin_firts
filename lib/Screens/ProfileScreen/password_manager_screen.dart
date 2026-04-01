@@ -147,3 +147,18 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
     );
   }
 }
+
+Widget title(BuildContext context, {required String title, double? size}) {
+  return Row(
+    children: [
+      SizedBox(width: AppSize.width(context) * 0.020),
+      Text(
+        title,
+        style: GoogleFonts.leagueSpartan(
+          fontSize: AppSize.width(context) * 0.046,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ],
+  );
+}

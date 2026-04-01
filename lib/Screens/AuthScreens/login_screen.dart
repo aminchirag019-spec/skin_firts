@@ -100,9 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText:
                               localization?.translate('emailExample') ??
                               "example@example.com",
-                          h: 14,
-                          w: 10,
-                          validator:(value) => Validators().validateEmail(context, value),
+                          validator: (value) =>
+                              Validators().validateEmail(context, value),
                         ),
                         SizedBox(height: AppSize.height(context) * 0.017),
                         Row(
@@ -119,7 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         coustomTextField(
                           context: context,
                           controller: passwordController,
-                          validator:(value) => Validators().validatePassword(context, value),
+                          validator: (value) =>
+                              Validators().validatePassword(context, value),
                           hintText: "••••••••",
                           image: const AssetImage(
                             "assets/images/obsecure_image.png",
@@ -212,9 +212,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
                       LoginRow(
                         svgPath: "assets/images/finger_svg.svg",
-                        onTap: () => context.go(
-                          RouterName.fingerAuthenticationScreen.path,
-                        ),
+                        onTap: () {
+                          if(!formKey.currentState!.validate()) return;
+                          context.go(
+                            RouterName.fingerAuthenticationScreen.path,
+                          );
+                        },
                       ),
                     ],
                   ),

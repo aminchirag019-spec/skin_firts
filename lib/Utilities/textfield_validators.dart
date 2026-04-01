@@ -33,9 +33,9 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return localization?.translate('Please enter your password') ?? "Please enter your password";
     }
-    if (!AppRegex.password.hasMatch(value)) {
-      return localization?.translate('Please enter a valid password') ?? "Please enter a valid password";
-    }
+    // if (!AppRegex.password.hasMatch(value)) {
+    //   return localization?.translate('Please enter a valid password') ?? "Please enter a valid password";
+    // }
     return null;
   }
 

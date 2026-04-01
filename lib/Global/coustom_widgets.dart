@@ -76,7 +76,7 @@ Widget coustomTextField({
     autovalidateMode: AutovalidateMode.onUserInteraction,
     onTap: onTap,
     style: GoogleFonts.leagueSpartan(
-      fontSize: 18
+      fontSize: 20
     ),
     decoration: InputDecoration(
       isCollapsed: true,

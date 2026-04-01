@@ -9,6 +9,7 @@ import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
+import 'package:skin_firts/Utilities/textfield_validators.dart';
 
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
@@ -33,258 +34,390 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   final TextEditingController careerPathController = TextEditingController();
   final TextEditingController highlightsController = TextEditingController();
   final TextEditingController qualificationController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
   final TextEditingController ratingController = TextEditingController();
-  final TextEditingController likeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
+  String selectedGender = 'Male';
+  bool isLiked = false;
+
   final doctorKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    specializationController.dispose();
+    descriptionController.dispose();
+    profileController.dispose();
+    experienceController.dispose();
+    availabilityController.dispose();
+    careerPathController.dispose();
+    highlightsController.dispose();
+    qualificationController.dispose();
+    ratingController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
+  void _clearForm() {
+    nameController.clear();
+    experienceController.clear();
+    specializationController.clear();
+    availabilityController.clear();
+    descriptionController.clear();
+    profileController.clear();
+    careerPathController.clear();
+    highlightsController.clear();
+    qualificationController.clear();
+    ratingController.clear();
+    emailController.clear();
+    setState(() {
+      isLiked = false;
+      selectedGender = 'Male';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         context.go(RouterName.profileScreen.path);
-        return false;
       },
       child: Scaffold(
         backgroundColor: AppColors.white,
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.064,
-              vertical: AppSize.height(context) * 0.023,
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  topRow(
-                    context,
-                    onPressed: () {
-                      context.go(RouterName.profileScreen.path);
-                    },
-                    text: localization?.translate("addDoctor") ?? "Add Doctor",
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width(context) * 0.064,
+                  vertical: AppSize.height(context) * 0.023,
+                ),
+                child: topRow(
+                  context,
+                  onPressed: () {
+                    context.go(RouterName.profileScreen.path);
+                  },
+                  text: localization?.translate("addDoctor") ?? "Add Doctor",
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width(context) * 0.064,
                   ),
-                  Form(
+                  child: Form(
                     key: doctorKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: AppSize.height(context) * 0.011),
-                        title(context, title: localization?.translate("fullname") ?? "Name"),
-                        AddDoctorField(
+                        _sectionTitle(context, localization?.translate("Personal Information") ?? "Personal Information"),
+                        _buildField(
                           context,
-                          hint: localization?.translate("fullname") ?? "Name",
+                          label: localization?.translate("fullname") ?? "Full Name",
                           controller: nameController,
+                          hint: "Dr. John Doe",
+                          validator: (value) => value == null || value.isEmpty ? "Please enter name" : null,
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("profile") ?? "Profile"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("profile") ?? "Profile",
-                          controller: profileController,
+                          label: localization?.translate("email") ?? "Email",
+                          controller: emailController,
+                          hint: "doctor@example.com",
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => Validators().validateEmail(context, value),
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Specialization") ?? "Specialization"),
-                        AddDoctorField(
+                        _buildGenderDropdown(context, localization),
+                        SizedBox(height: AppSize.height(context) * 0.02),
+
+                        _sectionTitle(context, localization?.translate("Professional Details") ?? "Professional Details"),
+                        _buildField(
                           context,
-                          hint: localization?.translate("Specialization") ?? "Specialization",
+                          label: localization?.translate("Specialization") ?? "Specialization",
                           controller: specializationController,
+                          hint: "Dermatologist",
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("qualification") ?? "qualification"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("qualification") ?? "qualification",
+                          label: localization?.translate("qualification") ?? "Qualification",
                           controller: qualificationController,
+                          hint: "MD, MBBS",
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Availybility") ?? "Availybility"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("Availybility") ?? "Availybility",
-                          controller: availabilityController,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("careerPath") ?? "Career Path"),
-                        AddDoctorField(
-                          context,
-                          hint: localization?.translate("careerPath") ?? "Career Path",
-                          controller: careerPathController,
-                          isParagraph: true,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("highlights") ?? "Highlights"),
-                        AddDoctorField(
-                          context,
-                          hint: localization?.translate("highlights") ?? "Highlights",
-                          controller: highlightsController,
-                          isParagraph: true,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Experience") ?? "Experience"),
-                        AddDoctorField(
-                          context,
-                          hint: localization?.translate("Experience") ?? "Experience",
+                          label: localization?.translate("Experience") ?? "Experience",
                           controller: experienceController,
-                          isParagraph: true,
+                          hint: "10+ years of experience",
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Description") ?? "Description"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("Description") ?? "Description",
+                          label: localization?.translate("Availybility") ?? "Availability",
+                          controller: availabilityController,
+                          hint: "Mon - Fri, 9 AM - 5 PM",
+                        ),
+                        _buildField(
+                          context,
+                          label: localization?.translate("profile") ?? "Profile Image URL",
+                          controller: profileController,
+                          hint: "https://example.com/photo.jpg",
+                        ),
+                        SizedBox(height: AppSize.height(context) * 0.02),
+
+                        _sectionTitle(context, localization?.translate("Extra Details") ?? "Extra Details"),
+                        _buildField(
+                          context,
+                          label: localization?.translate("Description") ?? "Description",
                           controller: descriptionController,
+                          hint: "Brief description about the doctor...",
                           isParagraph: true,
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Gender") ?? "Gender"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("Gender") ?? "Gender",
-                          controller: genderController,
+                          label: localization?.translate("careerPath") ?? "Career Path",
+                          controller: careerPathController,
+                          hint: "Academic and professional journey...",
+                          isParagraph: true,
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("Rating") ?? "Rating"),
-                        AddDoctorField(
+                        _buildField(
                           context,
-                          hint: localization?.translate("Rating") ?? "Rating",
-                          controller: ratingController,
+                          label: localization?.translate("highlights") ?? "Highlights",
+                          controller: highlightsController,
+                          hint: "Key achievements...",
+                          isParagraph: true,
                         ),
-                        SizedBox(height: AppSize.height(context) * 0.008),
-                        title(context, title: localization?.translate("liked") ?? "liked"),
-                        AddDoctorField(
-                          context,
-                          hint: localization?.translate("liked") ?? "liked",
-                          controller: likeController,
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildField(
+                                context,
+                                label: localization?.translate("Rating") ?? "Rating",
+                                controller: ratingController,
+                                hint: "4.5",
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            SizedBox(width: AppSize.width(context) * 0.05),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  localization?.translate("liked") ?? "Liked",
+                                  style: GoogleFonts.leagueSpartan(
+                                    fontSize: AppSize.width(context) * 0.04,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.darkPurple,
+                                  ),
+                                ),
+                                Switch(
+                                  value: isLiked,
+                                  activeColor: AppColors.darkPurple,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      isLiked = val;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
+                        SizedBox(height: AppSize.height(context) * 0.04),
+                        _buildSubmitButton(context, localization),
+                        SizedBox(height: AppSize.height(context) * 0.04),
                       ],
                     ),
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011),
-                  BlocConsumer<DoctorScreenBloc, DoctorScreenState>(
-                    listener: (context, state) {
-                      if (state.doctorStatus == DoctorStatus.success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(localization?.translate("Doctor Added Successfully") ?? "Doctor Added Successfully"),
-                          ),
-                        );
-                      }
-                      if (state.doctorStatus == DoctorStatus.failure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(localization?.translate("Something went wrong") ?? "Something went wrong")),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state.doctorStatus == DoctorStatus.loading) {
-                        return const CircularProgressIndicator();
-                      }
-                      return customButton(
-                        context,
-                        text: localization?.translate("addDoctor") ?? "Add Doctor",
-                        backgroundColor: AppColors.darkPurple,
-                        textColor: AppColors.white,
-                        onPressed: () {
-                          if (!doctorKey.currentState!.validate()) return;
-
-                          final doctor = AddDoctor(
-                            id: "",
-                            qualification: qualificationController.text,
-                            doctorName: nameController.text,
-                            experience: experienceController.text,
-                            specialization: specializationController.text,
-                            availability: availabilityController.text,
-                            description: descriptionController.text,
-                            profile: profileController.text,
-                            careerPath: careerPathController.text,
-                            highlights: highlightsController.text,
-                            isLiked: likeController.text == "true",
-                            rating: double.tryParse(ratingController.text) ?? 0.0,
-                            email: emailController.text,
-                            gender: genderController.text,
-                          );
-
-                          context.read<DoctorScreenBloc>().add(
-                            AddDoctorEvent(doctor),
-                          );
-                          // Clear controllers...
-                          nameController.clear();
-                          experienceController.clear();
-                          specializationController.clear();
-                          availabilityController.clear();
-                          descriptionController.clear();
-                          profileController.clear();
-                          careerPathController.clear();
-                          highlightsController.clear();
-                          qualificationController.clear();
-                          likeController.clear();
-                          ratingController.clear();
-                          emailController.clear();
-                          genderController.clear();
-                          
-                          context.read<NotificationBloc>().add(
-                            SendNotificationEvent(
-                              doctor,
-                              NotificationModel(
-                                title: "Add Doctor",
-                                body: "You successfully added a ${doctor.doctorName}",
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-Widget AddDoctorField(
-  BuildContext context, {
-  required String hint,
-  required TextEditingController controller,
-  bool isParagraph = false,
-}) {
-  return TextField(
-    controller: controller,
-    keyboardType: isParagraph ? TextInputType.multiline : TextInputType.text,
-    minLines: isParagraph ? 3 : 1,
-    maxLines: isParagraph ? null : 1,
-    decoration: InputDecoration(
-      hintText: hint,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          AppSize.width(context) * 0.038,
-        ),
-        borderSide: BorderSide.none,
-      ),
-      filled: true,
-      fillColor: AppColors.lightPurple,
-    ),
-  );
-}
-
-Widget title(BuildContext context, {required String title, double? size}) {
-  return Row(
-    children: [
-      SizedBox(width: AppSize.width(context) * 0.020),
-      Text(
-        title,
+  Widget _sectionTitle(BuildContext context, String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSize.height(context) * 0.015, top: AppSize.height(context) * 0.01),
+      child: Text(
+        text,
         style: GoogleFonts.leagueSpartan(
-          fontSize: AppSize.width(context) * 0.046,
-          fontWeight: FontWeight.w500,
+          fontSize: AppSize.width(context) * 0.05,
+          fontWeight: FontWeight.bold,
+          color: AppColors.darkPurple,
         ),
       ),
-    ],
-  );
+    );
+  }
+
+  Widget _buildField(
+      BuildContext context, {
+        required String label,
+        required TextEditingController controller,
+        required String hint,
+        bool isParagraph = false,
+        TextInputType keyboardType = TextInputType.text,
+        String? Function(String?)? validator,
+      }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSize.height(context) * 0.015),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.leagueSpartan(
+              fontSize: AppSize.width(context) * 0.04,
+              fontWeight: FontWeight.w500,
+              color: AppColors.darkPurple.withOpacity(0.8),
+            ),
+          ),
+          SizedBox(height: 5),
+          TextFormField(
+            controller: controller,
+            keyboardType: isParagraph ? TextInputType.multiline : keyboardType,
+            minLines: isParagraph ? 3 : 1,
+            maxLines: isParagraph ? 5 : 1,
+            validator: validator,
+            style: GoogleFonts.leagueSpartan(fontSize: 16),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: GoogleFonts.leagueSpartan(color: Colors.grey.shade400),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: isParagraph ? 12 : 0),
+              filled: true,
+              fillColor: AppColors.lightPurple.withOpacity(0.3),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.darkPurple, width: 1),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 1),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenderDropdown(BuildContext context, AppLocalizations? localization) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          localization?.translate("Gender") ?? "Gender",
+          style: GoogleFonts.leagueSpartan(
+            fontSize: AppSize.width(context) * 0.04,
+            fontWeight: FontWeight.w500,
+            color: AppColors.darkPurple.withOpacity(0.8),
+          ),
+        ),
+        SizedBox(height: 5),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: AppColors.lightPurple.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: selectedGender,
+              isExpanded: true,
+              icon: Icon(Icons.arrow_drop_down, color: AppColors.darkPurple),
+              items: ['Male', 'Female', 'Other'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: GoogleFonts.leagueSpartan(fontSize: 16)),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => selectedGender = val);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context, AppLocalizations? localization) {
+    return BlocConsumer<DoctorScreenBloc, DoctorScreenState>(
+      listener: (context, state) {
+        if (state.doctorStatus == DoctorStatus.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              content: Text(localization?.translate("Doctor Added Successfully") ?? "Doctor Added Successfully"),
+            ),
+          );
+          _clearForm();
+        }
+        if (state.doctorStatus == DoctorStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(localization?.translate("Something went wrong") ?? "Something went wrong"),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state.doctorStatus == DoctorStatus.loading) {
+          return Center(child: CircularProgressIndicator(color: AppColors.darkPurple));
+        }
+        return customButton(
+          context,
+          text: localization?.translate("addDoctor") ?? "Add Doctor",
+          backgroundColor: AppColors.darkPurple,
+          textColor: AppColors.white,
+          width: double.infinity,
+          onPressed: () {
+            if (!doctorKey.currentState!.validate()) return;
+
+            final doctor = AddDoctor(
+              id: "",
+              qualification: qualificationController.text,
+              doctorName: nameController.text,
+              experience: experienceController.text,
+              specialization: specializationController.text,
+              availability: availabilityController.text,
+              description: descriptionController.text,
+              profile: profileController.text,
+              careerPath: careerPathController.text,
+              highlights: highlightsController.text,
+              isLiked: isLiked,
+              rating: double.tryParse(ratingController.text) ?? 0.0,
+              email: emailController.text,
+              gender: selectedGender,
+            );
+
+            context.read<DoctorScreenBloc>().add(AddDoctorEvent(doctor));
+
+            context.read<NotificationBloc>().add(
+              SendNotificationEvent(
+                doctor,
+                NotificationModel(
+                  title: localization?.translate("Add Doctor") ?? "Add Doctor",
+                  body: "${localization?.translate("add_doctor_prefix") ?? "You successfully added a"} ${doctor.doctorName}",
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
