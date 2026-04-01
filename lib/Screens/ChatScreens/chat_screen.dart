@@ -263,23 +263,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                                 const Spacer(),
                                 chatBarIcons(
+                                  svgPath: "assets/images/audio.svg.svg",
                                   context,
-                                  image: const AssetImage(
-                                    "assets/images/chat_phone.png",
-                                  ),
                                   height: AppSize.height(context) * 0.015,
                                   width: AppSize.width(context) * 0.015,
                                   color: Colors.white,
+                                  imgColor: AppColors.darkPurple
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.025),
                                 chatBarIcons(
                                   context,
-                                  image: const AssetImage(
-                                    "assets/images/video_call.png",
-                                  ),
+                                  svgPath: "assets/images/video.svg.svg",
                                   height: AppSize.height(context) * 0.012,
                                   width: AppSize.width(context) * 0.012,
                                   color: Colors.white,
+                                  imgColor: AppColors.darkPurple
                                 ),
                               ],
                             ),
@@ -390,9 +388,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             child: chatBarIcons(
                               context,
-                              image: const AssetImage(
-                                "assets/images/chat_document.png",
-                              ),
+                              svgPath: "assets/images/chat_document.svg.svg",
                               imgHeight: AppSize.height(context) * 0.047,
                               width: AppSize.width(context) * 0.015,
                               color: Colors.white,
@@ -451,9 +447,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             },
                             child: chatBarIcons(
                               context,
-                              image: const AssetImage(
-                                "assets/images/send_icon.png",
-                              ),
+                             svgPath: "assets/images/send.svg.svg",
                               imgHeight: AppSize.height(context) * 0.023,
                               color: colorScheme.primary,
                               height: AppSize.height(context) * 0.018,

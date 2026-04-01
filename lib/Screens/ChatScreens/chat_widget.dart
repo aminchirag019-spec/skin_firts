@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skin_firts/Network/translation_repository.dart';
@@ -96,12 +97,13 @@ void showAttachmentOptions(BuildContext context, String receiverId) {
 
 Widget chatBarIcons(
   BuildContext context, {
-  required ImageProvider image,
+    required String svgPath,
   double? width,
   double? height,
   double? imgHeight,
   double? imgWidth,
   Color? color,
+      Color? imgColor
 }) {
   return Container(
     padding: EdgeInsets.symmetric(
@@ -109,7 +111,7 @@ Widget chatBarIcons(
       vertical: height ?? AppSize.height(context) * 0.005,
     ),
     decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-    child: Image(image: image, height: imgHeight, width: imgWidth),
+    child: SvgPicture.asset(svgPath, height: imgHeight, width: imgWidth,color: imgColor,),
   );
 }
 
