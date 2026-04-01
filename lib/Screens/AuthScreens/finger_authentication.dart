@@ -156,7 +156,7 @@ class _FingerAuthenticationState extends State<FingerAuthentication> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            localization?.translate('or use pin code') ?? "or use pin code",
+                            localization?.translate('or use pin code  ') ?? "or use pin code",
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: Colors.black45,
                             ),

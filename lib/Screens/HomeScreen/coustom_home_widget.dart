@@ -42,7 +42,7 @@ Widget doctorInformationCard() {
             ),
             child: GestureDetector(
               onTap: () {
-                context.go(RouterName.doctorInfoScreen.path, extra: doctor);
+                  context.go(RouterName.doctorInfoScreen.path, extra: doctor);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

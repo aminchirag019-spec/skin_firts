@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Screens/AppointmentScreen/appointment_screen.dart';
+import 'package:skin_firts/Screens/DoctorScreens/doctor_details.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
 import 'package:skin_firts/Screens/HelpCentreScreen/help_centre_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
@@ -18,7 +19,8 @@ import 'package:skin_firts/screens/authScreens/splash_screen.dart';
 import 'package:skin_firts/screens/authScreens/welcome_screen.dart';
 import 'package:skin_firts/screens/homeScreen/home_screen.dart';
 import '../Data/doctor_model.dart';
-import '../Screens/AppointmentScreen/schedule_screen.dart';
+import '../Screens/DoctorScreens/appointment_details.dart';
+import '../Screens/DoctorScreens/schedule_screen.dart';
 import '../Screens/ChatScreens/chat_list_screen.dart';
 import '../Screens/DoctorScreens/doctor_screen.dart';
 import '../Screens/ChatScreens/chat_screen.dart';
@@ -70,7 +72,25 @@ final GoRouter app_router = GoRouter(
                 return DoctorInfoScreen(data: data);
               },
             ),
-
+            GoRoute(
+              path: RouterName.doctorDetailsScreen.path,
+              builder: (context, state) {
+                final data = state.extra as AddDoctor?;
+                return DoctorDetailsScreen(doctor: data);
+              },
+            ),
+            GoRoute(path: RouterName.scheduleScreen.path,
+                builder: (context, state) {
+              final data = state.extra as AddDoctor;
+              return ScheduleScreen(doctor: data);
+            }),
+            GoRoute(
+              path: RouterName.appointmentDetails.path,
+              builder: (context, state) {
+                final doctor = state.extra as AddDoctor?;
+                return AppointmentDetails(doctor: doctor);
+              },
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -91,17 +111,15 @@ final GoRouter app_router = GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: RouterName.appointmentScreen.path,
-              builder: (context, state) {
-                final data = state.extra as AddDoctor?;
-                return AppointmentScreen(doctor: data);
-              },
+            GoRoute(path: RouterName.appointmentScreen.path,
+              builder: (context, state) => AppointmentScreen(),
             ),
+
           ],
         ),
       ],
     ),
+
     GoRoute(
       path: RouterName.fingerAuthenticationScreen.path,
       builder: (context, state) => FingerAuthentication(),
@@ -148,7 +166,7 @@ final GoRouter app_router = GoRouter(
       path: RouterName.helpCentreScreen.path,
       builder: (context, state) => HelpCentreScreen(),
     ),
-    GoRoute(path: RouterName.scheduleScreen.path,
-        builder: (context, state) => ScheduleScreen())
+
+
   ],
 );

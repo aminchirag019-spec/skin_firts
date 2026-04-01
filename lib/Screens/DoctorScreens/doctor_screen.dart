@@ -52,7 +52,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     doctorsTopRow(
                       context,
                       text: localization?.translate('doctors') ?? "Doctors",
-                      onPressed: () => context.go(RouterName.homeScreen.path),
+                        onPressed: () => context.go(RouterName.homeScreen.path),
                     ),
                     SizedBox(height: AppSize.height(context) * 0.023),
                     Row(

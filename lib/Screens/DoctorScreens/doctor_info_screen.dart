@@ -243,9 +243,14 @@ class DoctorInfoScreen extends StatelessWidget {
                                         size: 18,
                                       ),
                                       const SizedBox(width: 6),
-                                      Text(
-                                        localization?.translate('schedule') ?? "Schedule",
-                                        style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
+                                      GestureDetector(
+                                        onTap: () {
+                                          context.go(RouterName.doctorDetailsScreen.path,extra: data);
+                                        },
+                                        child: Text(
+                                          localization?.translate('schedule') ?? "Schedule",
+                                          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -464,12 +469,12 @@ Widget filterOptions(
   );
 }
 
-Widget servicesOptions(BuildContext context, {required IconData icon, required double size}) {
+Widget servicesOptions(BuildContext context,{required IconData icon, required double size,Color? color}) {
   final colorScheme = Theme.of(context).colorScheme;
   return Container(
     height: 25,
     width: 24,
-    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+    decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? AppColors.white),
     child: Center(
       child: Icon(icon, size: size, color: colorScheme.primary),
     ),

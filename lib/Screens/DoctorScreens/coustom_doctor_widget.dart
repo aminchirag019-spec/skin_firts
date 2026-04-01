@@ -82,7 +82,7 @@ Widget likedBar({String? text, String? title}) {
   );
 }
 
-Widget doctorDetailsCard() {
+Widget  doctorDetailsCard() {
   return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
     builder: (context, state) {
       final theme = Theme.of(context);
