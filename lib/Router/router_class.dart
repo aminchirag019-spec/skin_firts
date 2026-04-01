@@ -9,6 +9,7 @@ enum RouterName {
   doctorScreen('/DoctorScreen','DoctorScreen'),
   doctorInfoScreen('/DoctorInfoScreen','DoctorInfoScreen'),
   appointmentScreen('/AppointmentScreen','AppointmentScreen'),
+  cancelAppointmentScreen('/CancelAppointmentScreen','CancelAppointmentScreen'),
   appointmentDetails('/AppointmentDetails','AppointmentDetails'),
   doctorDetailsScreen('/DoctorDetailsScreen','DoctorDetailsScreen'),
   scheduleScreen('/ScheduleScreen','ScheduleScreen'),
@@ -24,7 +25,8 @@ enum RouterName {
   chatListScreen('/ChatScreens','ChatScreens'),
   notificationSetting('/NotificationScreen','NotificationScreen'),
   passwordManagerScreen('/PasswordManagerScreen','PasswordManagerScreen'),
-  welcomeScreen('/WelcomeScreen','WelcomeScreen');
+  welcomeScreen('/WelcomeScreen','WelcomeScreen'),
+  reviewScreen('/ReviewScreen','ReviewScreen');
 
 
   final String path;

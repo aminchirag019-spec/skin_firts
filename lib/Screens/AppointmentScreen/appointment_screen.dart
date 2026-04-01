@@ -273,14 +273,18 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
            SizedBox(width: 12),
           _buildIconActionButton("assets/images/right.svg.svg", () {}),
            SizedBox(width: 12),
-          _buildIconActionButton("assets/images/wrong.svg.svg", () {}),
+          _buildIconActionButton("assets/images/wrong.svg.svg", () {
+            context.push(RouterName.cancelAppointmentScreen.path);
+          }),
         ],
       );
     } else { // Cancelled
       return SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            context.go(RouterName.reviewScreen.path);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.darkPurple,
             foregroundColor: Colors.white,

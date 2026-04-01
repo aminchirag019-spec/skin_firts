@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Screens/AppointmentScreen/appointment_screen.dart';
+import 'package:skin_firts/Screens/AppointmentScreen/cancel_appointment_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_details.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_info_screen.dart';
+import 'package:skin_firts/Screens/DoctorScreens/review_screen.dart';
 import 'package:skin_firts/Screens/HelpCentreScreen/help_centre_screen.dart';
 import 'package:skin_firts/Screens/MessageScreen/message_screen.dart';
 import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
@@ -91,6 +93,13 @@ final GoRouter app_router = GoRouter(
                 return AppointmentDetails(doctor: doctor);
               },
             ),
+            GoRoute(
+              path: RouterName.reviewScreen.path,
+              builder: (context, state) {
+                final doctor = state.extra as AddDoctor?;
+                return ReviewScreen(doctor: doctor);
+              },
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -113,6 +122,9 @@ final GoRouter app_router = GoRouter(
           routes: [
             GoRoute(path: RouterName.appointmentScreen.path,
               builder: (context, state) => AppointmentScreen(),
+            ),
+             GoRoute(path: RouterName.cancelAppointmentScreen.path,
+              builder: (context, state) => CancelAppointmentScreen(),
             ),
 
           ],
