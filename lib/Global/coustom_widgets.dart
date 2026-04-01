@@ -73,6 +73,7 @@ Widget coustomTextField({
     maxLength: maxLength,
     initialValue: initialValue,
     obscureText: obscureText,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     onTap: onTap,
     style: GoogleFonts.leagueSpartan(
       fontSize: 18

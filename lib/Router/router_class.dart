@@ -2,7 +2,6 @@
 enum RouterName {
   loginScreen('/LoginScreen','LoginScreen'),
   signupScreen('/SignupScreen','SignupScreen'),
-  loginScreen1('/LoginScreen_1','LoginScreen'),
   splashScreen('/SplashScreen','SplashScreen'),
   setPasswordScreen('/SetPasswordScreen','SetPasswordScreen'),
   homeScreen('/HomeScreen','HomeScreen'),

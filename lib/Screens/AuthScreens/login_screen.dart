@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         SizedBox(height: AppSize.height(context) * 0.004),
                         Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                          localization?.translate('loreum') ?? "loreum",
                           style: theme.textTheme.bodyMedium?.copyWith(
                             letterSpacing: -0.7,
                             height: 0.9,
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "example@example.com",
                           h: 14,
                           w: 10,
-                          validator: Validators().validateEmail,
+                          validator:(value) => Validators().validateEmail(context, value),
                         ),
                         SizedBox(height: AppSize.height(context) * 0.017),
                         Row(
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         coustomTextField(
                           context: context,
                           controller: passwordController,
-                          validator: Validators().validatePassword,
+                          validator:(value) => Validators().validatePassword(context, value),
                           hintText: "••••••••",
                           image: const AssetImage(
                             "assets/images/obsecure_image.png",

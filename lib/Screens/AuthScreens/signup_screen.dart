@@ -101,7 +101,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         coustomTextField(
                           context: context,
                           controller: nameController,
-                          validator: Validators().validateEmail,
+                          validator: (value) => Validators().validateName(context, value),
                           hintText: localization?.translate('nameExample') ?? "Enter Your Name",
                           size: 20,
                         ),
@@ -123,6 +123,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               hintText: "••••••••",
                               obscureText: state.isPasswordHidden,
                               controller: passwordController,
+                              validator: (value) => Validators().validatePassword(context, value),
                               image: const AssetImage("assets/images/obsecure_image.png"),
                             );
                           },
@@ -140,6 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         coustomTextField(
                           context: context,
+                          validator: (value) => Validators().validateEmail(context, value),
                           hintText: localization?.translate('emailExample') ?? "example@example.com",
                           controller: emailController,
                           size: 20,
@@ -158,6 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         coustomTextField(
                           context: context,
                           maxLength: 10,
+                          validator: (value) => Validators().validateMobile(context, value),
                           textInputType: TextInputType.number,
                           hintText: localization?.translate('numberExample') ?? "+91 0000000000",
                           h: 16,
@@ -178,7 +181,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         coustomTextField(
                           context: context,
-                          hintText: localization?.translate('dobExample') ?? "DD / MM /YYY",
+                          validator: (value) => Validators().validateDob(context, value),
+                          hintText: localization?.translate('DD/MM/YYYY') ?? "DD/MM/YYY",
                           isBold: true,
                           controller: dobController,
                           size: 20,

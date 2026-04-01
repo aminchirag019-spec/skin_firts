@@ -100,5 +100,13 @@
   "photo": "फोटो",
   "file": "फ़ाइल",
   "camera": "कैमरा",
-  "gallery": "गैलरी"
+  "gallery": "गैलरी",
+  "Please enter the email": "कृपया ईमेल दर्ज करें",
+  "Please enter your password": "कृपया अपना पासवर्ड दर्ज करें",
+  "Please enter a valid password": "कृपया एक मान्य पासवर्ड दर्ज करें",
+  "Please enter mobile number": "कृपया मोबाइल नंबर दर्ज करें",
+  "Please enter valid mobile number": "कृपया एक मान्य मोबाइल नंबर दर्ज करें",
+  "Please enter your full name": "कृपया अपना पूरा नाम दर्ज करें",
+  "DD/MM/YYYY": "दिन / माह / वर्ष",
+  "Please enter you birth date": "कृपया अपनी जन्म तिथि दर्ज करें"
 }

@@ -3,10 +3,27 @@ import 'package:skin_firts/Utilities/App_regex.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
 
 class Validators {
+
+  String? validateDob(BuildContext context, String? value) {
+    final localization = AppLocalizations.of(context);
+    if (value == null || value.trim().isEmpty) {
+        return localization?.translate('Please enter you birth date') ?? "Please enter you birth date";
+    }
+    return null;
+  }
+
+  String? validateName(BuildContext context, String? value) {
+    final localization = AppLocalizations.of(context);
+    if (value == null || value.trim().isEmpty) {
+      return localization?.translate('Please enter your full name') ?? "Please enter your full name";
+    }
+    return null;
+  }
+
   String? validateEmail(BuildContext context, String? value) {
     final localization = AppLocalizations.of(context);
     if (value == null || value.trim().isEmpty) {
-      return localization?.translate('emailRequired') ?? "Please enter the email";
+      return localization?.translate('Please enter the email') ?? "Please enter the email";
     }
     return null;
   }
@@ -14,10 +31,10 @@ class Validators {
   String? validatePassword(BuildContext context, String? value) {
     final localization = AppLocalizations.of(context);
     if (value == null || value.trim().isEmpty) {
-      return localization?.translate('passwordRequired') ?? "Please enter your password";
+      return localization?.translate('Please enter your password') ?? "Please enter your password";
     }
     if (!AppRegex.password.hasMatch(value)) {
-      return localization?.translate('invalidPassword') ?? "Please enter a valid password";
+      return localization?.translate('Please enter a valid password') ?? "Please enter a valid password";
     }
     return null;
   }
@@ -25,10 +42,10 @@ class Validators {
   String? validateMobile(BuildContext context, String? value) {
     final localization = AppLocalizations.of(context);
     if (value == null || value.trim().isEmpty) {
-      return localization?.translate('mobileRequired') ?? "Please enter mobile number";
+      return localization?.translate('Please enter mobile number') ?? "Please enter mobile number";
     }
     if (!AppRegex.phone.hasMatch(value)) {
-      return localization?.translate('invalidMobile') ?? "Please enter valid mobile number";
+      return localization?.translate('"Please enter valid mobile number"') ?? "Please enter valid mobile number";
     }
     return null;
   }

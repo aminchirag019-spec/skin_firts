@@ -11,7 +11,6 @@ import 'package:skin_firts/Screens/ProfileScreen/setting_screen.dart';
 import 'package:skin_firts/Screens/widgets/bottom_nav_bar.dart';
 import 'package:skin_firts/router/router_class.dart';
 import 'package:skin_firts/screens/authScreens/finger_authentication.dart';
-import 'package:skin_firts/screens/authScreens/login_Screen_!.dart';
 import 'package:skin_firts/screens/authScreens/login_screen.dart';
 import 'package:skin_firts/screens/authScreens/set_password_screen.dart';
 import 'package:skin_firts/screens/authScreens/signup_screen.dart';
@@ -40,10 +39,6 @@ final GoRouter app_router = GoRouter(
     GoRoute(
       path: RouterName.loginScreen.path,
       builder: (context, state) => LoginScreen(),
-    ),
-    GoRoute(
-      path: RouterName.loginScreen1.path,
-      builder: (context, state) => LoginScreen_1(),
     ),
     GoRoute(
       path: RouterName.signupScreen.path,
