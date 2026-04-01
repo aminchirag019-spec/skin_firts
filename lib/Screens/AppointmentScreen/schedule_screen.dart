@@ -11,9 +11,27 @@ import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Helper/app_localizations.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   final AddDoctor? doctor;
   const ScheduleScreen({super.key, this.doctor});
+
+  @override
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _problemController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _problemController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,60 +42,102 @@ class ScheduleScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTopBar(context, doctor, colorScheme, langCode, localization),
-              _buildDateSelection(context, colorScheme),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Available Time",
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTopBar(context, widget.doctor, colorScheme, langCode, localization),
+                _buildDateSelection(context, colorScheme, localization),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localization?.translate('availableTime') ?? "Available Time",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    _buildTimeGrid(context, colorScheme),
-                    const SizedBox(height: 20),
-                    const Divider(height: 1),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Patient Details",
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 15),
+                      _buildTimeGrid(context, colorScheme),
+                      const SizedBox(height: 20),
+                      const Divider(height: 1),
+                      const SizedBox(height: 20),
+                      Text(
+                        localization?.translate('patientDetails') ?? "Patient Details",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPatientSelection(context, colorScheme),
-                    const SizedBox(height: 20),
-                    Text("Full Name", style: theme.textTheme.bodySmall),
-                    const SizedBox(height: 5),
-                    coustomTextField(context: context, hintText: "Jane Doe", isBold: false),
-                    const SizedBox(height: 15),
-                    Text("Age", style: theme.textTheme.bodySmall),
-                    const SizedBox(height: 5),
-                    coustomTextField(context: context, hintText: "30", isBold: false),
-                    const SizedBox(height: 15),
-                    Text("Gender", style: theme.textTheme.bodySmall),
-                    const SizedBox(height: 10),
-                    _buildGenderSelection(context, colorScheme),
-                    const SizedBox(height: 20),
-                    const Divider(height: 1),
-                    const SizedBox(height: 20),
-                    Text("Describe your problem", style: theme.textTheme.bodySmall),
-                    const SizedBox(height: 10),
-                    _buildProblemDescription(context),
-                  ],
+                      const SizedBox(height: 10),
+                      _buildPatientSelection(context, colorScheme, localization),
+                      const SizedBox(height: 20),
+                      Text(localization?.translate('fullName') ?? "Full Name", style: theme.textTheme.bodySmall),
+                      const SizedBox(height: 5),
+                      coustomTextField(
+                        context: context,
+                        hintText: localization?.translate('janeDoe') ?? "Jane Doe",
+                        controller: _nameController,
+                        isBold: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return localization?.translate('nameRequired') ?? "Name is required";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      Text(localization?.translate('age') ?? "Age", style: theme.textTheme.bodySmall),
+                      const SizedBox(height: 5),
+                      coustomTextField(
+                        context: context,
+                        hintText: "30",
+                        controller: _ageController,
+                        isBold: false,
+                        textInputType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return localization?.translate('ageRequired') ?? "Age is required";
+                          }
+                          if (int.tryParse(value) == null) {
+                            return localization?.translate('invalidAge') ?? "Please enter a valid age";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      Text(localization?.translate('gender') ?? "Gender", style: theme.textTheme.bodySmall),
+                      const SizedBox(height: 10),
+                      _buildGenderSelection(context, colorScheme, localization),
+                      const SizedBox(height: 20),
+                      const Divider(height: 1),
+                      const SizedBox(height: 20),
+                      Text(localization?.translate('describeProblem') ?? "Describe your problem", style: theme.textTheme.bodySmall),
+                      const SizedBox(height: 10),
+                      _buildProblemDescription(context, localization),
+                      const SizedBox(height: 30),
+                      customButton(
+                        context,
+                        text: localization?.translate('bookNow') ?? "Book Now",
+                        backgroundColor: colorScheme.primary,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // Proceed with booking
+                          }
+                        },
+                        width: double.infinity,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -110,7 +170,7 @@ class ScheduleScreen extends StatelessWidget {
           const SizedBox(width: 8),
           _topBarIcon(Icons.phone, colorScheme.primary),
           _topBarIcon(Icons.videocam, colorScheme.primary),
-          _topBarIcon(Icons.chat_bubble, colorScheme.primary),
+           _topBarIcon(Icons.chat_bubble, colorScheme.primary),
           _topBarIcon(Icons.help_outline, colorScheme.primary.withOpacity(0.5)),
           _topBarIcon(Icons.favorite, colorScheme.primary),
         ],
@@ -125,7 +185,7 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDateSelection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildDateSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization) {
     return Container(
       color: colorScheme.secondary.withOpacity(0.4),
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -135,7 +195,7 @@ class ScheduleScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Text("Month", style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold)),
+                Text(localization?.translate('month') ?? "Month", style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold)),
                 Icon(Icons.keyboard_arrow_down, color: colorScheme.primary),
               ],
             ),
@@ -215,12 +275,12 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPatientSelection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildPatientSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization) {
     return Row(
       children: [
-        _buildChoiceChip("Yourself", false, colorScheme),
+        _buildChoiceChip(localization?.translate('yourself') ?? "Yourself", false, colorScheme),
         const SizedBox(width: 10),
-        _buildChoiceChip("Another Person", true, colorScheme),
+        _buildChoiceChip(localization?.translate('anotherPerson') ?? "Another Person", true, colorScheme),
       ],
     );
   }
@@ -240,19 +300,19 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGenderSelection(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildGenderSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization) {
     return Row(
       children: [
-        _buildChoiceChip("Male", false, colorScheme),
+        _buildChoiceChip(localization?.translate('male') ?? "Male", false, colorScheme),
         const SizedBox(width: 10),
-        _buildChoiceChip("Female", true, colorScheme),
+        _buildChoiceChip(localization?.translate('female') ?? "Female", true, colorScheme),
         const SizedBox(width: 10),
-        _buildChoiceChip("Other", false, colorScheme),
+        _buildChoiceChip(localization?.translate('other') ?? "Other", false, colorScheme),
       ],
     );
   }
 
-  Widget _buildProblemDescription(BuildContext context) {
+  Widget _buildProblemDescription(BuildContext context, AppLocalizations? localization) {
     return Container(
       height: 120,
       padding: const EdgeInsets.all(12),
@@ -261,11 +321,12 @@ class ScheduleScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.lightPurple, width: 1),
       ),
-      child: const TextField(
+      child: TextField(
+        controller: _problemController,
         maxLines: null,
         decoration: InputDecoration(
-          hintText: "Enter Your Problem Here...",
-          hintStyle: TextStyle(color: Colors.black26, fontSize: 12),
+          hintText: localization?.translate('enterProblemHint') ?? "Enter Your Problem Here...",
+          hintStyle: const TextStyle(color: Colors.black26, fontSize: 12),
           border: InputBorder.none,
         ),
       ),
