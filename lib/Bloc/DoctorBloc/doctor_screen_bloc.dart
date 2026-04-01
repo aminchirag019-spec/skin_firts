@@ -19,7 +19,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   StreamSubscription? _localeSubscription;
 
   DoctorScreenBloc(this.authRepository, this.notificationService, this.localeBloc)
-    : super(DoctorScreenState()) {
+    : super(const DoctorScreenState()) {
     
     // 🌐 Automatically re-fetch data when language changes
     _localeSubscription = localeBloc.stream.listen((localeState) {
@@ -38,6 +38,16 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<SwitchEvent>(_onSwitch);
     on<TogglePasswordVisibility>(_onTogglePasswordVisibility);
     on<SelectDateEvent>(_onSelectDate);
+    on<SelectTimeEvent>(_onSelectTime);
+    on<SelectPatientEvent>(_onSelectPatient);
+    on<SelectGenderEvent>(_onSelectGender);
+    on<ChangeAddDoctorGenderEvent>(_onChangeAddDoctorGender);
+    on<ToggleAddDoctorLikedEvent>(_onToggleAddDoctorLiked);
+    on<ClearAddDoctorFormEvent>(_onClearAddDoctorForm);
+    on<ToggleServiceExpansionEvent>(_onToggleServiceExpansion);
+    on<SelectPaymentMethodEvent>(_onSelectPaymentMethod);
+    on<SelectAppointmentTabEvent>(_onSelectAppointmentTab);
+    on<SelectCancelReasonEvent>(_onSelectCancelReason);
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -50,6 +60,18 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
 
   void _onSelectDate(SelectDateEvent event, Emitter<DoctorScreenState> emit) {
     emit(state.copyWith(selectedDateIndex: event.index));
+  }
+
+  void _onSelectTime(SelectTimeEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedTime: event.time));
+  }
+
+  void _onSelectPatient(SelectPatientEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedPatient: event.patient));
+  }
+
+  void _onSelectGender(SelectGenderEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedGender: event.gender));
   }
 
   void _onTogglePasswordVisibility(TogglePasswordVisibility event, Emitter<DoctorScreenState> emit) {
@@ -131,5 +153,39 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     } catch (e) {
       emit(state.copyWith(doctorStatus: DoctorStatus.failure));
     }
+  }
+
+  void _onChangeAddDoctorGender(ChangeAddDoctorGenderEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(addDoctorGender: event.gender));
+  }
+
+  void _onToggleAddDoctorLiked(ToggleAddDoctorLikedEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(addDoctorIsLiked: event.isLiked));
+  }
+
+  void _onClearAddDoctorForm(ClearAddDoctorFormEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(addDoctorGender: 'Male', addDoctorIsLiked: false));
+  }
+
+  void _onToggleServiceExpansion(ToggleServiceExpansionEvent event, Emitter<DoctorScreenState> emit) {
+    final updatedTitles = Set<String>.from(state.expandedServiceTitles);
+    if (updatedTitles.contains(event.serviceTitle)) {
+      updatedTitles.remove(event.serviceTitle);
+    } else {
+      updatedTitles.add(event.serviceTitle);
+    }
+    emit(state.copyWith(expandedServiceTitles: updatedTitles));
+  }
+
+  void _onSelectPaymentMethod(SelectPaymentMethodEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedPaymentMethod: event.method));
+  }
+
+  void _onSelectAppointmentTab(SelectAppointmentTabEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedAppointmentTabIndex: event.index));
+  }
+
+  void _onSelectCancelReason(SelectCancelReasonEvent event, Emitter<DoctorScreenState> emit) {
+    emit(state.copyWith(selectedCancelReason: event.reason));
   }
 }

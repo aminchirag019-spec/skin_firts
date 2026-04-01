@@ -37,9 +37,6 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   final TextEditingController ratingController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
-  String selectedGender = 'Male';
-  bool isLiked = false;
-
   final doctorKey = GlobalKey<FormState>();
 
   @override
@@ -70,10 +67,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
     qualificationController.clear();
     ratingController.clear();
     emailController.clear();
-    setState(() {
-      isLiked = false;
-      selectedGender = 'Male';
-    });
+    context.read<DoctorScreenBloc>().add(ClearAddDoctorFormEvent());
   }
 
   @override
@@ -201,27 +195,30 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                               ),
                             ),
                             SizedBox(width: AppSize.width(context) * 0.05),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  localization?.translate("liked") ?? "Liked",
-                                  style: GoogleFonts.leagueSpartan(
-                                    fontSize: AppSize.width(context) * 0.04,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.darkPurple,
-                                  ),
-                                ),
-                                Switch(
-                                  value: isLiked,
-                                  activeColor: AppColors.darkPurple,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      isLiked = val;
-                                    });
-                                  },
-                                ),
-                              ],
+                            BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                              buildWhen: (previous, current) => previous.addDoctorIsLiked != current.addDoctorIsLiked,
+                              builder: (context, state) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      localization?.translate("liked") ?? "Liked",
+                                      style: GoogleFonts.leagueSpartan(
+                                        fontSize: AppSize.width(context) * 0.04,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.darkPurple,
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: state.addDoctorIsLiked,
+                                      activeColor: AppColors.darkPurple,
+                                      onChanged: (val) {
+                                        context.read<DoctorScreenBloc>().add(ToggleAddDoctorLikedEvent(val));
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -333,18 +330,25 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: selectedGender,
-              isExpanded: true,
-              icon: Icon(Icons.arrow_drop_down, color: AppColors.darkPurple),
-              items: ['Male', 'Female', 'Other'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: GoogleFonts.leagueSpartan(fontSize: 16)),
+            child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+              buildWhen: (previous, current) => previous.addDoctorGender != current.addDoctorGender,
+              builder: (context, state) {
+                return DropdownButton<String>(
+                  value: state.addDoctorGender,
+                  isExpanded: true,
+                  icon: Icon(Icons.arrow_drop_down, color: AppColors.darkPurple),
+                  items: ['Male', 'Female', 'Other'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value, style: GoogleFonts.leagueSpartan(fontSize: 16)),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    if (val != null) {
+                      context.read<DoctorScreenBloc>().add(ChangeAddDoctorGenderEvent(val));
+                    }
+                  },
                 );
-              }).toList(),
-              onChanged: (val) {
-                if (val != null) setState(() => selectedGender = val);
               },
             ),
           ),
@@ -398,10 +402,10 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               profile: profileController.text,
               careerPath: careerPathController.text,
               highlights: highlightsController.text,
-              isLiked: isLiked,
+              isLiked: state.addDoctorIsLiked,
               rating: double.tryParse(ratingController.text) ?? 0.0,
               email: emailController.text,
-              gender: selectedGender,
+              gender: state.addDoctorGender,
             );
 
             context.read<DoctorScreenBloc>().add(AddDoctorEvent(doctor));

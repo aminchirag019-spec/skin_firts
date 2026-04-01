@@ -60,3 +60,50 @@ class SelectDateEvent extends DoctorScreenEvent {
   final int index;
   SelectDateEvent(this.index);
 }
+
+class SelectTimeEvent extends DoctorScreenEvent {
+  final String time;
+  SelectTimeEvent(this.time);
+}
+
+class SelectPatientEvent extends DoctorScreenEvent {
+  final String patient;
+  SelectPatientEvent(this.patient);
+}
+
+class SelectGenderEvent extends DoctorScreenEvent {
+  final String gender;
+  SelectGenderEvent(this.gender);
+}
+
+class ChangeAddDoctorGenderEvent extends DoctorScreenEvent {
+  final String gender;
+  ChangeAddDoctorGenderEvent(this.gender);
+}
+
+class ToggleAddDoctorLikedEvent extends DoctorScreenEvent {
+  final bool isLiked;
+  ToggleAddDoctorLikedEvent(this.isLiked);
+}
+
+class ClearAddDoctorFormEvent extends DoctorScreenEvent {}
+
+class ToggleServiceExpansionEvent extends DoctorScreenEvent {
+  final String serviceTitle;
+  ToggleServiceExpansionEvent(this.serviceTitle);
+}
+
+class SelectPaymentMethodEvent extends DoctorScreenEvent {
+  final String method;
+  SelectPaymentMethodEvent(this.method);
+}
+
+class SelectAppointmentTabEvent extends DoctorScreenEvent {
+  final int index;
+  SelectAppointmentTabEvent(this.index);
+}
+
+class SelectCancelReasonEvent extends DoctorScreenEvent {
+  final String reason;
+  SelectCancelReasonEvent(this.reason);
+}

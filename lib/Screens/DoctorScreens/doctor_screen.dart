@@ -159,7 +159,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
   }
 }
 
-class ServiceDropdown extends StatefulWidget {
+class ServiceDropdown extends StatelessWidget {
   final String title;
   final String discription;
 
@@ -170,115 +170,113 @@ class ServiceDropdown extends StatefulWidget {
   });
 
   @override
-  State<ServiceDropdown> createState() => _ServiceDropdownState();
-}
-
-class _ServiceDropdownState extends State<ServiceDropdown> {
-  bool isExpanded = false;
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isExpanded = !isExpanded;
-            });
-          },
-          child: Container(
-              height: AppSize.height(context) * 0.065,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(
-                  AppSize.width(context) * 0.076,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 15),
-                  const Icon(Icons.favorite, color: Colors.white),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      maxLines: 2,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        height: 1,
-                        letterSpacing: -0.1,
+    return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+      buildWhen: (previous, current) =>
+          previous.expandedServiceTitles.contains(title) != current.expandedServiceTitles.contains(title),
+      builder: (context, state) {
+        bool isExpanded = state.expandedServiceTitles.contains(title);
+        return Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.read<DoctorScreenBloc>().add(ToggleServiceExpansionEvent(title));
+              },
+              child: Container(
+                  height: AppSize.height(context) * 0.065,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary,
+                    borderRadius: BorderRadius.circular(
+                      AppSize.width(context) * 0.076,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      const Icon(Icons.favorite, color: Colors.white),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            height: 1,
+                            letterSpacing: -0.1,
+                          ),
+                        ),
                       ),
-                    ),
+                      const Spacer(),
+                      Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: colorScheme.primary,
+                          size: AppSize.width(context) * 0.076,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  )),
+            ),
+            SizedBox(height: AppSize.height(context) * 0.011),
+            if (isExpanded) ...[
+              Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width(context) * 0.038,
                   ),
-                  const Spacer(),
-                  Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      color: colorScheme.primary,
-                      size: AppSize.width(context) * 0.076,
-                    ),
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.017,
+                  horizontal: AppSize.width(context) * 0.033,
+                ),
+                child: Text(
+                  discription,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    height: 1,
+                    letterSpacing: -0.3,
                   ),
-                  const SizedBox(width: 10),
-                ],
-              )),
-        ),
-        SizedBox(height: AppSize.height(context) * 0.011),
-        if (isExpanded) ...[
-          Container(
-            decoration: BoxDecoration(
-              color: colorScheme.secondary,
-              borderRadius: BorderRadius.circular(
-                AppSize.width(context) * 0.038,
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: AppSize.height(context) * 0.017,
-              horizontal: AppSize.width(context) * 0.033,
-            ),
-            child: Text(
-              widget.discription,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                height: 1,
-                letterSpacing: -0.3,
-              ),
-            ),
-          ),
-          SizedBox(height: AppSize.height(context) * 0.011),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colorScheme.secondary,
-              borderRadius: BorderRadius.circular(
-                AppSize.width(context) * 0.038,
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: AppSize.height(context) * 0.017,
-              horizontal: AppSize.width(context) * 0.033,
-            ),
-            child: Center(
-              child: Text(
-                "Looking doctors",
-                style: theme.textTheme.titleLarge?.copyWith(
-                  height: 0.8,
-                  letterSpacing: -0.3,
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.primary,
                 ),
               ),
-            ),
-          ),
-        ],
-      ],
+              SizedBox(height: AppSize.height(context) * 0.011),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width(context) * 0.038,
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSize.height(context) * 0.017,
+                  horizontal: AppSize.width(context) * 0.033,
+                ),
+                child: Center(
+                  child: Text(
+                    "Looking doctors",
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      height: 0.8,
+                      letterSpacing: -0.3,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }

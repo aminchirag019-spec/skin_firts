@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Global/dummy_data.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
 
-class AppointmentScreen extends StatefulWidget {
+class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
 
-  @override
-  State<AppointmentScreen> createState() => _AppointmentScreenState();
-}
-
-class _AppointmentScreenState extends State<AppointmentScreen> {
-  int _selectedIndex = 0;
-  final List<String> _tabs = ["Complete", "Upcoming", "Cancelled"];
+  final List<String> _tabs = const ["Complete", "Upcoming", "Cancelled"];
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +24,16 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         child: Column(
           children: [
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: topRow(
                 context,
-                onPressed: () => context.pop(),
+                onPressed: () => context.pop(context),
                 text: "All Appointment",
               ),
             ),
-             SizedBox(height: 16),
-            _buildTabs(),
-             SizedBox(height: 24),
+            const SizedBox(height: 16),
+            _buildTabs(context),
+            const SizedBox(height: 24),
             Expanded(
               child: _buildAppointmentList(),
             ),
@@ -45,57 +43,65 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     );
   }
 
-  Widget _buildTabs() {
+  Widget _buildTabs(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(_tabs.length, (index) {
-          bool isSelected = _selectedIndex == index;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              child: Container(
-                margin:  EdgeInsets.symmetric(horizontal: 4),
-                padding:  EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.darkPurple :  Color(0xffCAD6FF).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    _tabs[index],
-                    style: GoogleFonts.leagueSpartan(
-                      color: isSelected ? Colors.white : AppColors.darkPurple.withOpacity(0.6),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+      child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+        buildWhen: (previous, current) => previous.selectedAppointmentTabIndex != current.selectedAppointmentTabIndex,
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(_tabs.length, (index) {
+              bool isSelected = state.selectedAppointmentTabIndex == index;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<DoctorScreenBloc>().add(SelectAppointmentTabEvent(index));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.darkPurple : const Color(0xffCAD6FF).withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _tabs[index],
+                        style: GoogleFonts.leagueSpartan(
+                          color: isSelected ? Colors.white : AppColors.darkPurple.withOpacity(0.6),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           );
-        }),
+        },
       ),
     );
   }
 
   Widget _buildAppointmentList() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: doctors.length,
-      itemBuilder: (context, index) {
-        final doctor = doctors[index];
-        return _buildAppointmentCard(doctor);
+    return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+      buildWhen: (previous, current) => previous.selectedAppointmentTabIndex != current.selectedAppointmentTabIndex,
+      builder: (context, state) {
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: doctors.length,
+          itemBuilder: (context, index) {
+            final doctor = doctors[index];
+            return _buildAppointmentCard(context, doctor, state.selectedAppointmentTabIndex);
+          },
+        );
       },
     );
   }
 
-  Widget _buildAppointmentCard(DummyData doctor) {
+  Widget _buildAppointmentCard(BuildContext context, DummyData doctor, int selectedIndex) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -133,7 +139,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    if (_selectedIndex == 0) // Complete
+                    if (selectedIndex == 0) // Complete
                       Row(
                         children: [
                           Container(
@@ -172,7 +178,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          if (_selectedIndex == 1) ...[ // Upcoming
+          if (selectedIndex == 1) ...[ // Upcoming
             Row(
               children: [
                 _buildInfoChip(Icons.calendar_month_outlined, "Sunday, 12 June"),
@@ -180,9 +186,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 _buildInfoChip(Icons.access_time, "9:30 AM - 10:00 AM"),
               ],
             ),
-             SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
-          _buildActionButtons(doctor),
+          _buildActionButtons(context, doctor, selectedIndex),
         ],
       ),
     );
@@ -199,7 +205,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         child: Row(
           children: [
             Icon(icon, size: 16, color: AppColors.darkPurple),
-             SizedBox(width: 6),
+            const SizedBox(width: 6),
             Expanded(
               child: Text(
                 label,
@@ -217,8 +223,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     );
   }
 
-  Widget _buildActionButtons(DummyData doctor) {
-    if (_selectedIndex == 0) { // Complete
+  Widget _buildActionButtons(BuildContext context, DummyData doctor, int selectedIndex) {
+    if (selectedIndex == 0) { // Complete
       return Row(
         children: [
           Expanded(
@@ -235,7 +241,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               child: Text("Re-Book", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
             ),
           ),
-           SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
               onPressed: () {},
@@ -252,7 +258,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           ),
         ],
       );
-    } else if (_selectedIndex == 1) { // Upcoming
+    } else if (selectedIndex == 1) { // Upcoming
       return Row(
         children: [
           Expanded(
@@ -270,9 +276,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               child: Text("Details", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
             ),
           ),
-           SizedBox(width: 12),
+          const SizedBox(width: 12),
           _buildIconActionButton("assets/images/right.svg.svg", () {}),
-           SizedBox(width: 12),
+          const SizedBox(width: 12),
           _buildIconActionButton("assets/images/wrong.svg.svg", () {
             context.push(RouterName.cancelAppointmentScreen.path);
           }),
@@ -304,7 +310,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
-        decoration:  BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
         ),
@@ -312,7 +318,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           assetPath,
           height: 20,
           width: 20,
-          colorFilter:  ColorFilter.mode(AppColors.darkPurple, BlendMode.srcIn),
+          colorFilter: const ColorFilter.mode(AppColors.darkPurple, BlendMode.srcIn),
         ),
       ),
     );

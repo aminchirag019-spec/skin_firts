@@ -14,6 +14,15 @@ class DoctorScreenState extends Equatable {
   final List<ServiceModel> service;
   final bool isPasswordHidden;
   final int selectedDateIndex;
+  final String selectedTime;
+  final String selectedPatient;
+  final String selectedGender;
+  final String? selectedCancelReason;
+  final String addDoctorGender;
+  final bool addDoctorIsLiked;
+  final Set<String> expandedServiceTitles;
+  final String selectedPaymentMethod;
+  final int selectedAppointmentTabIndex;
 
   const DoctorScreenState({
     this.service = const [],
@@ -25,7 +34,16 @@ class DoctorScreenState extends Equatable {
     this.isTab = true,
     this.isPasswordHidden = true,
     this.selectedDateIndex = 0,
+    this.selectedTime = "10:00 AM",
+    this.selectedPatient = "Yourself",
+    this.selectedGender = "Female",
+    this.selectedCancelReason,
+    this.addDoctorGender = 'Male',
+    this.addDoctorIsLiked = false,
     this.switches = const [false, false, true, false, false, true, true, true],
+    this.expandedServiceTitles = const {},
+    this.selectedPaymentMethod = "Add New Card",
+    this.selectedAppointmentTabIndex = 0,
   });
 
   DoctorScreenState copyWith({
@@ -39,6 +57,15 @@ class DoctorScreenState extends Equatable {
     List<bool>? switches,
     bool? isPasswordHidden,
     int? selectedDateIndex,
+    String? selectedTime,
+    String? selectedPatient,
+    String? selectedGender,
+    String? selectedCancelReason,
+    String? addDoctorGender,
+    bool? addDoctorIsLiked,
+    Set<String>? expandedServiceTitles,
+    String? selectedPaymentMethod,
+    int? selectedAppointmentTabIndex,
   }) {
     return DoctorScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
@@ -51,6 +78,15 @@ class DoctorScreenState extends Equatable {
       switches: switches ?? this.switches,
       isPasswordHidden: isPasswordHidden ?? this.isPasswordHidden,
       selectedDateIndex: selectedDateIndex ?? this.selectedDateIndex,
+      selectedTime: selectedTime ?? this.selectedTime,
+      selectedPatient: selectedPatient ?? this.selectedPatient,
+      selectedGender: selectedGender ?? this.selectedGender,
+      selectedCancelReason: selectedCancelReason ?? this.selectedCancelReason,
+      addDoctorGender: addDoctorGender ?? this.addDoctorGender,
+      addDoctorIsLiked: addDoctorIsLiked ?? this.addDoctorIsLiked,
+      expandedServiceTitles: expandedServiceTitles ?? this.expandedServiceTitles,
+      selectedPaymentMethod: selectedPaymentMethod ?? this.selectedPaymentMethod,
+      selectedAppointmentTabIndex: selectedAppointmentTabIndex ?? this.selectedAppointmentTabIndex,
     );
   }
 
@@ -66,5 +102,14 @@ class DoctorScreenState extends Equatable {
     switches,
     isPasswordHidden,
     selectedDateIndex,
+    selectedTime,
+    selectedPatient,
+    selectedGender,
+    selectedCancelReason,
+    addDoctorGender,
+    addDoctorIsLiked,
+    expandedServiceTitles,
+    selectedPaymentMethod,
+    selectedAppointmentTabIndex,
   ];
 }

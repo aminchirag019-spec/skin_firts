@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
@@ -13,7 +17,6 @@ class CancelAppointmentScreen extends StatefulWidget {
 }
 
 class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
-  String? _selectedReason;
   final List<String> _reasons = [
     "Rescheduling",
     "Weather Conditions",
@@ -54,7 +57,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              ..._reasons.map((reason) => _buildReasonItem(reason)).toList(),
+              ..._reasons.map((reason) => _buildReasonItem(context, reason)).toList(),
               const SizedBox(height: 24),
               Text(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -106,56 +109,59 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
     );
   }
 
-  Widget _buildReasonItem(String reason) {
-    bool isSelected = _selectedReason == reason;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedReason = reason;
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xffCAD6FF).withOpacity(0.5) : Colors.transparent,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppColors.darkPurple,
-                  width: 2,
-                ),
-              ),
-              child: Center(
-                child: Container(
-                  height: 14,
-                  width: 14,
+  Widget _buildReasonItem(BuildContext context, String reason) {
+    return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+      buildWhen: (previous, current) => previous.selectedCancelReason != current.selectedCancelReason,
+      builder: (context, state) {
+        bool isSelected = state.selectedCancelReason == reason;
+        return GestureDetector(
+          onTap: () {
+            context.read<DoctorScreenBloc>().add(SelectCancelReasonEvent(reason));
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xffCAD6FF).withOpacity(0.5) : Colors.transparent,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: 24,
+                  width: 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isSelected ? AppColors.darkPurple : Colors.transparent,
+                    border: Border.all(
+                      color: AppColors.darkPurple,
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Container(
+                      height: 14,
+                      width: 14,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected ? AppColors.darkPurple : Colors.transparent,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 16),
+                Text(
+                  reason,
+                  style: GoogleFonts.leagueSpartan(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
-            Text(
-              reason,
-              style: GoogleFonts.leagueSpartan(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
