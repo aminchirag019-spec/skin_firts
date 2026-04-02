@@ -84,7 +84,7 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                           SizedBox(height: AppSize.height(context) * 0.082),
                           Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                            localization?.translate('loreum') ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                             textAlign: TextAlign.center,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               height: 1.2,

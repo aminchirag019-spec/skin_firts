@@ -21,10 +21,11 @@ class HelpCentreScreen extends StatelessWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(statusBarColor: Colors.white),
-      child: WillPopScope(
-        onWillPop: () async {
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) return;
           context.go(RouterName.profileScreen.path);
-          return false;
         },
         child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
           builder: (context, state) {
@@ -57,7 +58,7 @@ class HelpCentreScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                      "How Can We Help You?",
+                                      localization?.translate('howCanWeHelp') ?? "How Can We Help You?",
                                       style: theme.textTheme.titleLarge?.copyWith(
                                         color: colorScheme.secondary,
                                         fontWeight: FontWeight.w400,
@@ -70,7 +71,7 @@ class HelpCentreScreen extends StatelessWidget {
                                 height: 50,
                                 child: TextFormField(
                                   decoration: InputDecoration(
-                                    hintText: "Search...",
+                                    hintText: localization?.translate('searchHint') ?? "Search...",
                                     hintStyle: TextStyle(
                                       color: Colors.grey.shade500,
                                     ),
@@ -101,7 +102,10 @@ class HelpCentreScreen extends StatelessWidget {
                           horizontal: 25,
                           vertical: 10,
                         ),
-                        child: likedBar(text: "FAQ", title: "Contact Us"),
+                        child: likedBar(
+                          text: localization?.translate('faq') ?? "FAQ",
+                          title: localization?.translate('contactUs') ?? "Contact Us",
+                        ),
                       ),
                       // Expanded(
                       //   child: state.isTab

@@ -173,6 +173,7 @@ class ServiceDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localization = AppLocalizations.of(context);
 
     return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
       buildWhen: (previous, current) =>
@@ -263,7 +264,7 @@ class ServiceDropdown extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "Looking doctors",
+                    localization?.translate("lookingDoctors") ?? "Looking doctors",
                     style: theme.textTheme.titleLarge?.copyWith(
                       height: 0.8,
                       letterSpacing: -0.3,

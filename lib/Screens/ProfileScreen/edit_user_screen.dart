@@ -5,13 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/auth_model.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
-import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Router/router_class.dart';
-import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Helper/app_localizations.dart';
 import '../../Utilities/media_query.dart';
-import '../../main.dart';
 
 class EditUser extends StatefulWidget {
   const EditUser({super.key});
@@ -21,20 +19,16 @@ class EditUser extends StatefulWidget {
 }
 
 class _EditUserState extends State<EditUser> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController pass = TextEditingController();
-
-  TextEditingController nameController = TextEditingController();
-
-  TextEditingController dobController = TextEditingController();
-
-  TextEditingController phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController pass = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     context.read<AuthBloc>().add(LoadCurrentUser());
-    print("_----------------${nameController.text}");
   }
 
   @override
@@ -48,6 +42,9 @@ class _EditUserState extends State<EditUser> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.currentUser != null) {
@@ -61,7 +58,7 @@ class _EditUserState extends State<EditUser> {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width(context) * 0.064, // 25
+              horizontal: AppSize.width(context) * 0.064,
               vertical: AppSize.height(context) * 0.023,
             ),
             child: SingleChildScrollView(
@@ -71,26 +68,24 @@ class _EditUserState extends State<EditUser> {
                   topRow(
                     context,
                     onPressed: () => context.go(RouterName.profileScreen.path),
-                    text: "Profile",
+                    text: localization?.translate('editUser') ?? "Edit User",
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.011), // 10
+                  SizedBox(height: AppSize.height(context) * 0.011),
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      Positioned(
-                        child: CircleAvatar(
-                          radius: AppSize.width(context) * 0.153, // 60
-                          backgroundImage: const AssetImage(
-                            "assets/images/doctor_1.png",
-                          ),
+                      CircleAvatar(
+                        radius: AppSize.width(context) * 0.153,
+                        backgroundImage: const AssetImage(
+                          "assets/images/doctor_1.png",
                         ),
                       ),
                       Positioned(
-                        right: AppSize.width(context) * 0.007, // 3
-                        bottom: AppSize.height(context) * 0.009, // 8
+                        right: AppSize.width(context) * 0.007,
+                        bottom: AppSize.height(context) * 0.009,
                         child: Container(
-                          height: AppSize.width(context) * 0.076, // 30
-                          width: AppSize.width(context) * 0.076, // 30
+                          height: AppSize.width(context) * 0.076,
+                          width: AppSize.width(context) * 0.076,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xff2260FF),
@@ -103,37 +98,37 @@ class _EditUserState extends State<EditUser> {
                     ],
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
-                  title(context, title: "Full Name"),
+                  title(context, title: localization?.translate('fullname') ?? "Full Name"),
                   coustomTextField(
                     context: context,
                     controller: nameController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
-                  title(context, title: "Email"),
+                  title(context, title: localization?.translate('email') ?? "Email"),
                   coustomTextField(
                     context: context,
                     controller: _emailController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
-                  title(context, title: "Phone Number"),
+                  title(context, title: localization?.translate('mobile') ?? "Phone Number"),
                   coustomTextField(
                     context: context,
                     controller: phoneController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
-                  title(context, title: "Date of birth"),
+                  title(context, title: localization?.translate('dob') ?? "Date of birth"),
                   coustomTextField(
                     context: context,
                     controller: dobController,
                     hintText: "",
                   ),
-                  SizedBox(height: AppSize.height(context) * 0.2),
+                  SizedBox(height: AppSize.height(context) * 0.1),
                   customButton(
                     context,
-                    text: "Update Profile",
+                    text: localization?.translate('update') ?? "Update Profile",
                     backgroundColor: AppColors.darkPurple,
                     textColor: AppColors.white,
                     onPressed: () {

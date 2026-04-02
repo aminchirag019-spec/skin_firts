@@ -35,7 +35,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
             children: [
               topRow(
                 context,
-                text: localization?.translate('Review') ?? "Review",
+                text: localization?.translate('review') ?? "Review",
                 onPressed: () => context.go(RouterName.appointmentScreen.path),
               ),
               Expanded(
@@ -44,7 +44,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     children: [
                       SizedBox(height: AppSize.height(context) * 0.02),
                       Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        localization?.translate('loreum') ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.black54,
@@ -112,7 +112,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           controller: _commentController,
                           maxLines: 6,
                           decoration: InputDecoration(
-                            hintText: localization?.translate('enter_comment') ?? "Enter Your Comment Here...",
+                            hintText: localization?.translate('enterComment') ?? "Enter Your Comment Here...",
                             hintStyle: TextStyle(color: colorScheme.primary.withOpacity(0.4)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -137,7 +137,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             ),
                           ),
                           child: Text(
-                            localization?.translate('Add Review') ?? "Add Review",
+                            localization?.translate('addReview') ?? "Add Review",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
-import 'package:skin_firts/Global/dummy_data.dart';
+import '../../Global/dummy_data.dart';
 import '../../Global/enums.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Utilities/colors.dart';
@@ -27,10 +27,11 @@ class DoctorInfoScreen extends StatelessWidget {
     final localization = AppLocalizations.of(context);
     final langCode = Localizations.localeOf(context).languageCode;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
         context.go(RouterName.doctorScreen.path);
-        return false;
       },
       child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
         builder: (context, state) {
@@ -47,7 +48,8 @@ class DoctorInfoScreen extends StatelessWidget {
                     children: [
                       doctorsTopRow(
                         context,
-                        text: localization?.translate('info') ?? "Doctor Info",
+                        localization: localization,
+                        text: 'info',
                         onPressed: () {
                           context.go(RouterName.doctorScreen.path);
                         },
@@ -67,7 +69,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                 CircleAvatar(
                                   radius: AppSize.width(context) * 0.166,
                                   backgroundColor: Colors.white,
-                                  backgroundImage: const AssetImage(
+                                  backgroundImage: AssetImage(
                                     "assets/images/user_image.png",
                                   ),
                                 ),
@@ -105,7 +107,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                             ),
                                             SizedBox(width: AppSize.width(context) * 0.020),
                                             Text(
-                                              data?.experience ?? "",
+                                              localization?.formatNumber(data?.experience ?? "") ?? data?.experience ?? "",
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: Colors.white,
                                                 height: 1,
@@ -130,7 +132,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                             ),
                                             children: [
                                               TextSpan(
-                                                text: "${localization?.translate('focus') ?? 'Focus'}: ",
+                                                text: "${localization?.translate('Focus') ?? 'Focus'}: ",
                                                 style: const TextStyle(fontWeight: FontWeight.bold),
                                               ),
                                               TextSpan(
@@ -180,14 +182,14 @@ class DoctorInfoScreen extends StatelessWidget {
                                 infoBadge(
                                   context,
                                   "assets/images/star_svg.svg",
-                                  data?.rating.toString() ?? "0",
+                                  localization?.formatNumber(data?.rating.toString() ?? "0") ?? data?.rating.toString() ?? "0",
                                   width: 50,
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.007),
                                 infoBadge(
                                   context,
                                   "assets/images/meesage_svg.svg",
-                                  "50",
+                                  localization?.formatNumber("50") ?? "50",
                                   width: 50,
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.012),
@@ -206,11 +208,11 @@ class DoctorInfoScreen extends StatelessWidget {
                                           "assets/images/alarm_svg.svg",
                                           height: AppSize.width(context) * 0.041,
                                           width: AppSize.width(context) * 0.041,
-                                          color: colorScheme.primary,
+                                          colorFilter: ColorFilter.mode(colorScheme.primary, BlendMode.srcIn),
                                         ),
                                         SizedBox(width: AppSize.width(context) * 0.010),
                                         Text(
-                                          "Mon-Sat / 9:00AM - 5:00PM",
+                                          localization?.translate("doctorAvailability") ?? "Mon-Sat / 9:00AM - 5:00PM",
                                           style: theme.textTheme.bodySmall?.copyWith(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w300,
@@ -248,7 +250,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                           context.go(RouterName.doctorDetailsScreen.path,extra: data);
                                         },
                                         child: Text(
-                                          localization?.translate('schedule') ?? "Schedule",
+                                          localization?.translate('Schedule') ?? "Schedule",
                                           style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
                                         ),
                                       ),
@@ -373,7 +375,7 @@ class DoctorInfoScreen extends StatelessWidget {
   }
 }
 
-Widget doctorsTopRow(BuildContext context, {required String text, required VoidCallback onPressed}) {
+Widget doctorsTopRow(BuildContext context, {AppLocalizations? localization,required String text, required VoidCallback onPressed}) {
   final colorScheme = Theme.of(context).colorScheme;
   return Row(
     children: [
@@ -385,7 +387,7 @@ Widget doctorsTopRow(BuildContext context, {required String text, required VoidC
       Expanded(
         child: Center(
           child: Text(
-            text,
+            localization?.translate(text) ?? text,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.primary,

@@ -112,7 +112,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                                                   0.020,
                                             ),
                                             Text(
-                                              doctor?.experience ?? "",
+                                              localization?.formatNumber(doctor?.experience ?? "") ?? doctor?.experience ?? "",
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
                                                     color: Colors.white,
@@ -144,7 +144,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                                             children: [
                                               TextSpan(
                                                 text:
-                                                    "${localization?.translate('focus') ?? 'Focus'}: ",
+                                                    "${localization?.translate('Focus') ?? 'Focus'}: ",
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -208,14 +208,14 @@ class DoctorDetailsScreen extends StatelessWidget {
                                 infoBadge(
                                   context,
                                   "assets/images/star_svg.svg",
-                                  doctor?.rating.toString() ?? "0",
+                                  localization?.formatNumber(doctor?.rating.toString() ?? "0") ?? doctor?.rating.toString() ?? "0",
                                   width: 50,
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.007),
                                 infoBadge(
                                   context,
                                   "assets/images/meesage_svg.svg",
-                                  "50",
+                                  localization?.formatNumber("50") ?? "50",
                                   width: 50,
                                 ),
                                 SizedBox(width: AppSize.width(context) * 0.012),
@@ -253,7 +253,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                                             context.go(RouterName.scheduleScreen.path,extra: doctor);
                                           },
                                           child: Text(
-                                            "Mon-Sat / 9:00AM - 5:00PM",
+                                            localization?.translate("doctorAvailability") ?? "Mon-Sat / 9:00AM - 5:00PM",
                                             style: theme.textTheme.bodySmall
                                                 ?.copyWith(
                                                   fontSize: 10,
@@ -287,7 +287,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                               langCode,
                               localization,
                             ) ??
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                            localization?.translate('loreum') ?? "",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.black87,
                           height: 1.3,
@@ -314,6 +314,7 @@ class DoctorDetailsScreen extends StatelessWidget {
 
   Widget buildTopBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final localization = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
@@ -335,7 +336,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                 Icon(Icons.calendar_month, color: Colors.white, size: 16),
                 SizedBox(width: 4),
                 Text(
-                  "Schedule",
+                  localization?.translate("Schedule") ?? "Schedule",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -410,6 +411,16 @@ class DoctorDetailsScreen extends StatelessWidget {
     ColorScheme colorScheme,
     AppLocalizations? localization,
   ) {
+    final List<String> weekdays = [
+      localization?.translate("mon") ?? "MON",
+      localization?.translate("tue") ?? "TUE",
+      localization?.translate("wed") ?? "WED",
+      localization?.translate("thu") ?? "THU",
+      localization?.translate("fri") ?? "FRI",
+      localization?.translate("sat") ?? "SAT",
+      localization?.translate("sun") ?? "SUN",
+    ];
+
     return Container(
       padding: const EdgeInsets.all(20),
       color: colorScheme.secondary.withValues(alpha: 0.3),
@@ -421,7 +432,7 @@ class DoctorDetailsScreen extends StatelessWidget {
               Icon(Icons.arrow_back_ios, size: 14, color: colorScheme.primary),
               const SizedBox(width: 10),
               Text(
-                "MONTH",
+                localization?.translate("month") ?? "MONTH",
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -438,7 +449,7 @@ class DoctorDetailsScreen extends StatelessWidget {
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map((
+            children: weekdays.map((
               day,
             ) {
               return Container(
@@ -490,7 +501,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            "$day",
+                            localization?.formatNumber("$day") ?? "$day",
                             style: TextStyle(
                               color: isSelected
                                   ? Colors.white

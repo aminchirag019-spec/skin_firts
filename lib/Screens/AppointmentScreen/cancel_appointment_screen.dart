@@ -8,6 +8,7 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
+import 'package:skin_firts/Helper/app_localizations.dart';
 
 class CancelAppointmentScreen extends StatefulWidget {
   const CancelAppointmentScreen({super.key});
@@ -17,12 +18,6 @@ class CancelAppointmentScreen extends StatefulWidget {
 }
 
 class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
-  final List<String> _reasons = [
-    "Rescheduling",
-    "Weather Conditions",
-    "Unexpected Work",
-    "Others"
-  ];
   final TextEditingController _reasonController = TextEditingController();
 
   @override
@@ -33,6 +28,14 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final List<String> reasons = [
+      localization?.translate("rescheduling") ?? "Rescheduling",
+      localization?.translate("weatherConditions") ?? "Weather Conditions",
+      localization?.translate("unexpectedWork") ?? "Unexpected Work",
+      localization?.translate("others") ?? "Others"
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -44,11 +47,11 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
               topRow(
                 context,
                 onPressed: () => context.pop(),
-                text: "Cancel Appointment",
+                text: localization?.translate("cancelAppointment") ?? "Cancel Appointment",
               ),
               const SizedBox(height: 24),
               Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                localization?.translate("loreum") ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -57,10 +60,10 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              ..._reasons.map((reason) => _buildReasonItem(context, reason)).toList(),
+              ...reasons.map((reason) => _buildReasonItem(context, reason)).toList(),
               const SizedBox(height: 24),
               Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                localization?.translate("loreum") ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -78,7 +81,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                   controller: _reasonController,
                   maxLines: 6,
                   decoration: InputDecoration(
-                    hintText: "Enter Your Reason Here...",
+                    hintText: localization?.translate("enterReason") ?? "Enter Your Reason Here...",
                     hintStyle: GoogleFonts.leagueSpartan(
                       color: const Color(0xff809CFF),
                       fontSize: 16,
@@ -92,7 +95,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
               Center(
                 child: customButton(
                   context,
-                  text: "Cancel Appointment",
+                  text: localization?.translate("cancelAppointment") ?? "Cancel Appointment",
                   backgroundColor: AppColors.darkPurple,
                   textColor: Colors.white,
                   onPressed: () {

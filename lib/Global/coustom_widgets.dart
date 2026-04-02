@@ -1,20 +1,12 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
-import 'package:skin_firts/Screens/DoctorScreens/doctor_screen.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-
 import '../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../Bloc/DoctorBloc/doctor_screen_state.dart';
-import '../router/router_class.dart';
-
 import '../Utilities/media_query.dart';
 
 Widget topRow(BuildContext context, {

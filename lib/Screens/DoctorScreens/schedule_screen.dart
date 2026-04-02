@@ -61,17 +61,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            localization?.translate('Available Time') ?? "Available Time",
+                            localization?.translate('availableTime') ?? "Available Time",
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 15),
-                          _buildTimeGrid(context, colorScheme, state),
-                          const SizedBox(height: 20),
-                          const Divider(height: 1),
-                          const SizedBox(height: 20),
+                           SizedBox(height: 15),
+                          _buildTimeGrid(context, colorScheme, localization, state),
+                           SizedBox(height: 20),
+                           Divider(height: 1),
+                           SizedBox(height: 20),
                           Text(
                             localization?.translate('Patient Details') ?? "Patient Details",
                             style: theme.textTheme.titleMedium?.copyWith(
@@ -79,29 +79,29 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                           SizedBox(height: 10),
                           _buildPatientSelection(context, colorScheme, localization, state),
-                          const SizedBox(height: 20),
+                           SizedBox(height: 20),
                           Text(localization?.translate('Full Name') ?? "Full Name", style: theme.textTheme.bodySmall),
-                          const SizedBox(height: 5),
+                           SizedBox(height: 5),
                           coustomTextField(
                             context: context,
-                            hintText: localization?.translate('Jane Doe') ?? "Jane Doe",
+                            hintText: localization?.translate('Full Name') ?? "Full Name",
                             controller: _nameController,
                             isBold: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return localization?.translate('Name is required') ?? "Name is required";
+                                return localization?.translate('nameRequired') ?? "Name is required";
                               }
                               return null;
                             },
                           ),
-                          const SizedBox(height: 15),
+                           SizedBox(height: 15),
                           Text(localization?.translate('Age') ?? "Age", style: theme.textTheme.bodySmall),
-                          const SizedBox(height: 5),
+                           SizedBox(height: 5),
                           coustomTextField(
                             context: context,
-                            hintText: "30",
+                            hintText: localization?.formatNumber("30") ?? "30",
                             controller: _ageController,
                             isBold: false,
                             textInputType: TextInputType.number,
@@ -110,22 +110,22 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                 return localization?.translate('ageRequired') ?? "Age is required";
                               }
                               if (int.tryParse(value) == null) {
-                                return localization?.translate('invalidAge') ?? "Please enter a valid age";
+                                  return localization?.translate('invalidAge') ?? "Please enter a valid age";
                               }
                               return null;
                             },
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: 15),
                           Text(localization?.translate('Gender') ?? "Gender", style: theme.textTheme.bodySmall),
-                          const SizedBox(height: 10),
+                           SizedBox(height: 10),
                           _buildGenderSelection(context, colorScheme, localization, state),
-                          const SizedBox(height: 20),
-                          const Divider(height: 1),
-                          const SizedBox(height: 20),
-                          Text(localization?.translate('Describe your problem') ?? "Describe your problem", style: theme.textTheme.bodySmall),
-                          const SizedBox(height: 10),
+                           SizedBox(height: 20),
+                           Divider(height: 1),
+                           SizedBox(height: 20),
+                          Text(localization?.translate('Enter Your Problem Here...') ?? "Enter Your Problem Here...", style: theme.textTheme.bodySmall),
+                           SizedBox(height: 10),
                           _buildProblemDescription(context, localization),
-                          const SizedBox(height: 30),
+                           SizedBox(height: 30),
                           customButton(
                             context,
                             text: localization?.translate('Book Now') ?? "Book Now",
@@ -172,13 +172,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_month, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
+                Icon(Icons.calendar_month, color: Colors.white, size: 16),
+                 SizedBox(width: 4),
                 Text(
                   doctor != null 
-                      ? doctor.getLocalized(doctor.doctorName, langCode, localization)
-                      : localization?.translate("Schedule") ?? "Schedule",
-                  style: const TextStyle(
+                      ? (doctor.getLocalized(doctor.doctorName, langCode, localization) ?? "")
+                      : (localization?.translate("schedule") ?? "Schedule"),
+                  style:  TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -187,7 +187,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           chatBarIcons(
             context,
             svgPath: "assets/images/audio.svg.svg",
@@ -216,9 +216,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             imgWidth: 15,
             width: 6,
           ),
-          const Spacer(),
+           Spacer(),
           servicesOptions(context, color: AppColors.lightPurple, icon: Icons.question_mark, size: 15,),
-          const SizedBox(width: 3),
+           SizedBox(width: 3),
           BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
             builder: (context, state) {
               return GestureDetector(
@@ -240,7 +240,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               );
             },
           ),
-          const SizedBox(width: 2),
+          SizedBox(width: 2),
         ],
       ),
     );
@@ -256,13 +256,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Text(localization?.translate('Month') ?? "Month", style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold)),
-                const SizedBox(width: 5,),
+                Text(localization?.translate('month') ?? "Month", style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.bold)),
+                 SizedBox(width: 5,),
                 Icon(Icons.keyboard_arrow_down, color: colorScheme.primary),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: 10),
           SizedBox(
             height: 80,
             child: Row(
@@ -290,7 +290,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "${date.day}",
+                                localization?.formatNumber("${date.day}") ?? "${date.day}",
                                 style: GoogleFonts.leagueSpartan(
                                   color: isSelected ? AppColors.white : AppColors.black,
                                   fontSize: 20,
@@ -323,18 +323,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   String _getDayName(int weekday, AppLocalizations? localization) {
     switch (weekday) {
-      case 1: return localization?.translate("MON") ?? "MON";
-      case 2: return localization?.translate("TUE") ?? "TUE";
-      case 3: return localization?.translate("WED") ?? "WED";
-      case 4: return localization?.translate("THU") ?? "THU";
-      case 5: return localization?.translate("FRI") ?? "FRI";
-      case 6: return localization?.translate("SAT") ?? "SAT";
-      case 7: return localization?.translate("SUN") ?? "SUN";
+      case 1: return localization?.translate("mon") ?? "MON";
+      case 2: return localization?.translate("tue") ?? "TUE";
+      case 3: return localization?.translate("wed") ?? "WED";
+      case 4: return localization?.translate("thu") ?? "THU";
+      case 5: return localization?.translate("fri") ?? "FRI";
+      case 6: return localization?.translate("sat") ?? "SAT";
+      case 7: return localization?.translate("sun") ?? "SUN";
       default: return "";
     }
   }
 
-  Widget _buildTimeGrid(BuildContext context, ColorScheme colorScheme, DoctorScreenState state) {
+  Widget _buildTimeGrid(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
     List<String> times = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM"];
     return GridView.builder(
       shrinkWrap: true,
@@ -363,7 +363,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             child: Center(
               child: Text(
-                times[index],
+                localization?.formatNumber(times[index]) ?? times[index],
                 style: GoogleFonts.leagueSpartan(
                   color: isSelected ? Colors.white : (isBooked ? Colors.grey : AppColors.black) ,
                   fontSize: 10,
@@ -381,7 +381,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return Row(
       children: [
         _buildChoiceChip(
-          localization?.translate('Yourself') ?? "Yourself",
+          localization?.translate('your self') ?? "your self",
           state.selectedPatient == "Yourself", 
           colorScheme,
           () => context.read<DoctorScreenBloc>().add(SelectPatientEvent("Yourself")),

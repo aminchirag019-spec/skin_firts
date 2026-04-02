@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.displayMedium?.copyWith(
                   height: 0.8,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.w100,
                   color: AppColors.white,
                 ),
               ),

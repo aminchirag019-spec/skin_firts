@@ -11,14 +11,20 @@ import 'package:skin_firts/Global/dummy_data.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
+import 'package:skin_firts/Helper/app_localizations.dart';
 
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
 
-  final List<String> _tabs = const ["Complete", "Upcoming", "Cancelled"];
-
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final List<String> tabs = [
+      localization?.translate("complete") ?? "Complete",
+      localization?.translate("upcoming") ?? "Upcoming",
+      localization?.translate("cancelled") ?? "Cancelled"
+    ];
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -28,14 +34,14 @@ class AppointmentScreen extends StatelessWidget {
               child: topRow(
                 context,
                 onPressed: () => context.pop(context),
-                text: "All Appointment",
+                text: localization?.translate("allAppointment") ?? "All Appointment",
               ),
             ),
             const SizedBox(height: 16),
-            _buildTabs(context),
+            _buildTabs(context, tabs),
             const SizedBox(height: 24),
             Expanded(
-              child: _buildAppointmentList(),
+              child: _buildAppointmentList(tabs),
             ),
           ],
         ),
@@ -43,7 +49,7 @@ class AppointmentScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTabs(BuildContext context) {
+  Widget _buildTabs(BuildContext context, List<String> tabs) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
@@ -51,7 +57,7 @@ class AppointmentScreen extends StatelessWidget {
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(_tabs.length, (index) {
+            children: List.generate(tabs.length, (index) {
               bool isSelected = state.selectedAppointmentTabIndex == index;
               return Expanded(
                 child: GestureDetector(
@@ -67,7 +73,7 @@ class AppointmentScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        _tabs[index],
+                        tabs[index],
                         style: GoogleFonts.leagueSpartan(
                           color: isSelected ? Colors.white : AppColors.darkPurple.withOpacity(0.6),
                           fontSize: 16,
@@ -85,7 +91,7 @@ class AppointmentScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppointmentList() {
+  Widget _buildAppointmentList(List<String> tabs) {
     return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
       buildWhen: (previous, current) => previous.selectedAppointmentTabIndex != current.selectedAppointmentTabIndex,
       builder: (context, state) {
@@ -102,6 +108,7 @@ class AppointmentScreen extends StatelessWidget {
   }
 
   Widget _buildAppointmentCard(BuildContext context, DummyData doctor, int selectedIndex) {
+    final localization = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -153,7 +160,7 @@ class AppointmentScreen extends StatelessWidget {
                                 const Icon(Icons.star, color: Colors.blue, size: 14),
                                 const SizedBox(width: 4),
                                 Text(
-                                  doctor.rating.toString(),
+                                  localization?.formatNumber(doctor.rating.toString()) ?? doctor.rating.toString(),
                                   style: GoogleFonts.leagueSpartan(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -224,6 +231,7 @@ class AppointmentScreen extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context, DummyData doctor, int selectedIndex) {
+    final localization = AppLocalizations.of(context);
     if (selectedIndex == 0) { // Complete
       return Row(
         children: [
@@ -238,7 +246,7 @@ class AppointmentScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text("Re-Book", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
+              child: Text(localization?.translate("reBook") ?? "Re-Book", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
             ),
           ),
           const SizedBox(width: 12),
@@ -253,7 +261,7 @@ class AppointmentScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text("Add Review", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
+              child: Text(localization?.translate("addReview") ?? "Add Review", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
             ),
           ),
         ],
@@ -273,7 +281,7 @@ class AppointmentScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text("Details", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
+              child: Text(localization?.translate("details") ?? "Details", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
             ),
           ),
           const SizedBox(width: 12),
@@ -299,7 +307,7 @@ class AppointmentScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          child: Text("Add Review", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
+          child: Text(localization?.translate("addReview") ?? "Add Review", style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w600)),
         ),
       );
     }

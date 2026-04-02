@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/HomeScreen/coustom_home_widget.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
@@ -29,7 +30,7 @@ class AppointmentDetails extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: topRow(
                 context,
-                onPressed: () => context.pop(),
+                onPressed: () => context.go(RouterName.scheduleScreen.path,extra: doctor),
                 text: localization?.translate('Your Appointment') ?? "Your Appointment",
               ),
             ),
@@ -39,21 +40,21 @@ class AppointmentDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
+                     SizedBox(height: 10),
                     _buildDoctorCard(context, theme, colorScheme, localization, langCode),
-                    const SizedBox(height: 30),
-                    const Divider(color: AppColors.blue, thickness: 1),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 30),
+                     Divider(color: AppColors.blue, thickness: 1),
+                     SizedBox(height: 20),
                     _buildDateTimeSection(context, colorScheme, localization),
-                    const SizedBox(height: 20),
-                    const Divider(color: AppColors.blue, thickness: 1),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 20),
+                     Divider(color: AppColors.blue, thickness: 1),
+                     SizedBox(height: 20),
                     _buildPatientDetails(context, theme, colorScheme, localization),
-                    const SizedBox(height: 20),
-                    const Divider(color: AppColors.blue, thickness: 1),
-                    const SizedBox(height: 20),
+ SizedBox(height: 20),
+                     Divider(color: AppColors.blue, thickness: 1),
+                     SizedBox(height: 20),
                     _buildProblemSection(context, theme, colorScheme, localization),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -66,7 +67,7 @@ class AppointmentDetails extends StatelessWidget {
 
   Widget _buildDoctorCard(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations? localization, String langCode) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding:  EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.secondary.withOpacity(0.6),
         borderRadius: BorderRadius.circular(24),
@@ -76,7 +77,7 @@ class AppointmentDetails extends StatelessWidget {
           CircleAvatar(
             radius: AppSize.width(context) * 0.11,
             backgroundColor: Colors.white,
-            backgroundImage: const AssetImage("assets/images/user_image.png"),
+            backgroundImage:  AssetImage("assets/images/user_image.png"),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -84,7 +85,7 @@ class AppointmentDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -95,7 +96,7 @@ class AppointmentDetails extends StatelessWidget {
                       Text(
                         doctor != null 
                             ? "${doctor!.getLocalized(doctor!.doctorName, langCode, localization)}, ${doctor!.getLocalized(doctor!.qualification, langCode, localization)}"
-                            : "Dr. Olivia Turner, M.D.",
+                            : localization?.translate('drOliviaTurner') ?? "Dr. Olivia Turner, M.D.",
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -104,7 +105,7 @@ class AppointmentDetails extends StatelessWidget {
                       Text(
                         doctor != null 
                             ? doctor!.getLocalized(doctor!.specialization, langCode, localization)
-                            : "Dermato-Endocrinology",
+                            : localization?.translate('dermatoEndocrinology') ?? "Dermato-Endocrinology",
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.black54,
                         ),
@@ -146,7 +147,7 @@ class AppointmentDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  "Month 24, Year",
+                  localization?.translate('Month 24, Year') ?? "Month 24, Year",
                   style: GoogleFonts.leagueSpartan(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -157,7 +158,7 @@ class AppointmentDetails extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 12),
                 child: Text(
-                  "WED, 10:00 AM",
+                  localization?.translate('WED, 10:00 AM') ?? "WED, 10:00 AM",
                   style: GoogleFonts.leagueSpartan(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w500,
@@ -193,13 +194,13 @@ class AppointmentDetails extends StatelessWidget {
   Widget _buildPatientDetails(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations? localization) {
     return Column(
       children: [
-        _detailRow(localization?.translate('bookingFor') ?? "Booking For", "Another Person"),
+        _detailRow(localization?.translate('Booking For' ) ?? "Booking For", localization?.translate('Another Person') ?? "Another Person"),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('fullName') ?? "Full Name", "Jane Doe"),
+        _detailRow(localization?.translate('Full Name') ?? "Full Name", localization?.translate('janeDoe') ?? "Jane Doe"),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('age') ?? "Age", "30"),
+        _detailRow(localization?.translate('Age') ?? "Age", localization?.formatNumber("30") ?? "30"),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('gender') ?? "Gender", "Female"),
+        _detailRow(localization?.translate('Gender') ?? "Gender", localization?.translate('Female') ?? "Female"),
       ],
     );
   }
@@ -232,7 +233,7 @@ class AppointmentDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          localization?.translate('problem') ?? "Problem",
+          localization?.translate('Problem') ?? "Problem",
           style: GoogleFonts.leagueSpartan(
             color: Colors.black54,
             fontSize: 16,
@@ -240,7 +241,7 @@ class AppointmentDetails extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          localization?.translate('loreum') ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
           style: GoogleFonts.leagueSpartan(
             color: Colors.black,
             fontSize: 14,

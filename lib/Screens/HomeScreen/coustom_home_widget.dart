@@ -197,10 +197,12 @@ Widget appointmentInformation(BuildContext context) {
                   ),
                 ],
               ),
+              SizedBox(height: AppSize.height(context) *0.003,),
               Divider(color: colorScheme.primary.withOpacity(0.3)),
+              // SizedBox(height: AppSize.height(context) *0.002,),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
-                width: 240,
+                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                width: AppSize.width(context) *0.59,
                 decoration: BoxDecoration(
                   color: colorScheme.secondary,
                   borderRadius: BorderRadius.circular(AppSize.width(context) * 0.04),
@@ -209,7 +211,6 @@ Widget appointmentInformation(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5,vertical:0),
@@ -247,6 +248,7 @@ Widget appointmentInformation(BuildContext context) {
                   ],
                 ),
               ),
+              // SizedBox(height: AppSize.height(context) *0.0035,),
               Divider(color: colorScheme.primary.withOpacity(0.3)),
             ],
           ),
