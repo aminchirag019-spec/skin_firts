@@ -172,7 +172,7 @@ Widget appointmentInformation(BuildContext context) {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: AppSize.height(context) * 0.017,),
+            SizedBox(height: AppSize.height(context) * 0.017),
             _timeText(context, localization?.translate("9 AM") ?? "9 AM"),
             _timeText(context, localization?.translate("10 AM") ?? "10 AM"),
             _timeText(context, localization?.translate("11 AM") ?? "11 AM"),
@@ -183,7 +183,6 @@ Widget appointmentInformation(BuildContext context) {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -193,16 +192,18 @@ Widget appointmentInformation(BuildContext context) {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.primary,
                       letterSpacing: 0.6,
+                      fontSize: AppSize.width(context) * 0.028,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: AppSize.height(context) *0.003,),
+              SizedBox(height: AppSize.height(context) * 0.003),
               Divider(color: colorScheme.primary.withOpacity(0.3)),
-              // SizedBox(height: AppSize.height(context) *0.002,),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                width: AppSize.width(context) *0.59,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width(context) * 0.025,
+                  vertical: AppSize.height(context) * 0.009,
+                ),
                 decoration: BoxDecoration(
                   color: colorScheme.secondary,
                   borderRadius: BorderRadius.circular(AppSize.width(context) * 0.04),
@@ -212,43 +213,46 @@ Widget appointmentInformation(BuildContext context) {
                   children: [
                     Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5,vertical:0),
-                          child: Text(
-                            localization?.translate("Dr. Olivia Turner, M.D.") ?? "Dr. Olivia Turner, M.D.",
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.primary,
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSize.width(context) * 0.012,
+                            ),
+                            child: Text(
+                              localization?.translate("Dr. Olivia Turner, M.D.") ??
+                                  "Dr. Olivia Turner, M.D.",
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.primary,
+                                fontSize: AppSize.width(context) * 0.035,
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(width: AppSize.width(context) * 0.07,),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
+                          padding: EdgeInsets.only(bottom: AppSize.height(context) * 0.005),
                           child: Row(
                             children: [
-                              _statusIcon("assets/images/right.svg.svg"),
-                              SizedBox(width: 5),
-                              _statusIcon("assets/images/wrong.svg.svg"),
+                              _statusIcon(context, "assets/images/right.svg.svg"),
+                              SizedBox(width: AppSize.width(context) * 0.012),
+                              _statusIcon(context, "assets/images/wrong.svg.svg"),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    // SizedBox(height: 4),
                     Text(
                       localization?.translate(' Treatment and prevention of\n skin and photodermatitis.') ??
                           "Treatment and prevention of skin and photodermatitis.",
                       style: theme.textTheme.bodySmall?.copyWith(
-                        height: 1,
-                        fontSize: 13,
+                        height: 1.2,
+                        fontSize: AppSize.width(context) * 0.03,
                       ),
                     ),
                   ],
                 ),
               ),
-              // SizedBox(height: AppSize.height(context) *0.0035,),
               Divider(color: colorScheme.primary.withOpacity(0.3)),
             ],
           ),
@@ -265,34 +269,45 @@ Widget _timeText(BuildContext context, String text) {
       text,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(context).colorScheme.primary,
-            fontSize: 11,
+            fontSize: AppSize.width(context) * 0.028,
           ),
     ),
   );
 }
 
-Widget _statusIcon(String assetPath) {
+Widget _statusIcon(BuildContext context, String assetPath) {
   return Container(
-    padding: EdgeInsetsGeometry.symmetric(vertical: 3,horizontal: 3),
-    decoration: BoxDecoration(
+    padding: EdgeInsets.all(AppSize.width(context) * 0.008),
+    decoration: const BoxDecoration(
       color: Colors.white,
       shape: BoxShape.circle,
     ),
-    child: Center(child: SvgPicture.asset(assetPath,fit: BoxFit.cover,height: 7,width: 7,)),
+    child: Center(
+      child: SvgPicture.asset(
+        assetPath,
+        fit: BoxFit.cover,
+        height: AppSize.width(context) * 0.018,
+        width: AppSize.width(context) * 0.018,
+      ),
+    ),
   );
 }
 
 Widget circleIcon(BuildContext context, IconData icon, {bool isBlue = false}) {
   final colorScheme = Theme.of(context).colorScheme;
   return Container(
-    height: 22,
-    width: 22,
+    height: AppSize.width(context) * 0.056,
+    width: AppSize.width(context) * 0.056,
     decoration: const BoxDecoration(
       color: Colors.white,
       shape: BoxShape.circle,
     ),
     child: Center(
-      child: Icon(icon, size: 15, color: colorScheme.primary),
+      child: Icon(
+        icon,
+        size: AppSize.width(context) * 0.038,
+        color: colorScheme.primary,
+      ),
     ),
   );
 }
@@ -306,7 +321,7 @@ Widget infoBadge(
   final colorScheme = Theme.of(context).colorScheme;
   return Container(
     width: AppSize.width(context) * (width / 390.0),
-    height: 22,
+    height: AppSize.height(context) * 0.028,
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(20),
@@ -314,19 +329,20 @@ Widget infoBadge(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const SizedBox(width: 5),
+        SizedBox(width: AppSize.width(context) * 0.012),
         SvgPicture.asset(
           svgPath,
-          height: 16,
-          width: 16,
-          color: colorScheme.primary,
+          height: AppSize.width(context) * 0.04,
+          width: AppSize.width(context) * 0.04,
+          colorFilter: ColorFilter.mode(colorScheme.primary, BlendMode.srcIn),
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: AppSize.width(context) * 0.01),
         Text(
           text,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w300,
+                fontSize: AppSize.width(context) * 0.025,
               ),
         ),
       ],
