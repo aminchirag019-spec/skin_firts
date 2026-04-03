@@ -26,6 +26,7 @@ class DoctorScreenState extends Equatable {
   final int selectedAppointmentTabIndex;
   final List<AppointmentModel> appointments;
   final DoctorStatus appointmentStatus;
+  final DoctorStatus bookingStatus; 
   final AppointmentModel? lastBookedAppointment;
 
   const DoctorScreenState({
@@ -50,6 +51,7 @@ class DoctorScreenState extends Equatable {
     this.selectedAppointmentTabIndex = 1,
     this.appointments = const [],
     this.appointmentStatus = DoctorStatus.initial,
+    this.bookingStatus = DoctorStatus.initial,
     this.lastBookedAppointment,
   });
 
@@ -67,7 +69,7 @@ class DoctorScreenState extends Equatable {
     String? selectedTime,
     String? selectedPatient,
     String? selectedGender,
-    String? selectedCancelReason,
+    Object? selectedCancelReason = _sentinel,
     String? addDoctorGender,
     bool? addDoctorIsLiked,
     Set<String>? expandedServiceTitles,
@@ -75,7 +77,8 @@ class DoctorScreenState extends Equatable {
     int? selectedAppointmentTabIndex,
     List<AppointmentModel>? appointments,
     DoctorStatus? appointmentStatus,
-    AppointmentModel? lastBookedAppointment,
+    DoctorStatus? bookingStatus,
+    Object? lastBookedAppointment = _sentinel,
   }) {
     return DoctorScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
@@ -91,7 +94,7 @@ class DoctorScreenState extends Equatable {
       selectedTime: selectedTime ?? this.selectedTime,
       selectedPatient: selectedPatient ?? this.selectedPatient,
       selectedGender: selectedGender ?? this.selectedGender,
-      selectedCancelReason: selectedCancelReason ?? this.selectedCancelReason,
+      selectedCancelReason: selectedCancelReason == _sentinel ? this.selectedCancelReason : selectedCancelReason as String?,
       addDoctorGender: addDoctorGender ?? this.addDoctorGender,
       addDoctorIsLiked: addDoctorIsLiked ?? this.addDoctorIsLiked,
       expandedServiceTitles: expandedServiceTitles ?? this.expandedServiceTitles,
@@ -99,9 +102,12 @@ class DoctorScreenState extends Equatable {
       selectedAppointmentTabIndex: selectedAppointmentTabIndex ?? this.selectedAppointmentTabIndex,
       appointments: appointments ?? this.appointments,
       appointmentStatus: appointmentStatus ?? this.appointmentStatus,
-      lastBookedAppointment: lastBookedAppointment ?? this.lastBookedAppointment,
+      bookingStatus: bookingStatus ?? this.bookingStatus,
+      lastBookedAppointment: lastBookedAppointment == _sentinel ? this.lastBookedAppointment : lastBookedAppointment as AppointmentModel?,
     );
   }
+
+  static const _sentinel = Object();
 
   @override
   List<Object?> get props => [
@@ -126,6 +132,7 @@ class DoctorScreenState extends Equatable {
     selectedAppointmentTabIndex,
     appointments,
     appointmentStatus,
+    bookingStatus,
     lastBookedAppointment,
   ];
 }

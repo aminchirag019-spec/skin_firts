@@ -52,6 +52,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<BookAppointmentEvent>(_onBookAppointment);
     on<GetAppointmentsEvent>(_onGetAppointments);
     on<UpdateAppointmentStatusEvent>(_onUpdateAppointmentStatus);
+    // on<ClearAppointmentStatusEvent>(_onClearAppointmentStatus);
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -62,17 +63,24 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     return super.close();
   }
 
+  // void _onClearAppointmentStatus(ClearAppointmentStatusEvent event, Emitter<DoctorScreenState> emit) {
+  //   emit(state.copyWith(
+  //     bookingStatus: DoctorStatus.initial,
+  //     lastBookedAppointment: null
+  //   ));
+  // }
+
   void _onBookAppointment(BookAppointmentEvent event, Emitter<DoctorScreenState> emit) async {
-    emit(state.copyWith(appointmentStatus: DoctorStatus.loading));
+    emit(state.copyWith(bookingStatus: DoctorStatus.loading));
     try {
       await authRepository.bookAppointment(event.appointment);
       emit(state.copyWith(
-        appointmentStatus: DoctorStatus.success,
+        bookingStatus: DoctorStatus.success,
         lastBookedAppointment: event.appointment, // Store for navigation
       ));
       add(GetAppointmentsEvent());
     } catch (e) {
-      emit(state.copyWith(appointmentStatus: DoctorStatus.failure));
+      emit(state.copyWith(bookingStatus: DoctorStatus.failure));
     }
   }
 

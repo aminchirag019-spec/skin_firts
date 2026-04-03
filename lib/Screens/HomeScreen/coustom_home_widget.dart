@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
+import '../../Data/appointment_model.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Utilities/colors.dart';
 import '../../Router/router_class.dart';
@@ -155,7 +156,52 @@ Widget doctorInformationCard() {
   );
 }
 
-Widget appointmentInformation(BuildContext context) {
+Widget doctorStats(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: AppSize.width(context) * 0.064),
+    child: Row(
+      children: [
+        _statCard(context, "12", "Today's Patients", AppColors.darkPurple),
+        SizedBox(width: 10),
+        _statCard(context, "4", "Pending Requests", Colors.orange),
+      ],
+    ),
+  );
+}
+
+Widget _statCard(BuildContext context, String value, String label, Color color) {
+  return Expanded(
+    child: Container(
+      padding: EdgeInsets.all(AppSize.width(context) * 0.038),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(AppSize.width(context) * 0.038),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: GoogleFonts.leagueSpartan(
+              fontSize: AppSize.width(context) * 0.06,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: GoogleFonts.leagueSpartan(
+              fontSize: AppSize.width(context) * 0.03,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget appointmentInformation(BuildContext context, {AppointmentModel? appointment}) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
   final localization = AppLocalizations.of(context);
@@ -188,7 +234,9 @@ Widget appointmentInformation(BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "${localization?.translate("11 Wednesday") ?? "11 Wednesday"} - ${localization?.translate('today') ?? "Today"}",
+                    appointment != null 
+                      ? appointment.date 
+                      : "${localization?.translate("11 Wednesday") ?? "11 Wednesday"} - ${localization?.translate('today') ?? "Today"}",
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.primary,
                       letterSpacing: 0.6,
@@ -219,8 +267,9 @@ Widget appointmentInformation(BuildContext context) {
                               horizontal: AppSize.width(context) * 0.012,
                             ),
                             child: Text(
-                              localization?.translate("Dr. Olivia Turner, M.D.") ??
-                                  "Dr. Olivia Turner, M.D.",
+                              appointment != null 
+                                ? appointment.patientName 
+                                : (localization?.translate("Dr. Olivia Turner, M.D.") ?? "Dr. Olivia Turner, M.D."),
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
@@ -243,8 +292,10 @@ Widget appointmentInformation(BuildContext context) {
                       ],
                     ),
                     Text(
-                      localization?.translate(' Treatment and prevention of\n skin and photodermatitis.') ??
-                          "Treatment and prevention of skin and photodermatitis.",
+                      appointment != null 
+                        ? appointment.problem 
+                        : (localization?.translate(' Treatment and prevention of\n skin and photodermatitis.') ??
+                          "Treatment and prevention of skin and photodermatitis."),
                       style: theme.textTheme.bodySmall?.copyWith(
                         height: 1.2,
                         fontSize: AppSize.width(context) * 0.03,

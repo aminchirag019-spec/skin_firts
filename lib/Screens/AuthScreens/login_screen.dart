@@ -1,5 +1,4 @@
-
-import'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -159,6 +158,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             RouterName.fingerAuthenticationScreen.path,
                           );
                         }
+                      } else if (state.loginStatus == LoginStatus.failure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              localization?.translate('invalidLogin') ??
+                                  "Invalid Email or Password",
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                     },
                     builder: (context, state) {
@@ -214,10 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       LoginRow(
                         svgPath: "assets/images/finger_svg.svg",
                         onTap: () {
-                          if(!formKey.currentState!.validate()) return;
-                          context.go(
-                            RouterName.fingerAuthenticationScreen.path,
-                          );
+                          // Biometric login logic should be here
                         },
                       ),
                     ],

@@ -12,10 +12,10 @@ class SharedPrefsHelper {
 
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setBool("isLoggedIn", true);
-    await prefs.setString("userId", userId);
-    await prefs.setString("accessToken", accessToken);
-    await prefs.setString("checkToken", checkToken);
+    await prefs.setBool(PrefKeys.isLoggedIn, true);
+    await prefs.setString(PrefKeys.loginId, userId);
+    await prefs.setString(PrefKeys.accessToken, accessToken);
+    await prefs.setString(PrefKeys.checkToken, checkToken);
   }
 
   static Future<bool?> getBiometricEnabled(String userId) async {
@@ -33,24 +33,24 @@ class SharedPrefsHelper {
   static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getBool("isLoggedIn") ?? false;
+    return prefs.getBool(PrefKeys.isLoggedIn) ?? false;
   }
 
   static Future<String?> getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString("accessToken");
+    return prefs.getString(PrefKeys.accessToken);
   }
 
   static Future<String?> getCheckToken() async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString("checkToken");
+    return prefs.getString(PrefKeys.checkToken);
   }
   static Future<String?> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString("userId");
+    return prefs.getString(PrefKeys.loginId);
   }
 
   /// 🌐 LANGUAGE HELPER

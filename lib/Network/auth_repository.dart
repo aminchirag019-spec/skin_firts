@@ -305,14 +305,24 @@ class AuthRepository {
   Future<List<AppointmentModel>> getAppointments() async {
     final user = firebaseAuth.currentUser;
     if (user == null) return [];
-    final snapshot = await firestore
-        .collection('appointments')
-        .where('userId', isEqualTo: user.uid)
-        .orderBy('createdAt', descending: true)
-        .get();
+
+    final userData = await firestore.collection('users').doc(user.uid).get();
+    final role = userData.data()?['role'];
+
+    Query query = firestore.collection('appointments');
+
+    if (role == 'doctor') {
+      // If doctor, fetch appointments booked FOR them
+      query = query.where('doctorId', isEqualTo: user.uid);
+    } else {
+      // If user, fetch appointments booked BY them
+      query = query.where('userId', isEqualTo: user.uid);
+    }
+
+    final snapshot = await query.orderBy('createdAt', descending: true).get();
 
     return snapshot.docs.map((doc) {
-      return AppointmentModel.fromJson(doc.data(), doc.id);
+      return AppointmentModel.fromJson(doc.data() as Map<String, dynamic>, doc.id);
     }).toList();
   }
 

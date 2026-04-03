@@ -33,6 +33,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   final TextEditingController _problemController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _ageController.dispose();
@@ -50,13 +55,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return Scaffold(
       body: SafeArea(
         child: BlocConsumer<DoctorScreenBloc, DoctorScreenState>(
+          listenWhen: (previous, current) => 
+              previous.bookingStatus != current.bookingStatus,
           listener: (context, state) {
-            if (state.appointmentStatus == DoctorStatus.success && state.lastBookedAppointment != null) {
+            if (state.bookingStatus == DoctorStatus.success && state.lastBookedAppointment != null) {
                ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Appointment Booked Successfully"), backgroundColor: Colors.green),
               );
+              
+              final appointment = state.lastBookedAppointment;
+              
+              context.go(RouterName.appointmentDetails.path, extra: appointment);
               // Pass the appointment model to the details screen
-              context.go(RouterName.appointmentDetails.path, extra: state.lastBookedAppointment);
             }
           },
           builder: (context, state) {
@@ -139,7 +149,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                            SizedBox(height: 10),
                           _buildProblemDescription(context, localization),
                            SizedBox(height: 30),
-                          state.appointmentStatus == DoctorStatus.loading
+                          state.bookingStatus == DoctorStatus.loading
                           ? const Center(child: CircularProgressIndicator())
                           : customButton(
                             context,
