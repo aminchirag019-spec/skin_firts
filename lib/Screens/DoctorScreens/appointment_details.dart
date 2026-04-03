@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
-import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Global/custom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/HomeScreen/coustom_home_widget.dart';
 import 'package:skin_firts/Utilities/colors.dart';

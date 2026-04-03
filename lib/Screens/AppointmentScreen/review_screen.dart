@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Global/custom_widgets.dart';
 import '../../Data/doctor_model.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';

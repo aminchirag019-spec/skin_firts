@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
-import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Global/custom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/main.dart';
@@ -97,7 +97,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                            SizedBox(height: 20),
                           Text(localization?.translate('Full Name') ?? "Full Name", style: theme.textTheme.bodySmall),
                            SizedBox(height: 5),
-                          coustomTextField(
+                          customTextField(
                             context: context,
                             hintText: localization?.translate('Full Name') ?? "Full Name",
                             controller: _nameController,
@@ -112,7 +112,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                            SizedBox(height: 15),
                           Text(localization?.translate('Age') ?? "Age", style: theme.textTheme.bodySmall),
                            SizedBox(height: 5),
-                          coustomTextField(
+                          customTextField(
                             context: context,
                             hintText: localization?.formatNumber("30") ?? "30",
                             controller: _ageController,

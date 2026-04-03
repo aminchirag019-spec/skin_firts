@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Router/router_class.dart';
-import 'package:skin_firts/global/coustom_widgets.dart';
+import 'package:skin_firts/global/custom_widgets.dart';
 
 import '../../Global/enums.dart';
 import '../../Helper/app_localizations.dart';

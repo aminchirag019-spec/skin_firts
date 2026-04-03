@@ -9,7 +9,8 @@ import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
-import '../../Global/coustom_widgets.dart';
+
+import '../../Global/custom_widgets.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';

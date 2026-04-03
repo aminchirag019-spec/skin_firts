@@ -9,16 +9,17 @@ import '../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../Utilities/media_query.dart';
 
-Widget topRow(BuildContext context, {
+Widget topRow(
+  BuildContext context, {
   required VoidCallback onPressed,
   required String text,
-  Color ? color
+  Color? color,
 }) {
   return Row(
     children: [
       GestureDetector(
         onTap: onPressed,
-        child: Icon(Icons.arrow_back_ios, color:color ?? AppColors.darkPurple),
+        child: Icon(Icons.arrow_back_ios, color: color ?? AppColors.darkPurple),
       ),
       Expanded(
         child: Center(
@@ -37,7 +38,7 @@ Widget topRow(BuildContext context, {
   );
 }
 
-Widget coustomTextField({
+Widget customTextField({
   required BuildContext context,
   required String hintText,
   ImageProvider? image,
@@ -48,15 +49,14 @@ Widget coustomTextField({
   TextAlignVertical? alignment,
   bool isBold = false,
   bool obscureText = false,
-  String? SvgPath,
   String? padding,
   double h = 14,
   double w = 10,
   VoidCallback? onTap,
   String? initialValue,
-  String ? type,
-  TextInputType ? textInputType,
-  int ? maxLength
+  String? type,
+  TextInputType? textInputType,
+  int? maxLength,
 }) {
   return TextFormField(
     controller: controller,
@@ -67,9 +67,7 @@ Widget coustomTextField({
     obscureText: obscureText,
     autovalidateMode: AutovalidateMode.onUserInteraction,
     onTap: onTap,
-    style: GoogleFonts.leagueSpartan(
-      fontSize: 20
-    ),
+    style: GoogleFonts.leagueSpartan(fontSize: 20),
     decoration: InputDecoration(
       isCollapsed: true,
       alignLabelWithHint: true,
@@ -94,29 +92,27 @@ Widget coustomTextField({
       filled: true,
       fillColor: Color(0xffECF1FF),
       border: UnderlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          AppSize.width(context) * 0.038,
-        ),
+        borderRadius: BorderRadius.circular(AppSize.width(context) * 0.038),
         borderSide: BorderSide.none,
       ),
       suffixIcon: image != null
           ? BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-        builder: (context, state) {
-          return IconButton(
-            onPressed: () {
-              context
-                  .read<DoctorScreenBloc>()
-                  .add(TogglePasswordVisibility());
-              },
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () {
+                    context.read<DoctorScreenBloc>().add(
+                      TogglePasswordVisibility(),
+                    );
+                  },
 
-            icon: Icon(
-              state.isPasswordHidden
-                  ? Icons.visibility_off
-                  : Icons.visibility,
-            ),
-          );
-        },
-      )
+                  icon: Icon(
+                    state.isPasswordHidden
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                );
+              },
+            )
           : null,
     ),
   );
@@ -131,7 +127,8 @@ class LoginRow {
   LoginRow({required this.svgPath, this.onTap, this.radius, this.iconSize});
 }
 
-Widget loginRow(BuildContext context, {
+Widget loginRow(
+  BuildContext context, {
   required List<LoginRow> icons,
   double defaultRadius = 25,
   double defaultIconSize = 30,
@@ -165,7 +162,8 @@ Widget loginRow(BuildContext context, {
   );
 }
 
-Widget customButton(BuildContext context, {
+Widget customButton(
+  BuildContext context, {
   required String text,
   required Color backgroundColor,
   required Color textColor,
@@ -205,23 +203,23 @@ List<Days> getDynamicAppointmentDates() {
   DateTime now = DateTime.now();
   for (int i = 0; i < 30; i++) {
     DateTime current = now.add(Duration(days: i));
-    dates.add(Days(
-      date: current,
-      day: DateFormat('EEE').format(current).toUpperCase(),
-    ));
+    dates.add(
+      Days(date: current, day: DateFormat('EEE').format(current).toUpperCase()),
+    );
   }
   return dates;
 }
 
 List<Days> appointmentDates = getDynamicAppointmentDates();
 
-Widget homeCircleIcon(BuildContext context,
-    String svgPath, {
-      bool showDot = false,
-    }) {
+Widget homeCircleIcon(
+  BuildContext context,
+  String svgPath, {
+  bool showDot = false,
+}) {
   return Container(
     padding: EdgeInsets.all(AppSize.width(context) * 0.012), // 5
-    decoration:  BoxDecoration(
+    decoration: BoxDecoration(
       color: AppColors.lightPurple,
       shape: BoxShape.circle,
     ),
@@ -261,7 +259,7 @@ Widget menuItem(String svgPath, String text, BuildContext context) {
         svgPath,
         height: AppSize.height(context) * 0.020,
         width: AppSize.width(context) * 0.038,
-        colorFilter:  ColorFilter.mode(AppColors.darkPurple, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(AppColors.darkPurple, BlendMode.srcIn),
       ),
 
       SizedBox(height: AppSize.height(context) * 0.007),

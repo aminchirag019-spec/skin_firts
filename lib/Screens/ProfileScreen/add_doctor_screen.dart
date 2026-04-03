@@ -6,7 +6,7 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_bloc.dart';
 import 'package:skin_firts/Bloc/NotificationBloc/notification_event.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
-import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Global/custom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';

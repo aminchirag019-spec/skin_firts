@@ -6,7 +6,6 @@ import 'package:skin_firts/Network/translation_repository.dart';
 import '../Data/auth_model.dart';
 import '../Data/doctor_model.dart';
 import '../Helper/sharedpref_helper.dart';
-import '../main.dart';
 
 class AuthRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -43,6 +42,7 @@ class AuthRepository {
       }
     } catch (e) {
       print("Error creating user: $e");
+      rethrow;
     }
     return null;
   }
@@ -136,16 +136,17 @@ class AuthRepository {
     required String currentPassword,
     required String newPassword,
   }) async {
+    final user = firebaseAuth.currentUser;
     if (user == null) return;
     try {
       final credential = EmailAuthProvider.credential(
-        email: user!.email!,
+        email: user.email!,
         password: currentPassword,
       );
-      await user!.reauthenticateWithCredential(credential);
-      await user!.updatePassword(newPassword);
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
 
-      await firestore.collection('users').doc(user!.uid).update({
+      await firestore.collection('users').doc(user.uid).update({
         "password": newPassword,
         "passwordUpdatedAt": DateTime.now().toIso8601String(),
       });
@@ -156,9 +157,10 @@ class AuthRepository {
   }
 
   Future<void> updateUserProfile({required SignupModel signupModel}) async {
+    final user = firebaseAuth.currentUser;
     if (user == null) return;
 
-    await firestore.collection('users').doc(user!.uid).update({
+    await firestore.collection('users').doc(user.uid).update({
       "name": signupModel.name,
       "phone": signupModel.phone,
       "dob": signupModel.dob,
@@ -178,12 +180,15 @@ class AuthRepository {
   }
 
   Future<void> addDoctor({required AddDoctor addDoctorModel}) async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) return;
+
     final docRef = firestore.collection('doctors').doc();
 
     await docRef.set({
       ...addDoctorModel.toJson(),
       "id": docRef.id,
-      "userId": user!.uid,
+      "userId": user.uid,
       "createdAt": DateTime.now().toIso8601String(),
     });
   }
@@ -242,6 +247,7 @@ class AuthRepository {
       }
     } catch (e) {
       print(e);
+      rethrow;
     }
     return null;
   }
@@ -254,7 +260,7 @@ class AuthRepository {
         await SharedPrefsHelper.logout(userId);
       }
 
-      await FirebaseAuth.instance.signOut();
+      await firebaseAuth.signOut();
     } catch (e) {
       print("Logout Error: $e");
     }
@@ -297,10 +303,11 @@ class AuthRepository {
   }
 
   Future<List<AppointmentModel>> getAppointments() async {
+    final user = firebaseAuth.currentUser;
     if (user == null) return [];
     final snapshot = await firestore
         .collection('appointments')
-        .where('userId', isEqualTo: user!.uid)
+        .where('userId', isEqualTo: user.uid)
         .orderBy('createdAt', descending: true)
         .get();
 

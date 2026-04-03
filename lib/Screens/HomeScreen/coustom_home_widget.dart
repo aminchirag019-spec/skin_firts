@@ -22,7 +22,7 @@ Widget doctorInformationCard() {
       if (state.getDoctor.isEmpty) {
         return Center(
           child: Text(
-            localization?.translate('noDoctorsFound') ?? "No Doctors Found",
+            localization?.translate('No Doctors Found') ?? "No Doctors Found",
             style: theme.textTheme.bodyMedium,
           ),
         );

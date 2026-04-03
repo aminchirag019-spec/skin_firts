@@ -8,7 +8,7 @@ import 'package:skin_firts/Utilities/time_zones.dart';
 
 import '../../Bloc/NotificationBloc/notification_bloc.dart';
 import '../../Bloc/NotificationBloc/notification_state.dart';
-import '../../Global/coustom_widgets.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';

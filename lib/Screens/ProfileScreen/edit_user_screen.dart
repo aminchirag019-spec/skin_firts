@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Data/auth_model.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/Global/coustom_widgets.dart';
+import 'package:skin_firts/Global/custom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
@@ -99,28 +99,28 @@ class _EditUserState extends State<EditUser> {
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   title(context, title: localization?.translate('fullname') ?? "Full Name"),
-                  coustomTextField(
+                  customTextField(
                     context: context,
                     controller: nameController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   title(context, title: localization?.translate('email') ?? "Email"),
-                  coustomTextField(
+                  customTextField(
                     context: context,
                     controller: _emailController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   title(context, title: localization?.translate('mobile') ?? "Phone Number"),
-                  coustomTextField(
+                  customTextField(
                     context: context,
                     controller: phoneController,
                     hintText: "",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
                   title(context, title: localization?.translate('dob') ?? "Date of birth"),
-                  coustomTextField(
+                  customTextField(
                     context: context,
                     controller: dobController,
                     hintText: "",

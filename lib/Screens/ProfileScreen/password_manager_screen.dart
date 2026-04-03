@@ -7,7 +7,7 @@ import 'package:skin_firts/Screens/ProfileScreen/add_doctor_screen.dart';
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Global/app_string.dart';
 import '../../Utilities/colors.dart';
-import '../../Global/coustom_widgets.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Global/enums.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/media_query.dart';
@@ -60,7 +60,7 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
                     ),
                     SizedBox(height: AppSize.height(context) * 0.011),
                     title(context, title: "Current Password"),
-                    coustomTextField(
+                    customTextField(
                       context: context,
                       controller: currentPassController,
                       hintText: "••••••••",
@@ -88,7 +88,7 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
                     ),
                     SizedBox(height: AppSize.height(context) * 0.011),
                     title(context, title: "New Password"),
-                    coustomTextField(
+                    customTextField(
                       context: context,
                       controller: newPassController,
                       hintText: "••••••••",
@@ -96,7 +96,7 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
                     ),
                     SizedBox(height: AppSize.height(context) * 0.021),
                     title(context, title: "Confirm Password"),
-                    coustomTextField(
+                    customTextField(
                       context: context,
                       controller: confirmPassController,
                       hintText: "••••••••",

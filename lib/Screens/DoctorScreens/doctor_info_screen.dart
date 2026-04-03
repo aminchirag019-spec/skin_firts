@@ -12,7 +12,7 @@ import '../../Utilities/media_query.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
-import '../../Global/coustom_widgets.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Router/router_class.dart';
 import '../HomeScreen/coustom_home_widget.dart';
 
@@ -26,12 +26,10 @@ class DoctorInfoScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final localization = AppLocalizations.of(context);
     final langCode = Localizations.localeOf(context).languageCode;
-
     String getValidText(dynamic field) {
       final text = data?.getLocalized(field, langCode, localization) ?? "";
       return text.isEmpty ? (localization?.translate("loreum") ?? "loreum") : text;
     }
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {

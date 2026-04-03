@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../Global/coustom_widgets.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
@@ -52,7 +52,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                         SizedBox(height: AppSize.height(context) * 0.04),
                         _buildLabel("Card Holder Name"),
                         SizedBox(height: AppSize.height(context) * 0.01),
-                        coustomTextField(
+                        customTextField(
                           context: context,
                           hintText: "John Doe",
                           controller: _cardHolderController,
@@ -60,7 +60,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                         SizedBox(height: AppSize.height(context) * 0.02),
                         _buildLabel("Card Number"),
                         SizedBox(height: AppSize.height(context) * 0.01),
-                        coustomTextField(
+                        customTextField(
                           context: context,
                           hintText: "000 000 000 00",
                           controller: _cardNumberController,
@@ -75,7 +75,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                                 children: [
                                   _buildLabel("Expiry Date"),
                                   SizedBox(height: AppSize.height(context) * 0.01),
-                                  coustomTextField(
+                                  customTextField(
                                     context: context,
                                     hintText: "04/28",
                                     controller: _expiryDateController,
@@ -91,7 +91,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                                 children: [
                                   _buildLabel("CVV"),
                                   SizedBox(height: AppSize.height(context) * 0.01),
-                                  coustomTextField(
+                                  customTextField(
                                     context: context,
                                     hintText: "0000",
                                     controller: _cvvController,

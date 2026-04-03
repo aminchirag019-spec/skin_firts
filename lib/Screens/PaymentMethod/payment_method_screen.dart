@@ -7,7 +7,7 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/router/router_class.dart';
-import '../../Global/coustom_widgets.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Utilities/colors.dart';
 import '../../Utilities/media_query.dart';
 

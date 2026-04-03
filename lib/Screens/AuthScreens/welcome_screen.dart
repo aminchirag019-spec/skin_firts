@@ -8,7 +8,7 @@ import 'package:skin_firts/router/router_class.dart';
 import '../../Bloc/LocaleBloc/locale_event.dart';
 import '../../Bloc/LocaleBloc/locale_state.dart';
 import '../../Helper/app_localizations.dart';
-import '../../global/coustom_widgets.dart';
+import '../../global/custom_widgets.dart';
 import '../../Utilities/media_query.dart';
 
 class WelcomeScreen extends StatelessWidget {

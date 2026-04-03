@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skin_firts/Bloc/LocaleBloc/locale_bloc.dart';
-import 'package:skin_firts/global/coustom_widgets.dart';
+import 'package:skin_firts/global/custom_widgets.dart';
 
 import '../../Bloc/LocaleBloc/locale_event.dart';
 import '../../Bloc/LocaleBloc/locale_state.dart';

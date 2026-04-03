@@ -224,12 +224,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(signupStatus: SignupStatus.loading));
 
     try {
-      await repository.signUp(signupModel: event.signupModel);
+      final user = await repository.signUp(signupModel: event.signupModel);
 
       emit(
         state.copyWith(
           signupStatus: SignupStatus.success,
-          signupModel: event.signupModel,
+          signupModel: event.signupModel.copyWith(uid: user?.uid ?? ""),
         ),
       );
       add(LoadCurrentUser());

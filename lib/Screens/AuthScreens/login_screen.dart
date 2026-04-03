@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
+import'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,9 +10,9 @@ import 'package:skin_firts/router/router_class.dart';
 
 import '../../Bloc/AuthBloc/auth_bloc.dart';
 import '../../Data/auth_model.dart';
+import '../../Global/custom_widgets.dart';
 import '../../Helper/app_localizations.dart';
 import '../../Helper/sharedpref_helper.dart';
-import '../../global/coustom_widgets.dart';
 import '../../Utilities/media_query.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         SizedBox(height: AppSize.height(context) * 0.005),
-                        coustomTextField(
+                        customTextField(
                           context: context,
                           controller: emailController,
                           hintText:
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         SizedBox(height: AppSize.height(context) * 0.005),
-                        coustomTextField(
+                        customTextField(
                           context: context,
                           controller: passwordController,
                           validator: (value) =>
