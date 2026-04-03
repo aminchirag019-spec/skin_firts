@@ -1,15 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
+import 'package:skin_firts/main.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Global/dummy_data.dart';
+import '../../Global/enums.dart';
 import '../../Helper/app_localizations.dart';
 import '../ChatScreens/chat_widget.dart';
 import 'doctor_info_screen.dart';
@@ -45,7 +49,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+        child: BlocConsumer<DoctorScreenBloc, DoctorScreenState>(
+          listener: (context, state) {
+            if (state.appointmentStatus == DoctorStatus.success && state.lastBookedAppointment != null) {
+               ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Appointment Booked Successfully"), backgroundColor: Colors.green),
+              );
+              // Pass the appointment model to the details screen
+              context.go(RouterName.appointmentDetails.path, extra: state.lastBookedAppointment);
+            }
+          },
           builder: (context, state) {
             return Form(
               key: _formKey,
@@ -126,15 +139,37 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                            SizedBox(height: 10),
                           _buildProblemDescription(context, localization),
                            SizedBox(height: 30),
-                          customButton(
+                          state.appointmentStatus == DoctorStatus.loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : customButton(
                             context,
                             text: localization?.translate('Book Now') ?? "Book Now",
                             backgroundColor: colorScheme.primary,
                             textColor: Colors.white,
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                context.go(RouterName.appointmentDetails.path,
-                                    extra: widget.doctor);
+                              if (_formKey.currentState!.validate() && widget.doctor != null) {
+                                final selectedDate = DateTime.now().add(Duration(days: state.selectedDateIndex));
+                                final dateStr = "${_getDayFullName(selectedDate.weekday, localization)}, ${selectedDate.day} ${_getMonthName(selectedDate.month)}";
+
+                                final appointment = AppointmentModel(
+                                  id: "",
+                                  doctorId: widget.doctor!.id,
+                                  doctorName: widget.doctor!.getLocalized(widget.doctor!.doctorName, langCode, localization),
+                                  doctorQualification: widget.doctor!.getLocalized(widget.doctor!.qualification, langCode, localization),
+                                  doctorSpecialization: widget.doctor!.getLocalized(widget.doctor!.specialization, langCode, localization),
+                                  doctorImage: widget.doctor!.profile ?? "",
+                                  userId: user!.uid,
+                                  patientName: _nameController.text,
+                                  patientAge: _ageController.text,
+                                  patientGender: state.selectedGender,
+                                  problem: _problemController.text,
+                                  date: dateStr,
+                                  time: state.selectedTime,
+                                  status: "upcoming",
+                                  createdAt: Timestamp.now(),
+                                );
+
+                                context.read<DoctorScreenBloc>().add(BookAppointmentEvent(appointment));
                               }
                             },
                             width: double.infinity,
@@ -248,7 +283,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Widget _buildDateSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
     return Container(
-      color: colorScheme.secondary.withValues(alpha: 0.4),
+      color: colorScheme.secondary.withOpacity(0.4),
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
@@ -304,165 +339,182 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   color: isSelected ? AppColors.white : AppColors.black,
                                   fontSize: 15,
                                 ),
-                              ),
-                            ],
+                              )],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Icon(Icons.arrow_forward_ios, color: colorScheme.primary, size: 16),
-              ],
+                  Icon(Icons.arrow_forward_ios, color: colorScheme.primary, size: 16),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getDayName(int weekday, AppLocalizations? localization) {
-    switch (weekday) {
-      case 1: return localization?.translate("mon") ?? "MON";
-      case 2: return localization?.translate("tue") ?? "TUE";
-      case 3: return localization?.translate("wed") ?? "WED";
-      case 4: return localization?.translate("thu") ?? "THU";
-      case 5: return localization?.translate("fri") ?? "FRI";
-      case 6: return localization?.translate("sat") ?? "SAT";
-      case 7: return localization?.translate("sun") ?? "SUN";
-      default: return "";
+          ],
+        ),
+      );
     }
-  }
-
-  Widget _buildTimeGrid(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
-    List<String> times = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM"];
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 2.2,
-      ),
-      itemCount: times.length,
-      itemBuilder: (context, index) {
-        bool isSelected = times[index] == state.selectedTime;
-        bool isBooked = times[index] == "10:30 AM" || times[index] == "12:00 PM";
-        
-        return GestureDetector(
-          onTap: isBooked ? null : () {
-            context.read<DoctorScreenBloc>().add(SelectTimeEvent(times[index]));
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: isSelected 
-                  ? colorScheme.primary 
-                  : (isBooked ? Colors.grey.shade300 : colorScheme.secondary.withValues(alpha: 0.5)),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: Text(
-                localization?.formatNumber(times[index]) ?? times[index],
-                style: GoogleFonts.leagueSpartan(
-                  color: isSelected ? Colors.white : (isBooked ? Colors.grey : AppColors.black) ,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w300
+  
+    String _getDayName(int weekday, AppLocalizations? localization) {
+      switch (weekday) {
+        case 1: return localization?.translate("mon") ?? "MON";
+        case 2: return localization?.translate("tue") ?? "TUE";
+        case 3: return localization?.translate("wed") ?? "WED";
+        case 4: return localization?.translate("thu") ?? "THU";
+        case 5: return localization?.translate("fri") ?? "FRI";
+        case 6: return localization?.translate("sat") ?? "SAT";
+        case 7: return localization?.translate("sun") ?? "SUN";
+        default: return "";
+      }
+    }
+  
+    String _getDayFullName(int weekday, AppLocalizations? localization) {
+      switch (weekday) {
+        case 1: return "Monday";
+        case 2: return "Tuesday";
+        case 3: return "Wednesday";
+        case 4: return "Thursday";
+        case 5: return "Friday";
+        case 6: return "Saturday";
+        case 7: return "Sunday";
+        default: return "";
+      }
+    }
+  
+    String _getMonthName(int month) {
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      return months[month - 1];
+    }
+  
+    Widget _buildTimeGrid(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
+      List<String> times = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM"];
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 2.2,
+        ),
+        itemCount: times.length,
+        itemBuilder: (context, index) {
+          bool isSelected = times[index] == state.selectedTime;
+          bool isBooked = times[index] == "10:30 AM" || times[index] == "12:00 PM";
+          
+          return GestureDetector(
+            onTap: isBooked ? null : () {
+              context.read<DoctorScreenBloc>().add(SelectTimeEvent(times[index]));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: isSelected 
+                    ? colorScheme.primary 
+                    : (isBooked ? Colors.grey.shade300 : colorScheme.secondary.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: Text(
+                  localization?.formatNumber(times[index]) ?? times[index],
+                  style: GoogleFonts.leagueSpartan(
+                    color: isSelected ? Colors.white : (isBooked ? Colors.grey : AppColors.black) ,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300
+                  ),
                 ),
               ),
             ),
+          );
+        },
+      );
+    }
+  
+    Widget _buildPatientSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
+      return Row(
+        children: [
+          _buildChoiceChip(
+            localization?.translate('your self') ?? "your self",
+            state.selectedPatient == "Yourself", 
+            colorScheme,
+            () => context.read<DoctorScreenBloc>().add(SelectPatientEvent("Yourself")),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildPatientSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
-    return Row(
-      children: [
-        _buildChoiceChip(
-          localization?.translate('your self') ?? "your self",
-          state.selectedPatient == "Yourself", 
-          colorScheme,
-          () => context.read<DoctorScreenBloc>().add(SelectPatientEvent("Yourself")),
+          const SizedBox(width: 10),
+          _buildChoiceChip(
+            localization?.translate('Another Person') ?? "Another Person",
+            state.selectedPatient == "Another Person", 
+            colorScheme,
+            () => context.read<DoctorScreenBloc>().add(SelectPatientEvent("Another Person")),
+          ),
+        ],
+      );
+    }
+  
+    Widget _buildChoiceChip(String label, bool isSelected, ColorScheme colorScheme, VoidCallback onTap) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+          decoration: BoxDecoration(
+            color: isSelected ? colorScheme.primary : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colorScheme.primary, width: 0.5),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : colorScheme.primary.withOpacity(0.5),
+              fontSize: 12,
+            ),
+          ),
         ),
-        const SizedBox(width: 10),
-        _buildChoiceChip(
-          localization?.translate('Another Person') ?? "Another Person",
-          state.selectedPatient == "Another Person", 
-          colorScheme,
-          () => context.read<DoctorScreenBloc>().add(SelectPatientEvent("Another Person")),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChoiceChip(String label, bool isSelected, ColorScheme colorScheme, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+      );
+    }
+  
+    Widget _buildGenderSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
+      return Row(
+        children: [
+          _buildChoiceChip(
+            localization?.translate('Male') ?? "Male",
+            state.selectedGender == "Male", 
+            colorScheme,
+            () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Male")),
+          ),
+          const SizedBox(width: 10),
+          _buildChoiceChip(
+            localization?.translate('Female') ?? "Female",
+            state.selectedGender == "Female", 
+            colorScheme,
+            () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Female")),
+          ),
+          const SizedBox(width: 10),
+          _buildChoiceChip(
+            localization?.translate('Other') ?? "Other",
+            state.selectedGender == "Other", 
+            colorScheme,
+            () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Other")),
+          ),
+        ],
+      );
+    }
+  
+    Widget _buildProblemDescription(BuildContext context, AppLocalizations? localization) {
+      return Container(
+        height: 120,
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : Colors.white,
+          color: const Color(0xffECF1FF),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: colorScheme.primary, width: 0.5),
+          border: Border.all(color: AppColors.lightPurple, width: 1),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : colorScheme.primary.withValues(alpha: 0.5),
-            fontSize: 12,
+        child: TextField(
+          controller: _problemController,
+          maxLines: null,
+          decoration: InputDecoration(
+            hintText: localization?.translate('Enter Your Problem Here...') ?? "Enter Your Problem Here...",
+            hintStyle: const TextStyle(color: Colors.black26, fontSize: 12),
+            border: InputBorder.none,
           ),
         ),
-      ),
-    );
+      );
+    }
   }
-
-  Widget _buildGenderSelection(BuildContext context, ColorScheme colorScheme, AppLocalizations? localization, DoctorScreenState state) {
-    return Row(
-      children: [
-        _buildChoiceChip(
-          localization?.translate('Male') ?? "Male",
-          state.selectedGender == "Male", 
-          colorScheme,
-          () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Male")),
-        ),
-        const SizedBox(width: 10),
-        _buildChoiceChip(
-          localization?.translate('Female') ?? "Female",
-          state.selectedGender == "Female", 
-          colorScheme,
-          () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Female")),
-        ),
-        const SizedBox(width: 10),
-        _buildChoiceChip(
-          localization?.translate('Other') ?? "Other",
-          state.selectedGender == "Other", 
-          colorScheme,
-          () => context.read<DoctorScreenBloc>().add(SelectGenderEvent("Other")),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProblemDescription(BuildContext context, AppLocalizations? localization) {
-    return Container(
-      height: 120,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xffECF1FF),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.lightPurple, width: 1),
-      ),
-      child: TextField(
-        controller: _problemController,
-        maxLines: null,
-        decoration: InputDecoration(
-          hintText: localization?.translate('Enter Your Problem Here...') ?? "Enter Your Problem Here...",
-          hintStyle: const TextStyle(color: Colors.black26, fontSize: 12),
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-}

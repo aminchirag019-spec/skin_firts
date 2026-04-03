@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Bloc/LocaleBloc/locale_bloc.dart';
-import 'package:skin_firts/Bloc/LocaleBloc/locale_state.dart';
 
 import '../../Data/doctor_model.dart';
 import '../../Global/dummy_data.dart';
@@ -21,10 +20,10 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   DoctorScreenBloc(this.authRepository, this.notificationService, this.localeBloc)
     : super(const DoctorScreenState()) {
     
-    // 🌐 Automatically re-fetch data when language changes
     _localeSubscription = localeBloc.stream.listen((localeState) {
       add(GetDoctorEvent());
       add(GetServiceEvent());
+      add(GetAppointmentsEvent());
     });
 
     on<FilterChangedEvent>(_onFilterChange);
@@ -48,6 +47,11 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<SelectPaymentMethodEvent>(_onSelectPaymentMethod);
     on<SelectAppointmentTabEvent>(_onSelectAppointmentTab);
     on<SelectCancelReasonEvent>(_onSelectCancelReason);
+    
+    // Appointment Handlers
+    on<BookAppointmentEvent>(_onBookAppointment);
+    on<GetAppointmentsEvent>(_onGetAppointments);
+    on<UpdateAppointmentStatusEvent>(_onUpdateAppointmentStatus);
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -56,6 +60,42 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   Future<void> close() {
     _localeSubscription?.cancel();
     return super.close();
+  }
+
+  void _onBookAppointment(BookAppointmentEvent event, Emitter<DoctorScreenState> emit) async {
+    emit(state.copyWith(appointmentStatus: DoctorStatus.loading));
+    try {
+      await authRepository.bookAppointment(event.appointment);
+      emit(state.copyWith(
+        appointmentStatus: DoctorStatus.success,
+        lastBookedAppointment: event.appointment, // Store for navigation
+      ));
+      add(GetAppointmentsEvent());
+    } catch (e) {
+      emit(state.copyWith(appointmentStatus: DoctorStatus.failure));
+    }
+  }
+
+  void _onGetAppointments(GetAppointmentsEvent event, Emitter<DoctorScreenState> emit) async {
+    emit(state.copyWith(appointmentStatus: DoctorStatus.loading));
+    try {
+      final appointments = await authRepository.getAppointments();
+      emit(state.copyWith(
+        appointments: appointments,
+        appointmentStatus: DoctorStatus.success,
+      ));
+    } catch (e) {
+      emit(state.copyWith(appointmentStatus: DoctorStatus.failure));
+    }
+  }
+
+  void _onUpdateAppointmentStatus(UpdateAppointmentStatusEvent event, Emitter<DoctorScreenState> emit) async {
+    try {
+      await authRepository.updateAppointmentStatus(event.appointmentId, event.status);
+      add(GetAppointmentsEvent());
+    } catch (e) {
+      print("Error updating status: $e");
+    }
   }
 
   void _onSelectDate(SelectDateEvent event, Emitter<DoctorScreenState> emit) {

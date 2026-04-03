@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Screens/AppointmentScreen/appointment_screen.dart';
 import 'package:skin_firts/Screens/AppointmentScreen/cancel_appointment_screen.dart';
 import 'package:skin_firts/Screens/DoctorScreens/doctor_details.dart';
@@ -91,8 +92,8 @@ final GoRouter app_router = GoRouter(
             GoRoute(
               path: RouterName.appointmentDetails.path,
               builder: (context, state) {
-                final doctor = state.extra as AddDoctor?;
-                return AppointmentDetails(doctor: doctor);
+                final appointment = state.extra as AppointmentModel;
+                return AppointmentDetails(appointment: appointment);
               },
             ),
 
@@ -120,7 +121,10 @@ final GoRouter app_router = GoRouter(
               builder: (context, state) => AppointmentScreen(),
             ),
              GoRoute(path: RouterName.cancelAppointmentScreen.path,
-              builder: (context, state) => CancelAppointmentScreen(),
+              builder: (context, state) {
+                final appointmentId = state.extra as String?;
+                return CancelAppointmentScreen(appointmentId: appointmentId);
+              },
             ),
             GoRoute(
               path: RouterName.reviewScreen.path,

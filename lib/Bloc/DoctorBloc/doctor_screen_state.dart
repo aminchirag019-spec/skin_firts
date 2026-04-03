@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import '../../Global/dummy_data.dart';
 
@@ -23,6 +24,9 @@ class DoctorScreenState extends Equatable {
   final Set<String> expandedServiceTitles;
   final String selectedPaymentMethod;
   final int selectedAppointmentTabIndex;
+  final List<AppointmentModel> appointments;
+  final DoctorStatus appointmentStatus;
+  final AppointmentModel? lastBookedAppointment;
 
   const DoctorScreenState({
     this.service = const [],
@@ -43,7 +47,10 @@ class DoctorScreenState extends Equatable {
     this.switches = const [false, false, true, false, false, true, true, true],
     this.expandedServiceTitles = const {},
     this.selectedPaymentMethod = "Add New Card",
-    this.selectedAppointmentTabIndex = 0,
+    this.selectedAppointmentTabIndex = 1,
+    this.appointments = const [],
+    this.appointmentStatus = DoctorStatus.initial,
+    this.lastBookedAppointment,
   });
 
   DoctorScreenState copyWith({
@@ -66,6 +73,9 @@ class DoctorScreenState extends Equatable {
     Set<String>? expandedServiceTitles,
     String? selectedPaymentMethod,
     int? selectedAppointmentTabIndex,
+    List<AppointmentModel>? appointments,
+    DoctorStatus? appointmentStatus,
+    AppointmentModel? lastBookedAppointment,
   }) {
     return DoctorScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
@@ -87,6 +97,9 @@ class DoctorScreenState extends Equatable {
       expandedServiceTitles: expandedServiceTitles ?? this.expandedServiceTitles,
       selectedPaymentMethod: selectedPaymentMethod ?? this.selectedPaymentMethod,
       selectedAppointmentTabIndex: selectedAppointmentTabIndex ?? this.selectedAppointmentTabIndex,
+      appointments: appointments ?? this.appointments,
+      appointmentStatus: appointmentStatus ?? this.appointmentStatus,
+      lastBookedAppointment: lastBookedAppointment ?? this.lastBookedAppointment,
     );
   }
 
@@ -111,5 +124,8 @@ class DoctorScreenState extends Equatable {
     expandedServiceTitles,
     selectedPaymentMethod,
     selectedAppointmentTabIndex,
+    appointments,
+    appointmentStatus,
+    lastBookedAppointment,
   ];
 }

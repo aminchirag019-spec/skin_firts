@@ -34,6 +34,7 @@ class AddDoctor {
     required this.email,
     required this.gender,
   });
+
   String getLocalized(dynamic field, String langCode, AppLocalizations? localization) {
     if (field == null) return "";
     
@@ -44,10 +45,11 @@ class AddDoctor {
     final fieldStr = field.toString();
     if (localization != null) {
       final translated = localization.translate(fieldStr);
-      if (translated != fieldStr) return translated;
+      return translated;
     }
     return fieldStr;
   }
+
   Future<String> getLocalizedAsync(dynamic field, String langCode, AppLocalizations? localization) async {
     final basicResult = getLocalized(field, langCode, localization);
     if (langCode != 'en' && basicResult.isNotEmpty) {
@@ -170,21 +172,41 @@ class ServiceModel {
   }
 }
 
-class NotificationModel {
+  class NotificationModel {
   final dynamic title;
   final dynamic body;
   final Timestamp? createdAt;
 
   NotificationModel({required this.title, required this.body, this.createdAt});
 
-  String getLocalizedTitle(String langCode) {
+  String getLocalizedTitle(String langCode, AppLocalizations? localization) {
     if (title is Map) return (title[langCode] ?? title['en'] ?? "").toString();
-    return title.toString();
+    final titleStr = title.toString();
+    return localization?.translate(titleStr) ?? titleStr;
   }
 
-  String getLocalizedBody(String langCode) {
-    if (body is Map) return (body[langCode] ?? body['en'] ?? "").toString();
-    return body.toString();
+  String getLocalizedBody(String langCode, AppLocalizations? localization) {
+    if (body is Map) {
+      return (body[langCode] ?? body['en'] ?? "").toString();
+    }
+    
+    final bodyStr = body.toString();
+
+    // Fix for Chat Notifications stored as hardcoded strings
+    if (bodyStr.startsWith("You have a new message from ")) {
+      final name = bodyStr.replaceFirst("You have a new message from ", "");
+      final prefix = localization?.translate("new_message_prefix") ?? "You have a new message from ";
+      return "$prefix$name";
+    }
+
+    // Fix for Add Doctor Notifications stored as hardcoded strings
+    if (bodyStr.startsWith("You successfully added a ")) {
+      final name = bodyStr.replaceFirst("You successfully added a ", "");
+      final prefix = localization?.translate("add_doctor_prefix") ?? "You successfully added a ";
+      return "$prefix$name";
+    }
+
+    return localization?.translate(bodyStr) ?? bodyStr;
   }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {

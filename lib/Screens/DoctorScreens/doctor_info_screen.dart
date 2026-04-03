@@ -27,6 +27,11 @@ class DoctorInfoScreen extends StatelessWidget {
     final localization = AppLocalizations.of(context);
     final langCode = Localizations.localeOf(context).languageCode;
 
+    String getValidText(dynamic field) {
+      final text = data?.getLocalized(field, langCode, localization) ?? "";
+      return text.isEmpty ? (localization?.translate("loreum") ?? "loreum") : text;
+    }
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -136,7 +141,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                                 style: const TextStyle(fontWeight: FontWeight.bold),
                                               ),
                                               TextSpan(
-                                                text: data?.getLocalized(data?.description, langCode, localization) ?? "",
+                                                text: getValidText(data?.description),
                                               ),
                                             ],
                                           ),
@@ -307,7 +312,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.getLocalized(data?.profile, langCode, localization) ?? "",
+                              getValidText(data?.profile),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),
@@ -331,7 +336,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.getLocalized(data?.careerPath, langCode, localization) ?? "",
+                              getValidText(data?.careerPath),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),
@@ -355,7 +360,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data?.getLocalized(data?.highlights, langCode, localization) ?? "",
+                              getValidText(data?.highlights),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.2,
                               ),

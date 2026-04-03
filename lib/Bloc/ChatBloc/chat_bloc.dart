@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Data/chat_model.dart';
 import 'package:skin_firts/Network/chat_repository.dart';
-import 'package:skin_firts/Helper/firebase_message.dart';
 import 'package:skin_firts/main.dart';
 
 import '../../Global/enums.dart';
@@ -20,7 +19,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendFileMessage>(_onSendFileMessage);
     on<LoadMessageEvent>(_onLoadMessageEvent);
     on<MessagesUpdated>(_onMessagesUpdated);
-    on<ChatNotificationEvent>(_onChatNotificationEvent);
     on<EditChatEvent>(_onEditChatEvent);
     on<StartEditingEvent>(_onStartEditingEvent);
     on<CancelEditing>(_onCancelEditingEvent);
@@ -102,7 +100,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onReplyMessageEvent(ReplyMessageEvent event, Emitter<ChatState> emit) {
-    print("event Triggered");
     emit(state.copyWith(replyMessage: event.message));
   }
 
@@ -121,20 +118,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       event.newMessage,
     );
     emit(state.copyWith(editingMessage: null));
-  }
-
-  void _onChatNotificationEvent(
-    ChatNotificationEvent event,
-    Emitter<ChatState> emit,
-  ) async {
-    await chatRepository.sendMessage(event.chatModel);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      NotificationService.showNotification(
-        message.notification?.title ?? "",
-        message.notification?.body ?? "",
-      );
-    });
-    emit(state.copyWith(messageStatus: MessageStatus.sent));
   }
 
   void _onMessagesUpdated(MessagesUpdated event, Emitter<ChatState> emit) {

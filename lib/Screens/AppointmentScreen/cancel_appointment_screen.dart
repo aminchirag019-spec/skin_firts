@@ -7,11 +7,11 @@ import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/Utilities/media_query.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
 
 class CancelAppointmentScreen extends StatefulWidget {
-  const CancelAppointmentScreen({super.key});
+  final String? appointmentId;
+  const CancelAppointmentScreen({super.key, this.appointmentId});
 
   @override
   State<CancelAppointmentScreen> createState() => _CancelAppointmentScreenState();
@@ -99,7 +99,21 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                   backgroundColor: AppColors.darkPurple,
                   textColor: Colors.white,
                   onPressed: () {
-                    context.pop();
+                    if (widget.appointmentId != null) {
+                      // Update status to cancelled in Firebase
+                      context.read<DoctorScreenBloc>().add(
+                        UpdateAppointmentStatusEvent(widget.appointmentId!, "cancelled")
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Appointment Cancelled"), backgroundColor: Colors.red),
+                      );
+
+                      // Navigate back to the appointment list
+                      context.pop();
+                    } else {
+                      context.pop();
+                    }
                   },
                   width: double.infinity,
                   fontSize: 22,

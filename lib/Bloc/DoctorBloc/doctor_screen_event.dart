@@ -1,5 +1,6 @@
 import '../../Data/doctor_model.dart';
 import '../../Global/dummy_data.dart';
+import '../../Data/appointment_model.dart';
 
 class DoctorScreenEvent {}
 
@@ -106,4 +107,17 @@ class SelectAppointmentTabEvent extends DoctorScreenEvent {
 class SelectCancelReasonEvent extends DoctorScreenEvent {
   final String reason;
   SelectCancelReasonEvent(this.reason);
+}
+
+class BookAppointmentEvent extends DoctorScreenEvent {
+  final AppointmentModel appointment;
+  BookAppointmentEvent(this.appointment);
+}
+
+class GetAppointmentsEvent extends DoctorScreenEvent {}
+
+class UpdateAppointmentStatusEvent extends DoctorScreenEvent {
+  final String appointmentId;
+  final String status;
+  UpdateAppointmentStatusEvent(this.appointmentId, this.status);
 }

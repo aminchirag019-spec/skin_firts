@@ -6,15 +6,25 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_state.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
-import 'package:skin_firts/Global/dummy_data.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Utilities/colors.dart';
-import 'package:skin_firts/Utilities/media_query.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
 
-class AppointmentScreen extends StatelessWidget {
+class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
+
+  @override
+  State<AppointmentScreen> createState() => _AppointmentScreenState();
+}
+
+class _AppointmentScreenState extends State<AppointmentScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<DoctorScreenBloc>().add(GetAppointmentsEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +43,7 @@ class AppointmentScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: topRow(
                 context,
-                onPressed: () => context.pop(context),
+                onPressed: () => context.pop(),
                 text: localization?.translate("allAppointment") ?? "All Appointment",
               ),
             ),
@@ -93,21 +103,33 @@ class AppointmentScreen extends StatelessWidget {
 
   Widget _buildAppointmentList(List<String> tabs) {
     return BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-      buildWhen: (previous, current) => previous.selectedAppointmentTabIndex != current.selectedAppointmentTabIndex,
       builder: (context, state) {
+        final statusMap = {0: "complete", 1: "upcoming", 2: "cancelled"};
+        final targetStatus = statusMap[state.selectedAppointmentTabIndex];
+
+        final filteredAppointments = state.appointments.where((a) => a.status == targetStatus).toList();
+
+        if (filteredAppointments.isEmpty) {
+          return Center(
+            child: Text(
+              "No appointments found",
+              style: GoogleFonts.leagueSpartan(color: AppColors.darkPurple),
+            ),
+          );
+        }
+
         return ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: doctors.length,
+          itemCount: filteredAppointments.length,
           itemBuilder: (context, index) {
-            final doctor = doctors[index];
-            return _buildAppointmentCard(context, doctor, state.selectedAppointmentTabIndex);
+            return _buildAppointmentCard(context, filteredAppointments[index], state.selectedAppointmentTabIndex);
           },
         );
       },
     );
   }
 
-  Widget _buildAppointmentCard(BuildContext context, DummyData doctor, int selectedIndex) {
+  Widget _buildAppointmentCard(BuildContext context, AppointmentModel appointment, int selectedIndex) {
     final localization = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -123,7 +145,8 @@ class AppointmentScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: doctor.image,
+                backgroundImage: NetworkImage(appointment.doctorImage),
+                backgroundColor: AppColors.lightPurple,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -131,7 +154,7 @@ class AppointmentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${doctor.doctorName}, ${doctor.qualification}",
+                      "${appointment.doctorName}, ${appointment.doctorQualification}",
                       style: GoogleFonts.leagueSpartan(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -139,7 +162,7 @@ class AppointmentScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      doctor.title,
+                      appointment.doctorSpecialization,
                       style: GoogleFonts.leagueSpartan(
                         fontSize: 14,
                         color: Colors.black54,
@@ -160,7 +183,7 @@ class AppointmentScreen extends StatelessWidget {
                                 const Icon(Icons.star, color: Colors.blue, size: 14),
                                 const SizedBox(width: 4),
                                 Text(
-                                  localization?.formatNumber(doctor.rating.toString()) ?? doctor.rating.toString(),
+                                  localization?.formatNumber("4.5") ?? "4.5",
                                   style: GoogleFonts.leagueSpartan(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -188,14 +211,14 @@ class AppointmentScreen extends StatelessWidget {
           if (selectedIndex == 1) ...[ // Upcoming
             Row(
               children: [
-                _buildInfoChip(Icons.calendar_month_outlined, "Sunday, 12 June"),
+                _buildInfoChip(Icons.calendar_month_outlined, appointment.date),
                 const SizedBox(width: 8),
-                _buildInfoChip(Icons.access_time, "9:30 AM - 10:00 AM"),
+                _buildInfoChip(Icons.access_time, appointment.time),
               ],
             ),
             const SizedBox(height: 16),
           ],
-          _buildActionButtons(context, doctor, selectedIndex),
+          _buildActionButtons(context, appointment, selectedIndex),
         ],
       ),
     );
@@ -230,7 +253,7 @@ class AppointmentScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, DummyData doctor, int selectedIndex) {
+  Widget _buildActionButtons(BuildContext context, AppointmentModel appointment, int selectedIndex) {
     final localization = AppLocalizations.of(context);
     if (selectedIndex == 0) { // Complete
       return Row(
@@ -285,10 +308,13 @@ class AppointmentScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          _buildIconActionButton("assets/images/right.svg.svg", () {}),
+          _buildIconActionButton("assets/images/right.svg.svg", () {
+             context.read<DoctorScreenBloc>().add(UpdateAppointmentStatusEvent(appointment.id, "complete"));
+          }),
           const SizedBox(width: 12),
           _buildIconActionButton("assets/images/wrong.svg.svg", () {
-            context.push(RouterName.cancelAppointmentScreen.path);
+             context.read<DoctorScreenBloc>().add(UpdateAppointmentStatusEvent(appointment.id, "cancelled"));
+             context.push(RouterName.cancelAppointmentScreen.path);
           }),
         ],
       );

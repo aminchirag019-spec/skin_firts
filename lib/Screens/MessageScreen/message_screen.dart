@@ -34,6 +34,7 @@ class _MessageScreenState extends State<MessageScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final localization = AppLocalizations.of(context);
+    final langCode = localization?.locale.languageCode ?? 'en';
 
     return WillPopScope(
       onWillPop: () async {
@@ -52,7 +53,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 topRow(
                   context,
                   onPressed: () => context.go(RouterName.homeScreen.path),
-                  text: localization?.translate('Notification') ?? "Notification",
+                  text: localization?.translate('notification') ?? "Notification",
                 ),
                 SizedBox(height: AppSize.height(context) * 0.023),
                 Row(
@@ -80,8 +81,8 @@ class _MessageScreenState extends State<MessageScreen> {
                         itemCount: state.notifications.length,
                         itemBuilder: (context, index) {
                           final notification = state.notifications[index];
-                          final translatedTitle = localization?.translate(notification.title) ?? notification.title;
-                          final translatedBody = localization?.translate(notification.body) ?? notification.body;
+                          final translatedTitle = notification.getLocalizedTitle(langCode,localization);
+                          final translatedBody = notification.getLocalizedBody(langCode,localization);
 
                           return GestureDetector(
                             onTap: () {

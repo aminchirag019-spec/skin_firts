@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
+import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import 'package:skin_firts/global/coustom_widgets.dart';
 
@@ -28,6 +32,36 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+
+  // Doctor specific controllers
+  final TextEditingController specializationController = TextEditingController();
+  final TextEditingController qualificationController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
+  final TextEditingController availabilityController = TextEditingController();
+  final TextEditingController profileController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController careerPathController = TextEditingController();
+  final TextEditingController highlightsController = TextEditingController();
+  final TextEditingController ratingController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    dobController.dispose();
+    phoneController.dispose();
+    specializationController.dispose();
+    qualificationController.dispose();
+    experienceController.dispose();
+    availabilityController.dispose();
+    profileController.dispose();
+    descriptionController.dispose();
+    careerPathController.dispose();
+    highlightsController.dispose();
+    ratingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,135 +118,169 @@ class _SignupScreenState extends State<SignupScreen> {
                     text: localization?.translate('newAccount') ?? "New Account",
                   ),
                   SizedBox(height: AppSize.height(context) * 0.011),
-                  Row(
-                    children: [
-                      Text(
-                        localization?.translate('fullname') ?? "Full name",
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
                   Form(
                     key: formKey,
-                    child: Column(
-                      children: [
-                        coustomTextField(
-                          context: context,
-                          controller: nameController,
-                          validator: (value) => Validators().validateName(context, value),
-                          hintText: localization?.translate('nameExample') ?? "Enter Your Name",
-                          size: 20,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.014),
-                        Row(
+                    child: BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, authState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              localization?.translate('password') ?? "password",
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
-                          builder: (context, state) {
-                            return coustomTextField(
+                            _buildLabel(theme, localization?.translate('fullname') ?? "Full name"),
+                            coustomTextField(
                               context: context,
-                              hintText: "••••••••",
-                              obscureText: state.isPasswordHidden,
-                              controller: passwordController,
-                              validator: (value) => Validators().validatePassword(context, value),
-                              image: const AssetImage("assets/images/obsecure_image.png"),
-                            );
-                          },
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.014),
-                        Row(
-                          children: [
-                            Text(
-                              localization?.translate('email') ?? "Email",
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
+                              controller: nameController,
+                              validator: (value) => Validators().validateName(context, value),
+                              hintText: localization?.translate('nameExample') ?? "Enter Your Name",
+                              size: 20,
                             ),
-                          ],
-                        ),
-                        coustomTextField(
-                          context: context,
-                          validator: (value) => Validators().validateEmail(context, value),
-                          hintText: localization?.translate('emailExample') ?? "example@example.com",
-                          controller: emailController,
-                          size: 20,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.014),
-                        Row(
-                          children: [
-                            Text(
-                              localization?.translate('mobile') ?? "Mobile Number",
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
+                            SizedBox(height: AppSize.height(context) * 0.014),
+                            _buildLabel(theme, localization?.translate('password') ?? "password"),
+                            BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+                              builder: (context, state) {
+                                return coustomTextField(
+                                  context: context,
+                                  hintText: "••••••••",
+                                  obscureText: state.isPasswordHidden,
+                                  controller: passwordController,
+                                  validator: (value) => Validators().validatePassword(context, value),
+                                  image: const AssetImage("assets/images/obsecure_image.png"),
+                                );
+                              },
                             ),
-                          ],
-                        ),
-                        coustomTextField(
-                          context: context,
-                          maxLength: 10,
-                          validator: (value) => Validators().validateMobile(context, value),
-                          textInputType: TextInputType.number,
-                          hintText: localization?.translate('numberExample') ?? "+91 0000000000",
-                          h: 16,
-                          w: 13,
-                          controller: phoneController,
-                          size: 18,
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.014),
-                        Row(
-                          children: [
-                            Text(
-                              localization?.translate('dob') ?? "Date of birth",
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        coustomTextField(
-                          context: context,
-                          validator: (value) => Validators().validateDob(context, value),
-                          hintText: localization?.translate('DD/MM/YYYY') ?? "DD/MM/YYY",
-                          isBold: true,
-                          controller: dobController,
-                          size: 20,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
+                            SizedBox(height: AppSize.height(context) * 0.014),
+                            _buildLabel(theme, localization?.translate('email') ?? "Email"),
+                            coustomTextField(
                               context: context,
-                              initialDate: DateTime(2000),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now(),
-                            );
-                            if (pickedDate != null) {
-                              dobController.text = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-                            }
-                          },
-                        ),
-                        SizedBox(height: AppSize.height(context) * 0.017),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              localization?.translate('byContinuing') ?? "By continuing, you agree to",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w300,
-                                letterSpacing: -0.3,
-                                height: 0.7,
+                              validator: (value) => Validators().validateEmail(context, value),
+                              hintText: localization?.translate('emailExample') ?? "example@example.com",
+                              controller: emailController,
+                              size: 20,
+                            ),
+                            SizedBox(height: AppSize.height(context) * 0.014),
+                            _buildLabel(theme, localization?.translate('mobile') ?? "Mobile Number"),
+                            coustomTextField(
+                              context: context,
+                              maxLength: 10,
+                              validator: (value) => Validators().validateMobile(context, value),
+                              textInputType: TextInputType.number,
+                              hintText: localization?.translate('numberExample') ?? "+91 0000000000",
+                              h: 16,
+                              w: 13,
+                              controller: phoneController,
+                              size: 18,
+                            ),
+                            SizedBox(height: AppSize.height(context) * 0.014),
+                            _buildLabel(theme, localization?.translate('dob') ?? "Date of birth"),
+                            coustomTextField(
+                              context: context,
+                              validator: (value) => Validators().validateDob(context, value),
+                              hintText: localization?.translate('DD/MM/YYYY') ?? "DD/MM/YYY",
+                              isBold: true,
+                              controller: dobController,
+                              size: 20,
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime(2000),
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime.now(),
+                                );
+                                if (pickedDate != null) {
+                                  dobController.text = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                                }
+                              },
+                            ),
+
+                            if (authState.selectedRole == "doctor") ...[
+                              SizedBox(height: AppSize.height(context) * 0.02),
+                              _sectionTitle(context, localization?.translate("Professional Details") ?? "Professional Details"),
+                              _buildLabel(theme, localization?.translate("Specialization") ?? "Specialization"),
+                              coustomTextField(
+                                context: context,
+                                controller: specializationController,
+                                hintText: "Dermatologist",
                               ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("qualification") ?? "Qualification"),
+                              coustomTextField(
+                                context: context,
+                                controller: qualificationController,
+                                hintText: "MD, MBBS",
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("Experience") ?? "Experience"),
+                              coustomTextField(
+                                context: context,
+                                controller: experienceController,
+                                hintText: "10+ years of experience",
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("Availybility") ?? "Availability"),
+                              coustomTextField(
+                                context: context,
+                                controller: availabilityController,
+                                hintText: "Mon - Fri, 9 AM - 5 PM",
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("profile") ?? "Profile Image URL"),
+                              coustomTextField(
+                                context: context,
+                                controller: profileController,
+                                hintText: "https://example.com/photo.jpg",
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.02),
+                              _buildGenderDropdown(context, localization),
+                              SizedBox(height: AppSize.height(context) * 0.02),
+                              _sectionTitle(context, localization?.translate("Extra Details") ?? "Extra Details"),
+                              _buildLabel(theme, localization?.translate("Description") ?? "Description"),
+                              coustomTextField(
+                                context: context,
+                                controller: descriptionController,
+                                hintText: "Brief description...",
+                                size: 20,
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("careerPath") ?? "Career Path"),
+                              coustomTextField(
+                                context: context,
+                                controller: careerPathController,
+                                hintText: "Career journey...",
+                                size: 20,
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("highlights") ?? "Highlights"),
+                              coustomTextField(
+                                context: context,
+                                controller: highlightsController,
+                                hintText: "Key achievements...",
+                                size: 20,
+                              ),
+                              SizedBox(height: AppSize.height(context) * 0.014),
+                              _buildLabel(theme, localization?.translate("Rating") ?? "Rating"),
+                              coustomTextField(
+                                context: context,
+                                controller: ratingController,
+                                hintText: "4.5",
+                                textInputType: TextInputType.number,
+                              ),
+                            ],
+                            SizedBox(height: AppSize.height(context) * 0.017),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  localization?.translate('byContinuing') ?? "By continuing, you agree to",
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    letterSpacing: -0.3,
+                                    height: 0.7,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                   Row(
@@ -246,6 +314,26 @@ class _SignupScreenState extends State<SignupScreen> {
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state.signupStatus == SignupStatus.success) {
+                        if (state.selectedRole == "doctor") {
+                          final doctorState = context.read<DoctorScreenBloc>().state;
+                          final doctor = AddDoctor(
+                            id: "",
+                            doctorName: nameController.text,
+                            experience: experienceController.text,
+                            specialization: specializationController.text,
+                            availability: availabilityController.text,
+                            description: descriptionController.text,
+                            profile: profileController.text,
+                            careerPath: careerPathController.text,
+                            highlights: highlightsController.text,
+                            qualification: qualificationController.text,
+                            isLiked: doctorState.addDoctorIsLiked,
+                            rating: double.tryParse(ratingController.text) ?? 0.0,
+                            email: emailController.text,
+                            gender: doctorState.addDoctorGender,
+                          );
+                          context.read<DoctorScreenBloc>().add(AddDoctorEvent(doctor));
+                        }
                         context.go(RouterName.fingerAuthenticationScreen.path);
                       }
                     },
@@ -342,6 +430,72 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLabel(ThemeData theme, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Text(
+        text,
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(BuildContext context, String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSize.height(context) * 0.015, top: AppSize.height(context) * 0.01),
+      child: Text(
+        text,
+        style: GoogleFonts.leagueSpartan(
+          fontSize: AppSize.width(context) * 0.05,
+          fontWeight: FontWeight.bold,
+          color: AppColors.darkPurple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderDropdown(BuildContext context, AppLocalizations? localization) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel(Theme.of(context), localization?.translate("Gender") ?? "Gender"),
+        SizedBox(height: 5),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: AppColors.lightPurple.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: BlocBuilder<DoctorScreenBloc, DoctorScreenState>(
+              buildWhen: (previous, current) => previous.addDoctorGender != current.addDoctorGender,
+              builder: (context, state) {
+                return DropdownButton<String>(
+                  value: state.addDoctorGender,
+                  isExpanded: true,
+                  icon: const Icon(Icons.arrow_drop_down, color: AppColors.darkPurple),
+                  items: ['Male', 'Female', 'Other'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value, style: GoogleFonts.leagueSpartan(fontSize: 16)),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    if (val != null) {
+                      context.read<DoctorScreenBloc>().add(ChangeAddDoctorGenderEvent(val));
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

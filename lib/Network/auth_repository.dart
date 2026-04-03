@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Network/translation_repository.dart';
 
 import '../Data/auth_model.dart';
@@ -93,7 +94,7 @@ class AuthRepository {
     String langCode = 'en',
   }) async {
     try {
-      Query query = firestore.collection("doctors").where("userId", isEqualTo: user!.uid);
+      Query query = firestore.collection("doctors");
 
       if (gender != null) query = query.where("gender", isEqualTo: gender);
       if (liked != null) query = query.where("isLiked", isEqualTo: liked);
@@ -283,5 +284,34 @@ class AuthRepository {
       print("Error fetching users: $e");
       return [];
     }
+  }
+
+  // Appointment methods
+  Future<void> bookAppointment(AppointmentModel appointment) async {
+    final docRef = firestore.collection('appointments').doc();
+    await docRef.set({
+      ...appointment.toJson(),
+      'id': docRef.id,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<List<AppointmentModel>> getAppointments() async {
+    if (user == null) return [];
+    final snapshot = await firestore
+        .collection('appointments')
+        .where('userId', isEqualTo: user!.uid)
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      return AppointmentModel.fromJson(doc.data(), doc.id);
+    }).toList();
+  }
+
+  Future<void> updateAppointmentStatus(String appointmentId, String status) async {
+    await firestore.collection('appointments').doc(appointmentId).update({
+      'status': status,
+    });
   }
 }

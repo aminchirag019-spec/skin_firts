@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/coustom_widgets.dart';
 import 'package:skin_firts/Router/router_class.dart';
 import 'package:skin_firts/Screens/HomeScreen/coustom_home_widget.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/media_query.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
+import '../../Bloc/DoctorBloc/doctor_screen_event.dart';
 import '../../Helper/app_localizations.dart';
 
 class AppointmentDetails extends StatelessWidget {
-  final AddDoctor? doctor;
-  const AppointmentDetails({super.key, this.doctor});
+  final AppointmentModel appointment;
+  const AppointmentDetails({super.key, required this.appointment});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final localization = AppLocalizations.of(context);
-    final langCode = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -30,7 +33,7 @@ class AppointmentDetails extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: topRow(
                 context,
-                onPressed: () => context.go(RouterName.scheduleScreen.path,extra: doctor),
+                onPressed: () => context.go(RouterName.appointmentScreen.path),
                 text: localization?.translate('Your Appointment') ?? "Your Appointment",
               ),
             ),
@@ -40,21 +43,21 @@ class AppointmentDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     SizedBox(height: 10),
-                    _buildDoctorCard(context, theme, colorScheme, localization, langCode),
-                     SizedBox(height: 30),
-                     Divider(color: AppColors.blue, thickness: 1),
-                     SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    _buildDoctorCard(context, theme, colorScheme, localization),
+                    const SizedBox(height: 30),
+                    const Divider(color: AppColors.blue, thickness: 1),
+                    const SizedBox(height: 20),
                     _buildDateTimeSection(context, colorScheme, localization),
-                     SizedBox(height: 20),
-                     Divider(color: AppColors.blue, thickness: 1),
-                     SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    const Divider(color: AppColors.blue, thickness: 1),
+                    const SizedBox(height: 20),
                     _buildPatientDetails(context, theme, colorScheme, localization),
- SizedBox(height: 20),
-                     Divider(color: AppColors.blue, thickness: 1),
-                     SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    const Divider(color: AppColors.blue, thickness: 1),
+                    const SizedBox(height: 20),
                     _buildProblemSection(context, theme, colorScheme, localization),
-                     SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -65,9 +68,9 @@ class AppointmentDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildDoctorCard(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations? localization, String langCode) {
+  Widget _buildDoctorCard(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations? localization) {
     return Container(
-      padding:  EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.secondary.withOpacity(0.6),
         borderRadius: BorderRadius.circular(24),
@@ -77,7 +80,7 @@ class AppointmentDetails extends StatelessWidget {
           CircleAvatar(
             radius: AppSize.width(context) * 0.11,
             backgroundColor: Colors.white,
-            backgroundImage:  AssetImage("assets/images/user_image.png"),
+            backgroundImage: NetworkImage(appointment.doctorImage),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -85,7 +88,7 @@ class AppointmentDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding:  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -94,18 +97,14 @@ class AppointmentDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        doctor != null 
-                            ? "${doctor!.getLocalized(doctor!.doctorName, langCode, localization)}, ${doctor!.getLocalized(doctor!.qualification, langCode, localization)}"
-                            : localization?.translate('drOliviaTurner') ?? "Dr. Olivia Turner, M.D.",
+                        "${appointment.doctorName}, ${appointment.doctorQualification}",
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
                         ),
                       ),
                       Text(
-                        doctor != null 
-                            ? doctor!.getLocalized(doctor!.specialization, langCode, localization)
-                            : localization?.translate('dermatoEndocrinology') ?? "Dermato-Endocrinology",
+                        appointment.doctorSpecialization,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.black54,
                         ),
@@ -116,7 +115,7 @@ class AppointmentDetails extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    infoBadge(context, "assets/images/star_svg.svg", doctor?.rating.toString() ?? "5"),
+                    infoBadge(context, "assets/images/star_svg.svg", "4.5"),
                     const SizedBox(width: 8),
                     infoBadge(context, "assets/images/meesage_svg.svg", "60"),
                     const Spacer(),
@@ -147,7 +146,7 @@ class AppointmentDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  localization?.translate('Month 24, Year') ?? "Month 24, Year",
+                  appointment.date,
                   style: GoogleFonts.leagueSpartan(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -158,7 +157,7 @@ class AppointmentDetails extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 12),
                 child: Text(
-                  localization?.translate('WED, 10:00 AM') ?? "WED, 10:00 AM",
+                  appointment.time,
                   style: GoogleFonts.leagueSpartan(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w500,
@@ -168,9 +167,23 @@ class AppointmentDetails extends StatelessWidget {
             ],
           ),
         ),
-        _statusIcon("assets/images/right.svg.svg", colorScheme.primary),
-        const SizedBox(width: 12),
-        _statusIcon("assets/images/wrong.svg.svg", colorScheme.primary),
+        if (appointment.status == "upcoming") ...[
+          GestureDetector(
+            onTap: () {
+              context.read<DoctorScreenBloc>().add(UpdateAppointmentStatusEvent(appointment.id, "complete"));
+              context.go(RouterName.appointmentScreen.path);
+            },
+            child: _statusIcon("assets/images/right.svg.svg", colorScheme.primary),
+          ),
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () {
+              context.read<DoctorScreenBloc>().add(UpdateAppointmentStatusEvent(appointment.id, "cancelled"));
+              context.push(RouterName.cancelAppointmentScreen.path);
+            },
+            child: _statusIcon("assets/images/wrong.svg.svg", colorScheme.primary),
+          ),
+        ],
       ],
     );
   }
@@ -194,13 +207,13 @@ class AppointmentDetails extends StatelessWidget {
   Widget _buildPatientDetails(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations? localization) {
     return Column(
       children: [
-        _detailRow(localization?.translate('Booking For' ) ?? "Booking For", localization?.translate('Another Person') ?? "Another Person"),
+        _detailRow(localization?.translate('Booking For') ?? "Booking For", appointment.patientName == "Yourself" ? "Yourself" : "Another Person"),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('Full Name') ?? "Full Name", localization?.translate('janeDoe') ?? "Jane Doe"),
+        _detailRow(localization?.translate('Full Name') ?? "Full Name", appointment.patientName),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('Age') ?? "Age", localization?.formatNumber("30") ?? "30"),
+        _detailRow(localization?.translate('Age') ?? "Age", localization?.formatNumber(appointment.patientAge) ?? appointment.patientAge),
         const SizedBox(height: 12),
-        _detailRow(localization?.translate('Gender') ?? "Gender", localization?.translate('Female') ?? "Female"),
+        _detailRow(localization?.translate('Gender') ?? "Gender", appointment.patientGender),
       ],
     );
   }
@@ -241,7 +254,7 @@ class AppointmentDetails extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          localization?.translate('loreum') ?? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          appointment.problem.isEmpty ? (localization?.translate('loreum') ?? "No problem described.") : appointment.problem,
           style: GoogleFonts.leagueSpartan(
             color: Colors.black,
             fontSize: 14,
