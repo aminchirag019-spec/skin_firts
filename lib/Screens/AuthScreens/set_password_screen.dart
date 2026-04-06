@@ -36,7 +36,7 @@ class SetPasswordScreen extends StatelessWidget {
                     },
                     text: localization?.translate('setPassword') ?? "Set Password",
                   ),
-                  const SizedBox(height: 10),
+                   SizedBox(height: 10),
                   Text(
                     localization?.translate('loreum') ?? "",
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -46,7 +46,7 @@ class SetPasswordScreen extends StatelessWidget {
                       color: AppColors.black,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                   SizedBox(height: 20),
                   Row(
                     children: [
                       Text(
@@ -60,9 +60,9 @@ class SetPasswordScreen extends StatelessWidget {
                   customTextField(
                     context: context,
                     hintText: "••••••••",
-                    image: const AssetImage("assets/images/obsecure_image.png"),
+                    image:  AssetImage("assets/images/obsecure_image.png"),
                   ),
-                  const SizedBox(height: 20),
+                   SizedBox(height: 20),
                   Row(
                     children: [
                       Text(
@@ -78,7 +78,7 @@ class SetPasswordScreen extends StatelessWidget {
                     hintText: "••••••••",
                     image: const AssetImage("assets/images/obsecure_image.png"),
                   ),
-                  const SizedBox(height: 30),
+                   SizedBox(height: 30),
                   customButton(
                     context,
                     text: localization?.translate('createNewPass') ?? "Create New Password",
