@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "346029486466",
+    "project_id": "skin-firts-3eab4",
+    "storage_bucket": "skin-firts-3eab4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346029486466:android:1b4b726564853a90729f9b",
+        "android_client_info": {
+          "package_name": "com.example.skin_firts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346029486466-suctrsgta78ojb6egb5530thmgae7p13.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.skin_firts",
+            "certificate_hash": "b8cdade118a007fdafea470971c65b47c29c3108"
+          }
+        },
+        {
+          "client_id": "346029486466-p1g6k4v1l4tk0p84ij4qbmsq10ammito.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPJciG1JvlJM90D2xuUQyeDvk1cqPjkec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346029486466-nu9c5h8ggtmcac2cslh1ajamghsj9l60.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "346029486466-2mf4a0001nc2soou60ev6on9gl2llard.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.skinFirts"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
