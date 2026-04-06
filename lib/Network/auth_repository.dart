@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart' hide Query;
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:skin_firts/Data/appointment_model.dart';
@@ -12,6 +13,7 @@ import '../Helper/sharedpref_helper.dart';
 class AuthRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseDatabase realtimeDatabase = FirebaseDatabase.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<User?> signUp({required SignupModel signupModel}) async {
@@ -24,7 +26,7 @@ class AuthRepository {
       final user = credential.user;
       final token = await user?.getIdToken();
       if (user != null) {
-        await firestore.collection('users').doc(user.uid).set({
+        final userData = {
           'uid': user.uid,
           'name': signupModel.name,
           'email': signupModel.email,
@@ -34,7 +36,13 @@ class AuthRepository {
           'role': signupModel.role,
           'createdAt': DateTime.now().toIso8601String(),
           'updatedAt': DateTime.now().toIso8601String(),
-        });
+        };
+
+        // Store in Firestore
+        await firestore.collection('users').doc(user.uid).set(userData);
+
+        // Store in Realtime Database
+        await realtimeDatabase.ref('users').child(user.uid).set(userData);
 
         await SharedPrefsHelper.setLogin(
           userId: user.uid,
@@ -83,11 +91,14 @@ class AuthRepository {
             password: "",
             role: "user",
           );
-          await firestore.collection('users').doc(user.uid).set({
+          final userData = {
             ...userModel.toJson(),
             'createdAt': DateTime.now().toIso8601String(),
             'updatedAt': DateTime.now().toIso8601String(),
-          });
+          };
+          
+          await firestore.collection('users').doc(user.uid).set(userData);
+          await realtimeDatabase.ref('users').child(user.uid).set(userData);
         } else {
           userModel = SignupModel.fromJson(doc.data()!);
         }
@@ -263,10 +274,13 @@ class AuthRepository {
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
 
-      await firestore.collection('users').doc(user.uid).update({
+      final updateData = {
         "password": newPassword,
         "passwordUpdatedAt": DateTime.now().toIso8601String(),
-      });
+      };
+
+      await firestore.collection('users').doc(user.uid).update(updateData);
+      await realtimeDatabase.ref('users').child(user.uid).update(updateData);
     } catch (e) {
       debugPrint("Error updating password: $e");
       rethrow;
@@ -279,18 +293,24 @@ class AuthRepository {
       return;
     }
 
-    await firestore.collection('users').doc(user.uid).update({
+    final updateData = {
       "name": signupModel.name,
       "phone": signupModel.phone,
       "dob": signupModel.dob,
       "email": signupModel.email,
       "updatedAt": DateTime.now().toIso8601String(),
-    });
+    };
+
+    await firestore.collection('users').doc(user.uid).update(updateData);
+    await realtimeDatabase.ref('users').child(user.uid).update(updateData);
   }
 
   Future<void> likedDoctor(String doctorUid, bool isLiked) async {
     try {
       await firestore.collection("doctors").doc(doctorUid).update({
+        "isLiked": isLiked,
+      });
+      await realtimeDatabase.ref('doctors').child(doctorUid).update({
         "isLiked": isLiked,
       });
     } catch (e) {
@@ -305,13 +325,15 @@ class AuthRepository {
     }
 
     final docRef = firestore.collection('doctors').doc();
-
-    await docRef.set({
+    final doctorData = {
       ...addDoctorModel.toJson(),
       "id": docRef.id,
       "userId": user.uid,
       "createdAt": DateTime.now().toIso8601String(),
-    });
+    };
+
+    await docRef.set(doctorData);
+    await realtimeDatabase.ref('doctors').child(docRef.id).set(doctorData);
   }
 
   Future<SignupModel?> getCurrentUserDetails({String langCode = 'en'}) async {
@@ -425,11 +447,14 @@ class AuthRepository {
   // Appointment methods
   Future<void> bookAppointment(AppointmentModel appointment) async {
     final docRef = firestore.collection('appointments').doc();
-    await docRef.set({
+    final appointmentData = {
       ...appointment.toJson(),
       'id': docRef.id,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+      'createdAt': DateTime.now().toIso8601String(),
+    };
+    
+    await docRef.set(appointmentData);
+    await realtimeDatabase.ref('appointments').child(docRef.id).set(appointmentData);
   }
 
   Future<List<AppointmentModel>> getAppointments() async {
@@ -466,6 +491,9 @@ class AuthRepository {
     String status,
   ) async {
     await firestore.collection('appointments').doc(appointmentId).update({
+      'status': status,
+    });
+    await realtimeDatabase.ref('appointments').child(appointmentId).update({
       'status': status,
     });
   }
