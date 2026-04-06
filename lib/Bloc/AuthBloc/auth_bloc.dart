@@ -30,6 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignUpEvent>(_onSignUpEvent);
     on<LoginEvent>(_onLoginEvent);
+    on<GoogleLoginEvent>(_onGoogleLoginEvent);
     on<BiometricLoginEvent>(_onBiometricLoginEvent);
     on<AskBiometricEvent>(_onAskbiometric);
     on<LogoutEvent>(_onLogoutEvent);
@@ -207,6 +208,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
       add(LoadCurrentUser());
+    } catch (e) {
+      emit(state.copyWith(loginStatus: LoginStatus.failure));
+    }
+  }
+
+  void _onGoogleLoginEvent(GoogleLoginEvent event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(loginStatus: LoginStatus.loading));
+    try {
+      final result = await repository.signInWithGoogle();
+      if (result != null) {
+        emit(state.copyWith(
+          loginStatus: LoginStatus.success,
+          biometricStatus: BiometricStatus.initial,
+        ));
+        add(LoadCurrentUser());
+      } else {
+        emit(state.copyWith(loginStatus: LoginStatus.initial));
+      }
     } catch (e) {
       emit(state.copyWith(loginStatus: LoginStatus.failure));
     }

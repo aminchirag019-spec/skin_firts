@@ -218,6 +218,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       LoginRow(
                         svgPath: "assets/images/goole_svg.svg",
                         iconSize: 26,
+                        onTap: () {
+                          context.read<AuthBloc>().add(GoogleLoginEvent());
+                        },
                       ),
                       LoginRow(svgPath: "assets/images/facebook_svg.svg"),
                       LoginRow(

@@ -88,13 +88,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        homeCircleIcon(
-                          context,
-                          "assets/images/notification_icon.svg",
-                          showDot: true,
+                        GestureDetector(
+                          onTap: () {
+                            context.go(RouterName.messageScreen.path);
+                          },
+                          child: homeCircleIcon(
+                            context,
+                            "assets/images/notification_icon.svg",
+                            showDot: true,
+                          ),
                         ),
                         SizedBox(width: AppSize.width(context) * 0.012),
-                        homeCircleIcon(context, "assets/images/setting.svg"),
+                        GestureDetector(
+                            onTap: () {
+                              context.go(RouterName.settingScreen.path);
+                            },
+                            child: homeCircleIcon(context, "assets/images/setting.svg")),
                       ],
                     ),
                   ),

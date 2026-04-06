@@ -13,6 +13,8 @@ class LoginEvent extends AuthEvent {
    LoginEvent({required this.loginModel});
 }
 
+class GoogleLoginEvent extends AuthEvent {}
+
 class BiometricLoginEvent extends AuthEvent {}
 class AskBiometricEvent extends AuthEvent {}
 
