@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   StreamSubscription? _localeSubscription;
 
   AuthBloc(this.repository, this.biometricAuthService, this.prefsHelper, this.localeBloc)
-    : super( AuthState()) {
+    : super( const AuthState()) {
     _localeSubscription = localeBloc.stream.listen((localeState) {
       print("🌐 AuthBloc: Language changed to ${localeState.locale.languageCode}. Re-fetching user...");
       add(LoadCurrentUser());
@@ -137,8 +137,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await SharedPrefsHelper.logout(userId);
     }
 
-    emit(state.copyWith(loginStatus: LoginStatus.logout));
+    // Reset the state entirely on logout
+    emit(const AuthState(loginStatus: LoginStatus.logout));
   }
+
   void _onAskbiometric(AskBiometricEvent event, Emitter<AuthState> emit) async {
 
     String? userId = await SharedPrefsHelper.getUserId();
@@ -188,38 +190,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(biometricStatus: BiometricStatus.skip));
     }
   }
+
   void _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(loginStatus: LoginStatus.loading));
 
     try {
       await repository.login(loginModel: event.loginModel);
 
-      String? userId = await SharedPrefsHelper.getUserId();
-
-      bool? biometricEnabled;
-
-      if (userId != null) {
-        biometricEnabled =
-        await SharedPrefsHelper.getBiometricEnabled(userId);
-      }
-
+      // We start with initial biometric status even if enabled in prefs,
+      // so the user actually has to interact with the Fingerprint screen.
       emit(
         state.copyWith(
           loginStatus: LoginStatus.success,
-          biometricStatus: biometricEnabled == null
-              ? BiometricStatus.initial
-              : biometricEnabled
-              ? BiometricStatus.enabled
-              : BiometricStatus.skip,
+          biometricStatus: BiometricStatus.initial,
           loginModel: event.loginModel,
         ),
       );
-      // Load current user immediately after login
       add(LoadCurrentUser());
     } catch (e) {
       emit(state.copyWith(loginStatus: LoginStatus.failure));
     }
   }
+
   void _onSignUpEvent(SignUpEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(signupStatus: SignupStatus.loading));
 
@@ -229,6 +221,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         state.copyWith(
           signupStatus: SignupStatus.success,
+          biometricStatus: BiometricStatus.initial, // Reset for new user
           signupModel: event.signupModel.copyWith(uid: user?.uid ?? ""),
         ),
       );
@@ -237,6 +230,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(signupStatus: SignupStatus.failure));
     }
   }
+
   Future<void> onLoadChatList(
       LoadChatListEvent event,
       Emitter<AuthState> emit,
@@ -276,8 +270,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
  void selectedRoleMethod(SelectRoleEvent event,emit){
    emit(state.copyWith(selectedRole: event.role));
-
  }
-
-
 }

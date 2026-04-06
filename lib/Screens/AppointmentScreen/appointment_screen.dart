@@ -168,20 +168,20 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         color: Colors.black54,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                     SizedBox(height: 8),
                     if (selectedIndex == 0) // Complete
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding:  EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.star, color: Colors.blue, size: 14),
-                                const SizedBox(width: 4),
+                                Icon(Icons.star, color: Colors.blue, size: 14),
+                                 SizedBox(width: 4),
                                 Text(
                                   localization?.formatNumber("4.5") ?? "4.5",
                                   style: GoogleFonts.leagueSpartan(
@@ -193,7 +193,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+
+                            SizedBox(width: 12),
                           SvgPicture.asset(
                             "assets/images/heart_image.svg",
                             height: 20,
