@@ -41,11 +41,11 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
-  generate: true # 👈 ADD THIS
+  generate: true
   uses-material-design: true
   assets:
       - assets/images/
-      - assets/languages/ # 👈 ADD THIS
+      - assets/languages/
 
 flutter_launcher_icons:
   android: true

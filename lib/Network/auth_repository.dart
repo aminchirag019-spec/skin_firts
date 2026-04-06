@@ -64,8 +64,8 @@ class AuthRepository {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-          await firebaseAuth.signInWithCredential(credential);
+      final UserCredential userCredential = await firebaseAuth
+          .signInWithCredential(credential);
       final User? user = userCredential.user;
 
       if (user != null) {
@@ -74,7 +74,6 @@ class AuthRepository {
 
         SignupModel userModel;
         if (!doc.exists) {
-          // If user doesn't exist, create a new record
           userModel = SignupModel(
             uid: user.uid,
             name: user.displayName ?? "",
@@ -82,7 +81,7 @@ class AuthRepository {
             phone: "",
             dob: "",
             password: "",
-            role: "user", // Default role
+            role: "user",
           );
           await firestore.collection('users').doc(user.uid).set({
             ...userModel.toJson(),
@@ -109,49 +108,67 @@ class AuthRepository {
   }
 
   Future<List<ServiceModel>> getServices({String langCode = 'en'}) async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('services').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('services')
+        .get();
     List<ServiceModel> services = snapshot.docs
         .map((doc) => ServiceModel.fromJson(doc.data()))
         .toList();
 
     if (langCode != 'en') {
-      services = await Future.wait(services.map((s) async {
-        final translatedTitle = await TranslationService.translate(
-            s.getLocalizedTitle(langCode), langCode);
-        final translatedDesc = await TranslationService.translate(
-            s.getLocalizedDesc(langCode), langCode);
-        return ServiceModel(
-            title: translatedTitle, discription: translatedDesc);
-      }));
+      services = await Future.wait(
+        services.map((s) async {
+          final translatedTitle = await TranslationService.translate(
+            s.getLocalizedTitle(langCode),
+            langCode,
+          );
+          final translatedDesc = await TranslationService.translate(
+            s.getLocalizedDesc(langCode),
+            langCode,
+          );
+          return ServiceModel(
+            title: translatedTitle,
+            discription: translatedDesc,
+          );
+        }),
+      );
     }
     return services;
   }
 
-  Future<AddDoctor?> getDoctorByUid(String doctorUid,
-      {String langCode = 'en'}) async {
+  Future<AddDoctor?> getDoctorByUid(
+    String doctorUid, {
+    String langCode = 'en',
+  }) async {
     final doc = await FirebaseFirestore.instance
         .collection("doctors")
         .doc(doctorUid)
         .get();
 
     if (doc.exists) {
-      AddDoctor doctor =
-          AddDoctor.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      AddDoctor doctor = AddDoctor.fromJson(
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
 
       if (langCode != 'en') {
         final translations = await Future.wait([
           TranslationService.translate(
-              doctor.getLocalized(doctor.doctorName, langCode, null), langCode),
+            doctor.getLocalized(doctor.doctorName, langCode, null),
+            langCode,
+          ),
           TranslationService.translate(
-              doctor.getLocalized(doctor.specialization, langCode, null),
-              langCode),
+            doctor.getLocalized(doctor.specialization, langCode, null),
+            langCode,
+          ),
           TranslationService.translate(
-              doctor.getLocalized(doctor.qualification, langCode, null),
-              langCode),
+            doctor.getLocalized(doctor.qualification, langCode, null),
+            langCode,
+          ),
           TranslationService.translate(
-              doctor.getLocalized(doctor.description, langCode, null),
-              langCode),
+            doctor.getLocalized(doctor.description, langCode, null),
+            langCode,
+          ),
         ]);
 
         return doctor.copyWith(
@@ -198,21 +215,29 @@ class AuthRepository {
       }).toList();
 
       if (langCode != 'en') {
-        doctors = await Future.wait(doctors.map((d) async {
-          final translations = await Future.wait([
-            TranslationService.translate(
-                d.getLocalized(d.doctorName, langCode, null), langCode),
-            TranslationService.translate(
-                d.getLocalized(d.specialization, langCode, null), langCode),
-            TranslationService.translate(
-                d.getLocalized(d.qualification, langCode, null), langCode),
-          ]);
-          return d.copyWith(
-            doctorName: translations[0],
-            specialization: translations[1],
-            qualification: translations[2],
-          );
-        }));
+        doctors = await Future.wait(
+          doctors.map((d) async {
+            final translations = await Future.wait([
+              TranslationService.translate(
+                d.getLocalized(d.doctorName, langCode, null),
+                langCode,
+              ),
+              TranslationService.translate(
+                d.getLocalized(d.specialization, langCode, null),
+                langCode,
+              ),
+              TranslationService.translate(
+                d.getLocalized(d.qualification, langCode, null),
+                langCode,
+              ),
+            ]);
+            return d.copyWith(
+              doctorName: translations[0],
+              specialization: translations[1],
+              qualification: translations[2],
+            );
+          }),
+        );
       }
 
       return doctors;
@@ -276,7 +301,7 @@ class AuthRepository {
   Future<void> addDoctor({required AddDoctor addDoctorModel}) async {
     final user = firebaseAuth.currentUser;
     if (user == null) {
-      return;
+      throw Exception("User not authenticated");
     }
 
     final docRef = firestore.collection('doctors').doc();
@@ -302,8 +327,10 @@ class AuthRepository {
           SignupModel signupModel = SignupModel.fromJson(userData.data()!);
 
           if (langCode != 'en') {
-            final translatedName =
-                await TranslationService.translate(signupModel.name, langCode);
+            final translatedName = await TranslationService.translate(
+              signupModel.name,
+              langCode,
+            );
             signupModel = signupModel.copyWith(name: translatedName);
           }
 
@@ -352,7 +379,6 @@ class AuthRepository {
   Future<void> logout() async {
     try {
       String? userId = await SharedPrefsHelper.getUserId();
-
       if (userId != null) {
         await SharedPrefsHelper.logout(userId);
       }
@@ -429,12 +455,16 @@ class AuthRepository {
 
     return snapshot.docs.map((doc) {
       return AppointmentModel.fromJson(
-          doc.data() as Map<String, dynamic>, doc.id);
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
     }).toList();
   }
 
   Future<void> updateAppointmentStatus(
-      String appointmentId, String status) async {
+    String appointmentId,
+    String status,
+  ) async {
     await firestore.collection('appointments').doc(appointmentId).update({
       'status': status,
     });

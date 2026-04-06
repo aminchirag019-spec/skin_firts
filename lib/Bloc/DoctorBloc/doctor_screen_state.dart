@@ -7,6 +7,7 @@ import '../../Global/dummy_data.dart';
 class DoctorScreenState extends Equatable {
   final int selectedIndex;
   final DoctorStatus doctorStatus;
+  final DoctorStatus addDoctorStatus;
   final DoctorFilter selectedFilter;
   final bool isTab;
   final List<bool> switches;
@@ -34,6 +35,7 @@ class DoctorScreenState extends Equatable {
     this.selectedIndex = -1,
     this.getDoctor = const [],
     this.doctorStatus = DoctorStatus.initial,
+    this.addDoctorStatus = DoctorStatus.initial,
     this.doctorDetails,
     this.selectedFilter = DoctorFilter.none,
     this.isTab = true,
@@ -58,6 +60,7 @@ class DoctorScreenState extends Equatable {
   DoctorScreenState copyWith({
     int? selectedIndex,
     DoctorStatus? doctorStatus,
+    DoctorStatus? addDoctorStatus,
     DoctorFilter? selectedFilter,
     bool? isTab,
     List<AddDoctor>? getDoctor,
@@ -85,6 +88,7 @@ class DoctorScreenState extends Equatable {
       selectedFilter: selectedFilter ?? this.selectedFilter,
       isTab: isTab ?? this.isTab,
       doctorStatus: doctorStatus ?? this.doctorStatus,
+      addDoctorStatus: addDoctorStatus ?? this.addDoctorStatus,
       getDoctor: getDoctor ?? this.getDoctor,
       doctorDetails: doctorDetails ?? this.doctorDetails,
       service: service ?? this.service,
@@ -115,6 +119,7 @@ class DoctorScreenState extends Equatable {
     selectedFilter,
     isTab,
     doctorStatus,
+    addDoctorStatus,
     getDoctor,
     doctorDetails,
     service,

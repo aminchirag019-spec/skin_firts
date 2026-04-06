@@ -52,7 +52,6 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     on<BookAppointmentEvent>(_onBookAppointment);
     on<GetAppointmentsEvent>(_onGetAppointments);
     on<UpdateAppointmentStatusEvent>(_onUpdateAppointmentStatus);
-    // on<ClearAppointmentStatusEvent>(_onClearAppointmentStatus);
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -63,20 +62,13 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
     return super.close();
   }
 
-  // void _onClearAppointmentStatus(ClearAppointmentStatusEvent event, Emitter<DoctorScreenState> emit) {
-  //   emit(state.copyWith(
-  //     bookingStatus: DoctorStatus.initial,
-  //     lastBookedAppointment: null
-  //   ));
-  // }
-
   void _onBookAppointment(BookAppointmentEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(bookingStatus: DoctorStatus.loading));
     try {
       await authRepository.bookAppointment(event.appointment);
       emit(state.copyWith(
         bookingStatus: DoctorStatus.success,
-        lastBookedAppointment: event.appointment, // Store for navigation
+        lastBookedAppointment: event.appointment,
       ));
       add(GetAppointmentsEvent());
     } catch (e) {
@@ -163,12 +155,13 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   }
 
   void _onAddDoctor(AddDoctorEvent event, Emitter<DoctorScreenState> emit) async {
-    emit(state.copyWith(doctorStatus: DoctorStatus.loading));
+    emit(state.copyWith(addDoctorStatus: DoctorStatus.loading));
     try {
       await authRepository.addDoctor(addDoctorModel: event.addDoctor);
+      emit(state.copyWith(addDoctorStatus: DoctorStatus.success));
       add(GetDoctorEvent());
     } catch (e) {
-      emit(state.copyWith(doctorStatus: DoctorStatus.failure));
+      emit(state.copyWith(addDoctorStatus: DoctorStatus.failure));
     }
   }
 
@@ -212,7 +205,11 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   }
 
   void _onClearAddDoctorForm(ClearAddDoctorFormEvent event, Emitter<DoctorScreenState> emit) {
-    emit(state.copyWith(addDoctorGender: 'Male', addDoctorIsLiked: false));
+    emit(state.copyWith(
+      addDoctorGender: 'Male', 
+      addDoctorIsLiked: false, 
+      addDoctorStatus: DoctorStatus.initial
+    ));
   }
 
   void _onToggleServiceExpansion(ToggleServiceExpansionEvent event, Emitter<DoctorScreenState> emit) {

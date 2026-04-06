@@ -359,8 +359,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
 
   Widget _buildSubmitButton(BuildContext context, AppLocalizations? localization) {
     return BlocConsumer<DoctorScreenBloc, DoctorScreenState>(
+      listenWhen: (previous, current) => previous.addDoctorStatus != current.addDoctorStatus,
       listener: (context, state) {
-        if (state.doctorStatus == DoctorStatus.success) {
+        if (state.addDoctorStatus == DoctorStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
@@ -369,7 +370,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
           );
           _clearForm();
         }
-        if (state.doctorStatus == DoctorStatus.failure) {
+        if (state.addDoctorStatus == DoctorStatus.failure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
@@ -379,7 +380,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
         }
       },
       builder: (context, state) {
-        if (state.doctorStatus == DoctorStatus.loading) {
+        if (state.addDoctorStatus == DoctorStatus.loading) {
           return Center(child: CircularProgressIndicator(color: AppColors.darkPurple));
         }
         return customButton(

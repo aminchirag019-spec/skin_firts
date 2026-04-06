@@ -15,11 +15,29 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(settings);
 
+    // ✅ Request Permission for Android 13+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+
+    // ✅ Create Notification Channel for Android
+    const androidChannel = AndroidNotificationChannel(
+      'chat_channel',
+      'Chat Notifications',
+      description: 'Used for chat and system notifications',
+      importance: Importance.max,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidChannel);
+
     // ✅ Foreground notification listener
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("📩 Foreground Message Received");
 
-      // Check both notification and data payloads
       String title = message.notification?.title ?? message.data['title'] ?? "";
       String body = message.notification?.body ?? message.data['body'] ?? "";
 
@@ -34,8 +52,6 @@ class NotificationService {
     if (text.isEmpty) return text;
 
     final langCode = await SharedPrefsHelper.getLanguage() ?? 'en';
-    print("🔔 Translating: '$text' | Target: $langCode");
-
     if (langCode == 'en') return text;
 
     try {
@@ -43,11 +59,8 @@ class NotificationService {
       final jsonString = await rootBundle.loadString('assets/languages/$langCode.json');
       final Map<String, dynamic> jsonMap = json.decode(jsonString);
 
-      // Exact match check
       if (jsonMap.containsKey(text)) {
-        String res = jsonMap[text].toString();
-        print("✅ Local Match Found: $res");
-        return res;
+        return jsonMap[text].toString();
       }
 
       // Prefix match check for semi-dynamic messages
@@ -60,42 +73,46 @@ class NotificationService {
         if (text.startsWith(entry.key)) {
           String suffix = text.substring(entry.key.length);
           String translatedPrefix = jsonMap[entry.value]?.toString() ?? entry.key;
-          print("✅ Prefix Match: $translatedPrefix$suffix");
           return "$translatedPrefix$suffix";
         }
       }
 
-      // 2. Fallback to Online Translation Service for truly dynamic content
-      print("🌐 Calling TranslationService for dynamic text...");
-      String onlineRes = await TranslationService.translate(text, langCode);
-      print("✅ Online Translation Success: $onlineRes");
-      return onlineRes;
+      // 2. Fallback to Online Translation Service (with timeout)
+      return await TranslationService.translate(text, langCode)
+          .timeout(const Duration(seconds: 3), onTimeout: () => text);
 
     } catch (e) {
-      print("⚠️ Local translation error, trying online: $e");
-      return await TranslationService.translate(text, langCode);
+      print("⚠️ Translation error: $e");
+      return text;
     }
   }
 
   static Future<void> showNotification(String title, String body) async {
-    // Perform translation before showing
-    String translatedTitle = await _translate(title);
-    String translatedBody = await _translate(body);
+    try {
+      // Perform translation before showing
+      String translatedTitle = await _translate(title);
+      String translatedBody = await _translate(body);
 
-    const androidDetails = AndroidNotificationDetails(
-      'chat_channel',
-      'Chat Notifications',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+      const androidDetails = AndroidNotificationDetails(
+        'chat_channel',
+        'Chat Notifications',
+        channelDescription: 'Used for chat and system notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: true,
+      );
 
-    const details = NotificationDetails(android: androidDetails);
+      const details = NotificationDetails(android: androidDetails);
 
-    await flutterLocalNotificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      translatedTitle,
-      translatedBody,
-      details,
-    );
+      await flutterLocalNotificationsPlugin.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        translatedTitle,
+        translatedBody,
+        details,
+      );
+      print("✅ Notification shown: $translatedTitle");
+    } catch (e) {
+      print("❌ Error showing notification: $e");
+    }
   }
 }
