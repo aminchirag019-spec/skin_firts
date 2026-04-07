@@ -38,7 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<UpdateProfileEvent>(_onUpdateProfileEvent);
     on<UpdatePasswordEvent>(_onUpdatePasswordEvent);
     on<SelectRoleEvent>(selectedRoleMethod);
-    on<LoadChatListEvent>(onLoadChatList);
+
   }
 
   String get _currentLang => localeBloc.state.locale.languageCode;
@@ -250,42 +250,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> onLoadChatList(
-      LoadChatListEvent event,
-      Emitter<AuthState> emit,
-      ) async {
-
-    emit(state.copyWith(chatListStatus: ChatListStatus.loading));
-
-    try {
-      final currentUser = await repository.getCurrentUserDetails(langCode: _currentLang);
-      final role = currentUser?.role;
-
-      if (role == "user") {
-        final doctors = await repository.getAllDoctors();
-
-        emit(state.copyWith(
-          chatListStatus: ChatListStatus.success,
-          doctors: doctors,
-          role: role,
-          currentUser: currentUser,
-        ));
-
-      } else if (role == "doctor") {
-        final users = await repository.getAllUsers();
-
-        emit(state.copyWith(
-          chatListStatus: ChatListStatus.success,
-          users: users,
-          role: role,
-          currentUser: currentUser,
-        ));
-      }
-
-    } catch (e) {
-      emit(state.copyWith(   chatListStatus: ChatListStatus.failure,));
-    }
-  }
 
  void selectedRoleMethod(SelectRoleEvent event,emit){
    emit(state.copyWith(selectedRole: event.role));

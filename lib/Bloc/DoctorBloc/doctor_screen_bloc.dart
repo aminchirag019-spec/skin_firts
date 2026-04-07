@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Data/appointment_model.dart';
 import 'package:skin_firts/Global/enums.dart';
+import 'package:skin_firts/Network/appointment_repository.dart';
 import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Bloc/LocaleBloc/locale_bloc.dart';
+import 'package:skin_firts/Network/doctor_repository.dart';
 
 import '../../Data/doctor_model.dart';
 import '../../Global/dummy_data.dart';
@@ -14,10 +16,12 @@ import 'doctor_screen_state.dart';
 class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   final NotificationService notificationService;
   final AuthRepository authRepository;
+  final DoctorRepository doctorRepository;
+  final AppointmentRepository appointmentRepository;
   final LocaleBloc localeBloc;
   StreamSubscription? _localeSubscription;
 
-  DoctorScreenBloc(this.authRepository, this.notificationService, this.localeBloc)
+  DoctorScreenBloc(this.authRepository, this.notificationService, this.localeBloc,this.doctorRepository,this.appointmentRepository)
     : super(const DoctorScreenState()) {
     
     _localeSubscription = localeBloc.stream.listen((localeState) {
@@ -65,7 +69,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onBookAppointment(BookAppointmentEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(bookingStatus: DoctorStatus.loading));
     try {
-      await authRepository.bookAppointment(event.appointment);
+      await appointmentRepository.bookAppointment(event.appointment);
       emit(state.copyWith(
         bookingStatus: DoctorStatus.success,
         lastBookedAppointment: event.appointment,
@@ -79,7 +83,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onGetAppointments(GetAppointmentsEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(appointmentStatus: DoctorStatus.loading));
     try {
-      final appointments = await authRepository.getAppointments();
+      final appointments = await appointmentRepository.getAppointments();
       emit(state.copyWith(
         appointments: appointments,
         appointmentStatus: DoctorStatus.success,
@@ -91,7 +95,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
 
   void _onUpdateAppointmentStatus(UpdateAppointmentStatusEvent event, Emitter<DoctorScreenState> emit) async {
     try {
-      await authRepository.updateAppointmentStatus(event.appointmentId, event.status);
+      await appointmentRepository.updateAppointmentStatus(event.appointmentId, event.status);
       add(GetAppointmentsEvent());
     } catch (e) {
       print("Error updating status: $e");
@@ -137,7 +141,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onGetDoctorDetails(GetDoctorDetailsEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
-      final doctorDetails = await authRepository.getDoctorByUid(event.doctorUid, langCode: _currentLang);
+      final doctorDetails = await doctorRepository.getDoctorByUid(event.doctorUid, langCode: _currentLang);
       emit(state.copyWith(doctorStatus: DoctorStatus.success, doctorDetails: doctorDetails));
     } catch (e) {
       emit(state.copyWith(doctorStatus: DoctorStatus.failure));
@@ -147,7 +151,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onGetDoctor(GetDoctorEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
-      final doctors = await authRepository.getDoctors(langCode: _currentLang);
+      final doctors = await doctorRepository.getDoctors(langCode: _currentLang);
       emit(state.copyWith(doctorStatus: DoctorStatus.success, getDoctor: doctors));
     } catch (e) {
       emit(state.copyWith(doctorStatus: DoctorStatus.failure));
@@ -157,7 +161,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onAddDoctor(AddDoctorEvent event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(addDoctorStatus: DoctorStatus.loading));
     try {
-      await authRepository.addDoctor(addDoctorModel: event.addDoctor);
+      await doctorRepository.addDoctor(addDoctorModel: event.addDoctor);
       emit(state.copyWith(addDoctorStatus: DoctorStatus.success));
       add(GetDoctorEvent());
     } catch (e) {
@@ -170,7 +174,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   }
 
   void _onLiked(LikedEvent event, Emitter<DoctorScreenState> emit) async {
-    await authRepository.likedDoctor(event.doctorId, event.isLiked);
+    await doctorRepository.likedDoctor(event.doctorId, event.isLiked);
     add(ApplyFilters(
       sortBy: state.selectedFilter == DoctorFilter.sortBy ? "A->Z" : null,
       liked: state.selectedFilter == DoctorFilter.liked ? true : null,
@@ -184,7 +188,7 @@ class DoctorScreenBloc extends Bloc<DoctorScreenEvent, DoctorScreenState> {
   void _onApplyFilters(ApplyFilters event, Emitter<DoctorScreenState> emit) async {
     emit(state.copyWith(doctorStatus: DoctorStatus.loading));
     try {
-      final doctors = await authRepository.getDoctors(
+      final doctors = await doctorRepository.getDoctors(
         sortBy: event.sortBy,
         liked: event.liked,
         gender: event.gender,

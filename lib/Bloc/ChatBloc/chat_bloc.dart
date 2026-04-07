@@ -3,17 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skin_firts/Data/chat_model.dart';
+import 'package:skin_firts/Network/auth_repository.dart';
 import 'package:skin_firts/Network/chat_repository.dart';
+import 'package:skin_firts/Network/doctor_repository.dart';
 import 'package:skin_firts/main.dart';
 
 import '../../Global/enums.dart';
+import '../LocaleBloc/locale_bloc.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository chatRepository;
+  final AuthRepository authRepository;
+  final DoctorRepository doctorRepository;
+  final LocaleBloc localeBloc;
   StreamSubscription<List<ChatModel>>? streamSubscription;
-  ChatBloc(this.chatRepository) : super(const ChatState(chats: [])) {
+  ChatBloc(this.chatRepository,this.authRepository,this.doctorRepository,this.localeBloc) : super(const ChatState(chats: [])) {
     on<SendTextMessage>(_onSendChatEvent);
     on<SendImageMessage>(_onSendImageMessage);
     on<SendFileMessage>(_onSendFileMessage);
@@ -28,7 +34,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ToggleMessageSelection>(_onToggleMessageSelection);
     on<UnSelectMessageEvent>(_onUnSelectMessageEvent);
     on<DeleteMessagesEvent>(_onDeleteMessages);
+    on<LoadChatListEvent>(onLoadChatList);
   }
+  String get _currentLang => localeBloc.state.locale.languageCode;
 
   void _onToggleMessageSelection(
     ToggleMessageSelection event,
@@ -198,5 +206,43 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     await chatRepository.sendMessage(sendFile);
     emit(state.copyWith(replyMessage: null, clearReply: true));
+  }
+
+
+  Future<void> onLoadChatList(
+      LoadChatListEvent event,
+      Emitter<ChatState> emit,
+      ) async {
+
+    emit(state.copyWith(chatListStatus: ChatListStatus.loading));
+
+    try {
+      final currentUser = await authRepository.getCurrentUserDetails(langCode: _currentLang);
+      final role = currentUser?.role;
+
+      if (role == "user") {
+        final doctors = await doctorRepository.getAllDoctors();
+
+        emit(state.copyWith(
+          chatListStatus: ChatListStatus.success,
+          doctors: doctors,
+          role: role,
+          currentUser: currentUser,
+        ));
+
+      } else if (role == "doctor") {
+        final users = await authRepository.getAllUsers();
+
+        emit(state.copyWith(
+          chatListStatus: ChatListStatus.success,
+          users: users,
+          role: role,
+          currentUser: currentUser,
+        ));
+      }
+
+    } catch (e) {
+      emit(state.copyWith(   chatListStatus: ChatListStatus.failure,));
+    }
   }
 }

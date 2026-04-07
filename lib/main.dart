@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,10 +24,16 @@ import 'Bloc/LocaleBloc/locale_event.dart';
 import 'Bloc/LocaleBloc/locale_state.dart';
 import 'Helper/app_localizations.dart';
 import 'Helper/sharedpref_helper.dart';
+import 'Network/appointment_repository.dart';
+import 'Network/doctor_repository.dart';
 import 'Utilities/bio_metric.dart';
 import 'Helper/firebase_message.dart';
 
 final user = FirebaseAuth.instance.currentUser;
+final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+final FirebaseDatabase realtimeDatabase = FirebaseDatabase.instance;
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +47,10 @@ void main() async {
   final authRepository = AuthRepository();
   final notificationService = NotificationService();
   final notificationRepository = NotificationRepository();
+  final appointmentRepository = AppointmentRepository();
+  final chatRepository = ChatRepository();
+  final doctorRepository = DoctorRepository();
+
 
   runApp(
     MultiBlocProvider(
@@ -51,6 +63,9 @@ void main() async {
             authRepository,
             notificationService,
             context.read<LocaleBloc>(),
+            doctorRepository,
+            appointmentRepository,
+
           ),
         ),
         BlocProvider(
@@ -67,7 +82,13 @@ void main() async {
             context.read<LocaleBloc>(),
           ),
         ),
-        BlocProvider(create: (context) => ChatBloc(ChatRepository())),
+        BlocProvider(create: (context) => ChatBloc(
+            ChatRepository(),
+          authRepository,
+            doctorRepository,
+            context.read<LocaleBloc>(),
+
+        )),
       ],
       child: const MyApp(),
     ),

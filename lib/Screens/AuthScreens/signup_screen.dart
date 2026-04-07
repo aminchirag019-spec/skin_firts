@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skin_firts/Bloc/ChatBloc/chat_state.dart';
 import 'package:skin_firts/Bloc/DoctorBloc/doctor_screen_event.dart';
 import 'package:skin_firts/Data/doctor_model.dart';
 import 'package:skin_firts/Global/enums.dart';
 import 'package:skin_firts/Utilities/colors.dart';
 import 'package:skin_firts/Utilities/textfield_validators.dart';
 import '../../Bloc/AuthBloc/auth_bloc.dart';
+import '../../Bloc/ChatBloc/chat_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_bloc.dart';
 import '../../Bloc/DoctorBloc/doctor_screen_state.dart';
 import '../../Data/auth_model.dart';
@@ -85,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  BlocBuilder<AuthBloc, AuthState>(
+                  BlocBuilder<ChatBloc, ChatState>(
                     builder: (context, state) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,8 +131,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: AppSize.height(context) * 0.011),
                   Form(
                     key: formKey,
-                    child: BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, authState) {
+                    child: BlocBuilder<ChatBloc, ChatState>(
+                      builder: (context, state) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -233,7 +235,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               },
                             ),
 
-                            if (authState.selectedRole == "doctor") ...[
+                            if (state.selectedRole == "doctor") ...[
                               SizedBox(height: AppSize.height(context) * 0.02),
                               _sectionTitle(
                                 context,
@@ -402,7 +404,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state.signupStatus == SignupStatus.success) {
-                        if (state.selectedRole == "doctor") {
+                        if (context.read<ChatBloc>().state.selectedRole == "doctor") {
                           final doctorState = context
                               .read<DoctorScreenBloc>()
                               .state;
@@ -471,7 +473,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 name: nameController.text,
                                 dob: dobController.text,
                                 phone: phoneController.text,
-                                role: state.selectedRole ?? "user",
+                                role: context.read<ChatBloc>().state.selectedRole ?? "user",
                                 uid: "",
                               ),
                             ),

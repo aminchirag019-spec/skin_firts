@@ -67,6 +67,7 @@ class ReplyMessageEvent extends ChatEvent {
   final ChatModel message;
   ReplyMessageEvent(this.message);
 }
+class LoadChatListEvent extends ChatEvent{}
 
 class CancelReply extends ChatEvent {}
 

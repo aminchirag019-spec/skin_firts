@@ -6,6 +6,7 @@ import 'package:skin_firts/Bloc/AuthBloc/auth_bloc.dart';
 import 'package:skin_firts/Helper/app_localizations.dart';
 
 import '../../Bloc/ChatBloc/chat_bloc.dart';
+import '../../Bloc/ChatBloc/chat_event.dart';
 import '../../Bloc/ChatBloc/chat_state.dart';
 import '../../Router/router_class.dart';
 import '../../Utilities/colors.dart';
@@ -22,13 +23,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthBloc>().add(LoadChatListEvent());
+    context.read<ChatBloc>().add(LoadChatListEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return PopScope(
           canPop: false,

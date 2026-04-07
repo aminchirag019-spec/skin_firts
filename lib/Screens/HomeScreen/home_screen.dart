@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+         import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
               final isDoctor = authState.currentUser?.role == 'doctor';
-              
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -244,7 +242,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               final dateStr = DateFormat.d(locale).format(item.date);
                                               final localizedDateStr = localization?.formatNumber(dateStr) ?? dateStr;
                                               final dayStr = DateFormat.E(locale).format(item.date).toUpperCase();
-
                                               return GestureDetector(
                                                 onTap: () {
                                                   context.read<DoctorScreenBloc>().add(SelectDateEvent(index));
