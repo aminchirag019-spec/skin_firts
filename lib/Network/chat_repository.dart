@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:skin_firts/Network/cloudinary_service.dart';
 import '../Data/chat_model.dart';
 import '../main.dart';
 
 class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final CloudinaryService _cloudinaryService = CloudinaryService();
 
   Future<void> sendMessage(ChatModel message) async {
     final chatId = getChatId(message.senderId, message.receiverId);
@@ -15,6 +20,37 @@ class ChatRepository {
         .doc(chatId)
         .collection('messages')
         .add(message.toJson());
+  }
+
+  Future<String?> uploadToCloudinary(String path) async {
+    return await _cloudinaryService.uploadImage(path);
+  }
+
+  Future<String> uploadFile(String path, String folder) async {
+    try {
+      File file = File(path);
+      if (!file.existsSync()) {
+        throw Exception("File does not exist at path: $path");
+      }
+      
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference ref = _storage.ref().child(folder).child(fileName);
+      
+      print("Starting upload to: ${ref.fullPath}");
+      UploadTask uploadTask = ref.putFile(file);
+      
+      // Monitor progress or wait for completion
+      TaskSnapshot snapshot = await uploadTask;
+      
+      print("Upload complete. Fetching download URL...");
+      return await snapshot.ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      print("Firebase Storage Error: ${e.code} - ${e.message}");
+      rethrow;
+    } catch (e) {
+      print("Unknown error during upload: $e");
+      rethrow;
+    }
   }
 
   Future<void> editMessage(

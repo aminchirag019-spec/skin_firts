@@ -123,7 +123,7 @@ Widget fileContent(ChatModel chat, BuildContext context) {
       const SizedBox(width: 10),
       Flexible(
         child: Text(
-          chat.filePath.split('/').last,
+          chat.filePath.split('/').last.split('?').first,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.leagueSpartan(
@@ -144,15 +144,21 @@ Widget imageContent(ChatModel chat, BuildContext context) {
         maxWidth: AppSize.width(context) * 0.6,
         maxHeight: AppSize.height(context) * 0.4,
       ),
-      child: Image.file(
-        File(chat.filePath),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Image.network(
-          chat.filePath,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => const Icon(Icons.image, size: 100),
-        ),
-      ),
+      child: chat.filePath.startsWith('http')
+          ? Image.network(
+              chat.filePath,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 100),
+            )
+          : Image.file(
+              File(chat.filePath),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Icon(Icons.image, size: 100),
+            ),
     ),
   );
 }

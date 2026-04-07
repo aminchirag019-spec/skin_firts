@@ -172,40 +172,60 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     SendImageMessage event,
     Emitter<ChatState> emit,
   ) async {
-    final reply = state.replyMessage;
-    final sendImage = ChatModel(
-      filePath: event.imagePath,
-      senderId: user!.uid,
-      timestamp: DateTime.now(),
-      chatType: ChatType.image,
-      id: '',
-      receiverId: event.receiverId,
-      replyMessage: reply?.message ?? (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
-      replySender: reply?.senderId,
-    );
-    
-    await chatRepository.sendMessage(sendImage);
-    emit(state.copyWith(replyMessage: null, clearReply: true));
+    try {
+      final reply = state.replyMessage;
+      
+      // Upload image to Cloudinary and get the URL
+      String? imageUrl = await chatRepository.uploadToCloudinary(event.imagePath);
+
+      if (imageUrl != null) {
+        final sendImage = ChatModel(
+          filePath: imageUrl,
+          senderId: user!.uid,
+          timestamp: DateTime.now(),
+          chatType: ChatType.image,
+          id: '',
+          receiverId: event.receiverId,
+          replyMessage: reply?.message ?? (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
+          replySender: reply?.senderId,
+        );
+        
+        await chatRepository.sendMessage(sendImage);
+        emit(state.copyWith(replyMessage: null, clearReply: true));
+      } else {
+        print("Cloudinary upload failed");
+      }
+    } catch (e) {
+      print("Failed to send image: $e");
+    }
   }
 
   void _onSendFileMessage(
     SendFileMessage event,
     Emitter<ChatState> emit,
   ) async {
-    final reply = state.replyMessage;
-    final sendFile = ChatModel(
-      filePath: event.filePath,
-      senderId: user!.uid,
-      timestamp: DateTime.now(),
-      chatType: ChatType.file,
-      id: '',
-      receiverId: event.receiverId,
-      replyMessage: reply?.message ?? (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
-      replySender: reply?.senderId,
-    );
+    try {
+      final reply = state.replyMessage;
+      
+      // Upload file to Firebase Storage and get the URL
+      String fileUrl = await chatRepository.uploadFile(event.filePath, 'chat_files');
 
-    await chatRepository.sendMessage(sendFile);
-    emit(state.copyWith(replyMessage: null, clearReply: true));
+      final sendFile = ChatModel(
+        filePath: fileUrl,
+        senderId: user!.uid,
+        timestamp: DateTime.now(),
+        chatType: ChatType.file,
+        id: '',
+        receiverId: event.receiverId,
+        replyMessage: reply?.message ?? (reply?.chatType == ChatType.image ? "Photo" : reply?.chatType == ChatType.file ? "File" : null),
+        replySender: reply?.senderId,
+      );
+
+      await chatRepository.sendMessage(sendFile);
+      emit(state.copyWith(replyMessage: null, clearReply: true));
+    } catch (e) {
+      print("Failed to send file: $e");
+    }
   }
 
 
