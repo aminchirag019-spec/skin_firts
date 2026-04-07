@@ -653,7 +653,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       chat.replyMessage!.trim().isNotEmpty)
                     _buildReplyBox(chat, isMe),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       chat.chatType == ChatType.image
                           ? imageContent(chat, context)
